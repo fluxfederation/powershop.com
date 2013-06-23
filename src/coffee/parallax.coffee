@@ -16,9 +16,7 @@ do ($ = jQuery, window) ->
 	$(document).ready ->
 		# standard DOM node that parallaxs on a separate layer
 		parallaxableElements = $ "[data-parallax-speed]"
-
-		# background only parallaxer
-		parallaxableHeight = $ "[data-parallax-destheight]"
+		parallaxableHeight = $ ".parallax-height"
 
 		scrollHandler = () ->
 			scrolledY = $(window).scrollTop()
@@ -70,8 +68,11 @@ do ($ = jQuery, window) ->
 			# page (i.e are shown, increase the height by the amount they scroll up to
 			# the given maximum (destheight).
 			parallaxableHeight.each (i, elem)->
-				destHeight = $(elem).data('parallax-destheight')
-				startHeight = $(elem).data('parallax-startheight')
+				# destheight is the target height when the element hits the top
+				destHeight = $(elem).data('parallax-destheight') || $(window).height()
+
+				# speed 
+				speed = $(elem).data('parallax-speed') || 0.3
 
 				top = $(elem).position().top
 				scrolled = $(window).scrollTop()
@@ -79,28 +80,39 @@ do ($ = jQuery, window) ->
 				amountScrolledToView = top - winHeight;
 				viewable = top < (scrolled + winHeight)
 				past = (top + $(elem).height()) < scrolled
-
-				changed = startHeight + (scrolled - amountScrolledToView)
 				backgroundMove = false
-				return
+
+				startScrollingAt = (top - winHeight)
+
+				if startScrollingAt < 0 then startScrollingAt = 0
+
 				if viewable and not past
-					backgroundMove = ((changed - destHeight) * -0.3)
+					difference = scrolled - startScrollingAt
+
+					# change is the px between the height and the dest height
+					imageChange = (difference - destHeight) / 2;
+
+					if difference > destHeight 
+						difference = destHeight
 
 					$(elem).css(
-						'backgroundPosition': 'center '+ backgroundMove + "px"
+						height: Math.ceil(difference)
+					).find('.parallax-background').css(
+						top: imageChange
 					)
 
-				if changed >= destHeight
-					changed = destHeight
 
-				if viewable 
-					if $(elem).height() != changed and changed >= startHeight
-						$(elem).css(
-							height: changed
-						)
-						
+		$(".parallax-background").css(
+			height: $(window).height(),
+			width: $(window).width
+		)
 
-				
+		$(window).resize ()->
+			$(".parallax-background").css(
+				height: $(window).height(),
+				width: $(window).width
+			)
+
 		$(window).scroll ()->
 			if scrollTimeout?
 				clearTimeout(scrollTimeout)

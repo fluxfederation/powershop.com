@@ -7,7 +7,14 @@ do ($ = jQuery, window) ->
     page = $ "html"
     officePhotos = $ "#office_photos"
     isLocalScrolling = false
+
+    # fade in elements as the user goes down the page
     fadeIn = $ ".fade-in"
+
+    fadeIn.css(
+      opacity: 0
+    )
+
     # --------------------------------------------------------------------------
 
     # 
@@ -33,6 +40,8 @@ do ($ = jQuery, window) ->
     # to a particular point in the page, fade in the header bar.
     #
     $(window).scroll ()->
+      scroll = $(window).scrollTop()
+
       current = header.css('background')
       latest = getHeaderBackground()
 
@@ -41,6 +50,14 @@ do ($ = jQuery, window) ->
           background: latest
         ) 
 
+      fadeIn.each (i, elem)->
+        # if the scroll is past the fade in point and we haven't shown
+        # the element yet, fade it in
+        if $(elem).data('fade-in-at') >= scroll
+          if not $(elem).data('showing')
+            $(elem).data('showing', true).animate(
+              opacity: 1
+            )
     #
     # Clicking show navigation reveals the site wide navigation reveals over
     # the webpage.
@@ -89,8 +106,6 @@ do ($ = jQuery, window) ->
     # section
     #
     if officePhotos.length > 0
-
-
       loadImages = ()->
         $("[data-image]", officePhotos).each (i, elem)->
             if $(elem).data('img-loaded') == true

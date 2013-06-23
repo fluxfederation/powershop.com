@@ -141,6 +141,7 @@ a {
 		overflow: hidden;
 		background: url(/img/sprite.png) no-repeat;
 		text-indent: -9000px;
+		outline: none;
 		width: 31px;
 	}
 }
@@ -183,10 +184,9 @@ a {
 	background: url(/img/sprite.png) -220px -30px no-repeat;
 	text-indent: -90000px;
 	outline: none;
-	position: fixed;
-	top: 9px;
-	right: 50%;
-	margin-right: -555px;
+	position: absolute;
+	right: 0;
+	top: 10px;
 
 	&:hover,
 	&:focus {
@@ -203,6 +203,7 @@ a {
 #nav {
 	overflow-x: hidden;
 	overflow-y: auto;
+	position: relative;
 	
 	.logo {
 		position: fixed;
@@ -413,6 +414,7 @@ a {
 #shit_hot {
 	background: @purplePink;
 	padding: 175px 0 50px;
+	min-height: 100%;
 
 	h1 {
 		width: 90%;
@@ -427,9 +429,22 @@ a {
 }
 
 #culture_banner {
-	background: #F1F8D8 url(/img/pow_banner.jpg) no-repeat center 0 fixed;
-	background-size: cover;
-	height: 510px;
+
+	.parallax-background {
+		background: url(/img/pow_banner.jpg) no-repeat;
+		background-size: 100% 100%;
+	}
+
+}
+
+.parallax-height {
+	height: 0;
+	position: relative;
+}
+
+.parallax-background {
+	position: absolute;
+	width: 100%;
 }
 
 #culture {
