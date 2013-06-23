@@ -3,6 +3,7 @@
 	"devDependencies": {
 		"grunt": "~0.4.1",
 		"grunt-contrib-coffee": "*",
+		"grunt-contrib-uglify": "*",
 		"grunt-contrib-less": "*",
 		"grunt-contrib-copy": "*",
 		"grunt-contrib-watch": "*"

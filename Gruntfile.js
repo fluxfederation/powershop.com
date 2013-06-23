@@ -1,12 +1,28 @@
 module.exports = function(grunt) {
   grunt.initConfig({
+    jekyll: {
+      server : {
+
+      }
+    },
+ 
     less: {
       dist: {
         options: {
           yuicompress: true
         },
         files: {
-          "_dist/production.css": ["src/less/*.less"]
+          "_dist/prod.con.css": ["src/less/*.less"]
+        }
+      }
+    },
+    uglify: {
+      dist: {
+        files: {
+          '_dist/prod.con.js': [
+            'src/vendor/*',
+            '_dist/site.js'
+          ]
         }
       }
     },
@@ -16,28 +32,22 @@ module.exports = function(grunt) {
           join: true
         },
         files: {
-          '_dist/production.js': ['src/coffee/*.coffee'],
+          '_dist/site.js': [ 'src/coffee/*.coffee'],
         }
       }
-    },
-    copy: {
-      files: [
-        {expand: true, src: ['_dist/**'], dest: '_site/_dist/'},
-        {expand: true, src: ['img/**'], dest: '_site/img/'},
-      ]
     },
     watch: {
       coffee: {
         files: ['src/coffee/*.coffee'],
-        tasks: ['coffee']
+        tasks: ['coffee', 'uglify']
       },
       less: {
         files: ['src/less/*.less'],
         tasks: ['less']
       },
       jekyll: {
-        files: ['img/**'],
-        tasks: ['copy']
+        files: ['_dist/*', '_layouts/*', 'about/*', 'contact/*', 'culture/*'],
+        tasks: ['jekyll']
       }
     }
   });
@@ -45,8 +55,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-jekyll');
 
-  grunt.registerTask('default', ['coffee', 'less', 'jekyll:server']);
+  grunt.registerTask('default', ['coffee', 'less', 'uglify', 'jekyll:server']);
 
 };

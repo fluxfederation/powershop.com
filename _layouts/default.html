@@ -6,24 +6,24 @@
         <title>{{ page.title }}</title>
         <meta name="viewport" content="width=device-width">
 
-        <link rel="stylesheet" href="/_dist/production.css">
+        <link rel="stylesheet" href="/_dist/prod.con.css">
 
         <script type="text/javascript" src="//use.typekit.net/hvb0his.js"></script>
         <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
     </head>
 
     <body class="{{ page.body_class }}">
-      <header id="header">
+      <header id="header" class="{{ page.header_color }}">
         <div class="wrapper">
-          <p><a href="/" class="logo">Powershop</a></p>
+          <p class="logo"><a href="/">Powershop</a></p>
 
-          <p>
+          <p class="navigation">
             <a href="#content" class="accessibility">Skip to content</a>
-            <a href="#nav" class="nav">Skip to navigation</a>
+            <a href="#nav" class="show_nav">Skip to navigation</a>
           </p>
-          
+
           <nav id="nav">
-            <p><a href="#" class="close_nav">Close nav</a></p>
+            <p class="right"><a href="#" class="close_nav">Close nav</a></p>
 
             <ol class="sematic">
               <li>
@@ -33,7 +33,7 @@
                   <li><a href="/#betterer">Make things betterer</a></li>
                   <li><a href="/#shit">Give a shit</a></li>
                   <li><a href="/#">Something</a></li>
-                </ul>
+                </ol>
               </li>
 
               <li>
@@ -74,6 +74,6 @@
       </script>
 
       <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-      <script src="/_dist/production.js"></script>
+      <script src="/_dist/prod.con.js"></script>
     </body>
 </html>
