@@ -6,6 +6,7 @@
 		"grunt-contrib-uglify": "*",
 		"grunt-contrib-less": "*",
 		"grunt-contrib-copy": "*",
+		"grunt-jekyll": "*",
 		"grunt-contrib-watch": "*"
 	}
 }

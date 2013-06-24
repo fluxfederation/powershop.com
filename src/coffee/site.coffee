@@ -191,3 +191,33 @@ do ($ = jQuery, window) ->
           loadedOfficePics = true
 
           loadImages()
+
+    #
+    # On the homepage we have a google map for the office location.
+    #
+    if $("#map").length > 0
+      google.maps.event.addDomListener(window, 'load', ()->
+        options =
+          center: new google.maps.LatLng(-41.287538, 174.776010),
+          zoom: 16,
+          disableDefaultUI: true,
+          draggable: false, 
+          panControl: false, 
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          styles: window.map_styles
+
+        map = new google.maps.Map( $("#map").get(0), options)
+
+        image = 
+          url: '/img/face.png',
+          size: new google.maps.Size(62, 62),
+          origin: new google.maps.Point(0,0)
+          anchor: new google.maps.Point(0, 0)
+
+        marker = new google.maps.Marker(
+          position: options.center,
+          map: map,
+          icon: image,
+          animation: google.maps.Animation.DROP,
+        )
+      )

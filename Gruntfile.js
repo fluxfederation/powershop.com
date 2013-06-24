@@ -46,7 +46,7 @@ module.exports = function(grunt) {
         tasks: ['less']
       },
       jekyll: {
-        files: ['_dist/*', '_layouts/*', 'about/*', 'contact/*', 'culture/*'],
+        files: ['_dist/*', 'index.html', '_layouts/*', 'about/*', 'contact/*', 'culture/*'],
         tasks: ['jekyll']
       }
     }

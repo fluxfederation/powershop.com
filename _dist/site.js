@@ -1,12 +1,14 @@
 (function() {
   (function($, window) {
     return $(document).ready(function() {
-      var parallaxableElements, parallaxableHeight, scrollHandler;
+      var parallaxableElements, parallaxableHeight, parallaxableIntro, scrollHandler;
       parallaxableElements = $("[data-parallax-speed]");
       parallaxableHeight = $(".parallax-height");
+      parallaxableIntro = $(".parallax_intro");
       scrollHandler = function() {
-        var scrolledY;
+        var scrolledY, winHeight;
         scrolledY = $(window).scrollTop();
+        winHeight = $(window).height();
         parallaxableElements.each(function(i, elem) {
           var debug, maxY, minY, offset, reverseScale, speed, stop, top;
           offset = $(elem).data('parallax-offset-y');
@@ -50,13 +52,15 @@
             }
           ]);
         });
-        return parallaxableHeight.each(function(i, elem) {
-          var amountScrolledToView, backgroundMove, destHeight, difference, imageChange, past, scrolled, speed, startScrollingAt, top, viewable, winHeight;
-          destHeight = $(elem).data('parallax-destheight') || $(window).height();
+        parallaxableHeight.each(function(i, elem) {
+          var amountScrolledToView, backgroundMove, destHeight, difference, imageChange, past, scrolled, speed, startScrollingAt, top, viewable;
+          destHeight = $(elem).data('parallax-destheight') || winHeight;
+          if (destHeight.substr(-1) === "%") {
+            destHeight = (parseInt(destHeight.replace(/%/, '')) / 100) * winHeight;
+          }
           speed = $(elem).data('parallax-speed') || 0.3;
           top = $(elem).position().top;
           scrolled = $(window).scrollTop();
-          winHeight = $(window).height();
           amountScrolledToView = top - winHeight;
           viewable = top < (scrolled + winHeight);
           past = (top + $(elem).height()) < scrolled;
@@ -67,6 +71,9 @@
           }
           if (viewable && !past) {
             difference = scrolled - startScrollingAt;
+            if (top < 1) {
+              difference = destHeight;
+            }
             imageChange = (difference - destHeight) / 2;
             if (difference > destHeight) {
               difference = destHeight;
@@ -77,6 +84,21 @@
               top: imageChange
             });
           }
+        });
+        return parallaxableIntro.each(function(i, elem) {
+          var currentHeight, lastScrolled, latestHeight, pixelToPercentRatio, scrollDifference;
+          lastScrolled = $(elem).data('last_scrolled');
+          if (!lastScrolled) {
+            lastScrolled = 0;
+          }
+          $(elem).data('last_scrolled', scrolledY);
+          scrollDifference = lastScrolled - scrolledY;
+          currentHeight = parseInt($(elem).css('height').replace(/%/, ''));
+          pixelToPercentRatio = currentHeight / $(elem).height();
+          latestHeight = currentHeight + (scrollDifference * pixelToPercentRatio);
+          return $(elem).siblings("section").first().css({
+            'paddingTop': latestHeight
+          });
         });
       };
       $(".parallax-background").css({
@@ -237,7 +259,7 @@
             }
           }
         });
-        return $(window).scroll(function() {
+        $(window).scroll(function() {
           if (loadedOfficePics) {
             return;
           }
@@ -245,6 +267,33 @@
             loadedOfficePics = true;
             return loadImages();
           }
+        });
+      }
+      if ($("#map").length > 0) {
+        return google.maps.event.addDomListener(window, 'load', function() {
+          var image, map, marker, options;
+          options = {
+            center: new google.maps.LatLng(-41.287538, 174.776010),
+            zoom: 16,
+            disableDefaultUI: true,
+            draggable: false,
+            panControl: false,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            styles: window.map_styles
+          };
+          map = new google.maps.Map($("#map").get(0), options);
+          image = {
+            url: '/img/face.png',
+            size: new google.maps.Size(62, 62),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(0, 0)
+          };
+          return marker = new google.maps.Marker({
+            position: options.center,
+            map: map,
+            icon: image,
+            animation: google.maps.Animation.DROP
+          });
         });
       }
     });
