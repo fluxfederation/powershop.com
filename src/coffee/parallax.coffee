@@ -17,7 +17,9 @@ do ($ = jQuery, window) ->
 		# standard DOM node that parallaxs on a separate layer
 		parallaxableElements = $ "[data-parallax-speed]"
 		parallaxableHeight = $ ".parallax-height"
-		parallaxableIntro = $ ".parallax_intro"
+		parallax = $ ".parallax"
+		body = $ "body"
+		currentParallax = parallax.first().addClass('current_parallax_frame')
 
 		scrollHandler = () ->
 			scrolledY = $(window).scrollTop()
@@ -59,6 +61,7 @@ do ($ = jQuery, window) ->
 				if minY && top < minY
 					top = minY
 
+
 				$(elem).css({
 					'top': top
 				}).trigger('parallaxed', [{
@@ -66,80 +69,48 @@ do ($ = jQuery, window) ->
 					'scrolledY': scrolledY
 				}])
 
-			# parallax backgrounds. As soon as these elements come into account 
-			# on the page (i.e are shown, increase the height by the amount they 
-			# scroll up to the given maximum (destheight).
-			parallaxableHeight.each (i, elem)->
-				# destheight is the target height when the element hits the top
-				destHeight = $(elem).data('parallax-destheight') || winHeight
+			if currentParallax
+				elem = currentParallax.get(0)
 
-				# if destHeight is a percentage, convert to a px size
-				if destHeight.substr(-1) == "%"
-					destHeight = (parseInt(destHeight.replace(/%/, '')) / 100) * winHeight
+				if scrolled < 0 then scrolled = 0
 
-				# speed 
-				speed = $(elem).data('parallax-speed') || 0.3
-
-				top = $(elem).position().top
-				scrolled = $(window).scrollTop()
-				amountScrolledToView = top - winHeight;
-				viewable = top < (scrolled + winHeight)
-				past = (top + $(elem).height()) < scrolled
-				backgroundMove = false
-
-				startScrollingAt = (top - winHeight)
-
-				if startScrollingAt < 0 then startScrollingAt = 0
-
-				if viewable and not past
-					difference = scrolled - startScrollingAt
-
-					# if the parallax is the top of the page then the difference
-					if top < 1 then difference = destHeight
-
-					# change is the px between the height and the dest height
-					imageChange = (difference - destHeight) / 2;
-
-					if difference > destHeight 
-						difference = destHeight
-
-					$(elem).css(
-						height: Math.ceil(difference)
-					).find('.parallax-background').css(
-						top: imageChange
-					)
-
-			# parallaxable intro sections, these are designed to not have a lot
-			# of content so can experience the full parallax effect.
-			parallaxableIntro.each (i, elem)->
-				# calculate the new height the for scrolled amount. The last
-				# scrolled amount is stored as a data value. 
 				lastScrolled = $(elem).data 'last_scrolled'
 				if not lastScrolled then lastScrolled = 0
 
 				$(elem).data 'last_scrolled', scrolledY
 
 				scrollDifference = lastScrolled - scrolledY
-				currentHeight = parseInt($(elem).css('height').replace(/%/, ''))
-				pixelToPercentRatio = currentHeight / $(elem).height()
 
-				latestHeight = currentHeight + (scrollDifference * pixelToPercentRatio)
+				# percent to start with
+				actualHeight = $(elem).height()
+				latestHeight = actualHeight + scrollDifference 
+
+				$(elem).css('height', latestHeight)
+					.find('.wrapper').css('height', latestHeight)	
 
 
-				$(elem).siblings("section").first().css(
-					'paddingTop': latestHeight
+		# fix body scrolling
+		winHeight = $(window).height()
+		body.css('height', body.height());
+
+		parallax.each (i, elem)->
+			wrapper = $(elem).find('.wrapper')
+
+			if $(elem).outerHeight() > winHeight
+				$(elem).css(
+					'height': $(elem).height(),
+					'position': 'fixed'
+					'z-index': parallax.length - i
 				)
 
-		$(".parallax-background").css(
-			height: $(window).height(),
-			width: $(window).width
-		)
+				wrapper.css('height', wrapper.height())
 
-		$(window).resize ()->
-			$(".parallax-background").css(
-				height: $(window).height(),
-				width: $(window).width
-			)
+			else 
+				$(elem).css(
+					'height': winHeight - 30,
+					'position': 'fixed'
+					'z-index': parallax.length - i
+				)
 
 		$(window).scroll ()->
 			if scrollTimeout?

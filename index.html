@@ -14,17 +14,17 @@ body_class: home
 	</ol>
 </nav>
 
-<section id="welcome" class="anchor">
+<section id="welcome" class="anchor parallax">
 	<div class="wrapper">
 		<h1>We're Powershop</h1>
 
 		<p>Powershop is the world’s first online shop for electricity. Unlike traditional retailers, our customers can shop for power, get discounts and save money. They see how much they’re using and what it costs before they buy. It’s simple yet radical. Here’s what we’ve learnt about shifting the balance of power in the power industry.</p>
 
-		<p><a href="#make_things">Scroll down to see what we're all about</a></p>
+		<p><a href="#make_things" class="animated repeat bounceInDown">Scroll down to see what we're all about</a></p>
 	</div>
 </section>
 
-<section id="make_things" class="anchor">
+<section id="make_things" class="anchor parallax">
 	<div class="wrapper">
 		<h2 class="yell">Make Things Betterer</h2>
 
@@ -50,7 +50,7 @@ body_class: home
 	</div>
 </section>
 
-<section id="give" class="anchor">
+<section id="give" class="anchor parallax">
 	<div class="wrapper">
 		<h2 class="yell">Give a shit</h2>
 
@@ -76,7 +76,7 @@ body_class: home
 	</div>
 </section>
 
-<section id="weird" class="anchor">
+<section id="weird" class="anchor parallax">
 	<div class="wrapper">
 		<h2 class="yell">Keep being weird</h2>
 
@@ -102,59 +102,50 @@ body_class: home
 	</div>
 </section>
 
-<section id="contact" class="anchor">
+<section id="contact" class="anchor parallax">
 	<div class="wrapper">
 		<h2>Contact us</h2>
 
 		<p>Get in touch with us to get the ball rolling.</p>
 
-		<ul class="sematic">
-			<li>
-				<a href="mailto:hello@powershop.co.nz" class="mail">
-					<span class="icon"><!-- --></span>
-					hello@powershop.co.nz
-				</a>
-			</li>
+		<p class="social">
+			<a href="mailto:hello@powershop.co.nz" class="mail">
+				<span class="icon"><!-- --></span>
+				<em>hello@powershop.co.nz</em>
+			</a>
+	
+			<a href="tel:+64-800-462-668" class="phone">
+				<span class="icon"><!-- --></span>
+				<em>0800 462 668</em>
+			</a>
 
-			<li>
-				<a href="tel:+64-800-462-668" class="phone">
-					<span class="icon"><!-- --></span>
-					0800 462 668
-				</a>
-			</li>
+			<a href="https://twitter.com/powershop" class="twitter">
+				<span class="icon"><!-- --></span>
+				<em>Follow us</em>
+			</a>
 
-			<li>
-				<a href="https://twitter.com/powershop" class="twitter">
-					<span class="icon"><!-- --></span>
-					Follow us
-				</a>
-			</li>
+			<a href="https://www.facebook.com/powershop" class="facebook">
+				<span class="icon"><!-- --></span>
+				<em>Like us</em>
+			</a>
 
-			<li>
-				<a href="https://www.facebook.com/powershop" class="facebook">
-					<span class="icon"><!-- --></span>
-					Like us
-				</a>
-			</li>
-
-			<li>
-				<a href="skype:powershopnz" class="skype">
-					<span class="icon"><!-- --></span>
-					powershopnz
-				</a>
-			</li>
-		</ul>
+			<a href="skype:powershopnz" class="skype">
+				<span class="icon"><!-- --></span>
+				<em>powershopnz</em>
+			</a>
+		</p>
 	</div>
 </section>
 
-<section id="find" class="anchor">
+<section id="find" class="anchor parallax">
 	<div class="wrapper">
 		<h2>Find Us</h2>
 	</div>
 
-	<div id="map"><!-- --></div>
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true&amp;key=AIzaSyCdkXi0YALAoZAHs70uzqfUha3lJ2U_GAM"></script>
-	<script type="text/javascript">
+	<div id="map_holder">
+		<div id="map"><!-- --></div>
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true&amp;key=AIzaSyCdkXi0YALAoZAHs70uzqfUha3lJ2U_GAM"></script>
+		<script type="text/javascript">
 		window.map_styles = [{
 "featureType": "road.highway",
 "elementType": "geometry.fill",
@@ -225,13 +216,16 @@ body_class: home
 }
 ]
 </script>
-	<div class="vcard">
-		<div class="org">Powershop</div>
-		<div class="adr">
-			<div class="street-address">PO Box 7651</div>
-			<span class="locality">Newtown</span> 
-			<span class="region">Wellington</span>
-			<span class="postal-code">6242</span>
+		<div class="vcard">
+			<div class="content">
+				<div class="org">Powershop</div>
+				<div class="adr">
+					<div class="street-address">PO Box 7651</div>
+					<span class="locality">Newtown</span> 
+					<span class="region">Wellington <span class="postal-code">6242</span></span>
+					
+				</div>
+			</div>
 		</div>
 	</div>
 </section>

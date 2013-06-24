@@ -1,12 +1,14 @@
 (function() {
   (function($, window) {
     return $(document).ready(function() {
-      var parallaxableElements, parallaxableHeight, parallaxableIntro, scrollHandler;
+      var body, currentParallax, parallax, parallaxableElements, parallaxableHeight, scrollHandler, winHeight;
       parallaxableElements = $("[data-parallax-speed]");
       parallaxableHeight = $(".parallax-height");
-      parallaxableIntro = $(".parallax_intro");
+      parallax = $(".parallax");
+      body = $("body");
+      currentParallax = parallax.first().addClass('current_parallax_frame');
       scrollHandler = function() {
-        var scrolledY, winHeight;
+        var actualHeight, elem, lastScrolled, latestHeight, scrollDifference, scrolled, scrolledY, winHeight;
         scrolledY = $(window).scrollTop();
         winHeight = $(window).height();
         parallaxableElements.each(function(i, elem) {
@@ -52,64 +54,41 @@
             }
           ]);
         });
-        parallaxableHeight.each(function(i, elem) {
-          var amountScrolledToView, backgroundMove, destHeight, difference, imageChange, past, scrolled, speed, startScrollingAt, top, viewable;
-          destHeight = $(elem).data('parallax-destheight') || winHeight;
-          if (destHeight.substr(-1) === "%") {
-            destHeight = (parseInt(destHeight.replace(/%/, '')) / 100) * winHeight;
+        if (currentParallax) {
+          elem = currentParallax.get(0);
+          if (scrolled < 0) {
+            scrolled = 0;
           }
-          speed = $(elem).data('parallax-speed') || 0.3;
-          top = $(elem).position().top;
-          scrolled = $(window).scrollTop();
-          amountScrolledToView = top - winHeight;
-          viewable = top < (scrolled + winHeight);
-          past = (top + $(elem).height()) < scrolled;
-          backgroundMove = false;
-          startScrollingAt = top - winHeight;
-          if (startScrollingAt < 0) {
-            startScrollingAt = 0;
-          }
-          if (viewable && !past) {
-            difference = scrolled - startScrollingAt;
-            if (top < 1) {
-              difference = destHeight;
-            }
-            imageChange = (difference - destHeight) / 2;
-            if (difference > destHeight) {
-              difference = destHeight;
-            }
-            return $(elem).css({
-              height: Math.ceil(difference)
-            }).find('.parallax-background').css({
-              top: imageChange
-            });
-          }
-        });
-        return parallaxableIntro.each(function(i, elem) {
-          var currentHeight, lastScrolled, latestHeight, pixelToPercentRatio, scrollDifference;
           lastScrolled = $(elem).data('last_scrolled');
           if (!lastScrolled) {
             lastScrolled = 0;
           }
           $(elem).data('last_scrolled', scrolledY);
           scrollDifference = lastScrolled - scrolledY;
-          currentHeight = parseInt($(elem).css('height').replace(/%/, ''));
-          pixelToPercentRatio = currentHeight / $(elem).height();
-          latestHeight = currentHeight + (scrollDifference * pixelToPercentRatio);
-          return $(elem).siblings("section").first().css({
-            'paddingTop': latestHeight
-          });
-        });
+          actualHeight = $(elem).height();
+          latestHeight = actualHeight + scrollDifference;
+          return $(elem).css('height', latestHeight).find('.wrapper').css('height', latestHeight);
+        }
       };
-      $(".parallax-background").css({
-        height: $(window).height(),
-        width: $(window).width
-      });
-      $(window).resize(function() {
-        return $(".parallax-background").css({
-          height: $(window).height(),
-          width: $(window).width
-        });
+      winHeight = $(window).height();
+      body.css('height', body.height());
+      parallax.each(function(i, elem) {
+        var wrapper;
+        wrapper = $(elem).find('.wrapper');
+        if ($(elem).outerHeight() > winHeight) {
+          $(elem).css({
+            'height': $(elem).height(),
+            'position': 'fixed',
+            'z-index': parallax.length - i
+          });
+          return wrapper.css('height', wrapper.height());
+        } else {
+          return $(elem).css({
+            'height': winHeight - 30,
+            'position': 'fixed',
+            'z-index': parallax.length - i
+          });
+        }
       });
       $(window).scroll(function() {
         var scrollTimeout;
@@ -125,7 +104,7 @@
 
   (function($, window) {
     return $(document).ready(function() {
-      var content, fadeIn, getHeaderBackground, header, isLocalScrolling, loadImages, loadedOfficePics, nav, officePhotoScroller, officePhotos, page, sections;
+      var content, fadeIn, getHeaderBackground, header, isLocalScrolling, loadImages, loadedOfficePics, nav, officePhotoScroller, officePhotos, onHomePage, page, sections;
       sections = $(".section");
       content = $("#content");
       nav = $("#nav");
@@ -133,18 +112,32 @@
       page = $("html");
       officePhotos = $("#office_photos");
       isLocalScrolling = false;
+      onHomePage = $(".home").length > 0;
       fadeIn = $(".fade-in");
       fadeIn.css({
         opacity: 0
       });
       getHeaderBackground = function() {
-        var op, scroll;
+        var endWelcome, op, scroll;
         scroll = $(window).scrollTop();
-        if (scroll >= 140) {
-          return 'rgba(0, 0, 0, 0.2)';
-        } else if (scroll < 1) {
-          return 'rgba(0, 0, 0, 0)';
+        if (onHomePage) {
+          if (scroll > 0) {
+            $(".logo em").fadeOut();
+          } else {
+            $(".logo em").fadeIn();
+          }
+          if (scroll >= ($("#make_things").position().top)) {
+            return 'rgba(0, 0, 0, 0.2)';
+          } else {
+            endWelcome = $("#welcome").offset().top + $("#welcome").height();
+            return 'rgba(0, 0, 0, 0)';
+          }
         } else {
+          if (scroll >= 140) {
+            return 'rgba(0, 0, 0, 0.2)';
+          } else if (scroll < 1) {
+            return 'rgba(0, 0, 0, 0)';
+          }
           op = (scroll / 140) / 5;
           return 'rgba(0, 0, 0, ' + op + ')';
         }
@@ -273,11 +266,13 @@
         return google.maps.event.addDomListener(window, 'load', function() {
           var image, map, marker, options;
           options = {
-            center: new google.maps.LatLng(-41.287538, 174.776010),
+            center: new google.maps.LatLng(-41.287997, 174.781469),
             zoom: 16,
             disableDefaultUI: true,
             draggable: false,
             panControl: false,
+            scaleControl: false,
+            scrollwheel: false,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             styles: window.map_styles
           };
@@ -286,10 +281,10 @@
             url: '/img/face.png',
             size: new google.maps.Size(62, 62),
             origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(0, 0)
+            anchor: new google.maps.Point(31, 31)
           };
           return marker = new google.maps.Marker({
-            position: options.center,
+            position: new google.maps.LatLng(-41.287622, 174.776166),
             map: map,
             icon: image,
             animation: google.maps.Animation.DROP
