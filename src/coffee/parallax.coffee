@@ -22,8 +22,7 @@ do ($ = jQuery, window) ->
 		currentParallax = parallax.first().addClass('current_parallax_frame')
 
 		scrollHandler = () ->
-			scrolledY = $(window).scrollTop()
-			winHeight = $(window).height();
+			
 
 			# parallax DOM elements
 			parallaxableElements.each (i, elem)->
@@ -69,56 +68,170 @@ do ($ = jQuery, window) ->
 					'scrolledY': scrolledY
 				}])
 
-			if currentParallax
-				elem = currentParallax.get(0)
-
-				if scrolled < 0 then scrolled = 0
-
-				lastScrolled = $(elem).data 'last_scrolled'
-				if not lastScrolled then lastScrolled = 0
-
-				$(elem).data 'last_scrolled', scrolledY
-
-				scrollDifference = lastScrolled - scrolledY
-
-				# percent to start with
-				actualHeight = $(elem).height()
-				latestHeight = actualHeight + scrollDifference 
-
-				$(elem).css('height', latestHeight)
-					.find('.wrapper').css('height', latestHeight)	
-
 
 		# fix body scrolling
 		winHeight = $(window).height()
 		body.css('height', body.height());
 
 		parallax.each (i, elem)->
-			wrapper = $(elem).find('.wrapper')
+			wrapper = $(elem).find('.parallax_layer')
+			wrapperLength = wrapper.height();
 
-			if $(elem).outerHeight() > winHeight
-				$(elem).css(
-					'height': $(elem).height(),
-					'position': 'fixed'
-					'z-index': parallax.length - i
-				)
+			outer = $(elem).outerHeight()
+			height = $(elem).height()
 
-				wrapper.css('height', wrapper.height())
+			if wrapperLength > winHeight
+				css  = 
+					'height': wrapperLength,
+
+				wrapper.css('height', wrapperLength)
 
 			else 
-				$(elem).css(
-					'height': winHeight - 30,
-					'position': 'fixed'
-					'z-index': parallax.length - i
+				difference = (winHeight - outer)
+
+				css =
+					'height': winHeight - Math.min(difference, 120),
+
+
+				# set the margin-top of the following one so we can see that at the
+				# bottom of the page
+				$(elem).next('.parallax').css(
+					'top': (winHeight - Math.min(difference, 120))
 				)
 
-		$(window).scroll ()->
-			if scrollTimeout?
-				clearTimeout(scrollTimeout)
+			css['position'] = 'fixed'
+			css['z-index'] = parallax.length - i
 
-				scrollTimeout = null
-			
-			# scrollTimeout = setTimeout(scrollHandler, 1);
-			scrollHandler();
+			$(elem).css(css).data('original_height', height)
 
-		scrollHandler()
+
+		scrollParallaxBackground = ()->
+			scrolledY = $(window).scrollTop()
+			winHeight = $(window).height();
+
+			if currentParallax
+				elem = currentParallax.get(0)
+
+				lastScrolled = $(elem).data 'last_scrolled'
+				if not lastScrolled then lastScrolled = $(elem).data 'scroll_offset'
+				if not lastScrolled then lastScrolled = 0
+				
+				scrollOffset = $(elem).data 'scroll_offset'
+				if not scrollOffset then scrollOffset = 0
+
+				$(elem).data 'last_scrolled', scrolledY
+
+				scrollDifference = lastScrolled - scrolledY
+
+				# if the wrapper is currently off the page then lets start by
+				# moving that before changing any heights here.
+				parallaxed = $(elem).find('.parallax_layer')
+				scrollLayer = $(elem).find('.wrapper')
+
+				# inward scroll is 0 - yd, but stored in the DOM as a negative
+				# margin
+				currentInwardScroll = -1 * parseInt(scrollLayer.css('marginTop').replace(/px/, ''))
+				
+				scrollLength = scrollLayer.height()
+				parallaxedHeight = parallaxed.height()
+
+				inwardScroll = (scrollLayer.outerHeight() - currentInwardScroll)
+				###
+				if scrollLayer and scrollLength > parallaxedHeight
+					# current layer has a scroll length that is longer than
+					# the div. There are 3 cases for this:
+					# - i the inner div if margin top doesn't equal the
+					# distance between the heights an
+					# - s
+					if scrollDifference < 0
+						# they have scrolled down the page, therefore increasing
+						# our negative marginTop till we hit the difference.
+						targetDifference = (scrollLength - parallaxedHeight);
+						changeMargin = Math.min(targetDifference, scrollDifference)
+
+						if(currentInwardScroll < targetDifference)
+							changeScroll = currentInwardScroll - scrollDifference
+
+							# prevent scrolling too far
+							if changeScroll > targetDifference then changeScroll = targetDifference
+							scrollLayer.css(
+								marginTop: changeScroll * -1
+							)
+
+							return
+					else
+						# the user has scrolled up, we need to decrease the 
+						# margintop till it hits 0. If it's 0 then we don't 
+						# need to worry
+						if currentInwardScroll > 0
+							changeScroll = (currentInwardScroll - scrollDifference) 
+							if(changeScroll < 0) then changeScroll = 0
+
+							scrollLayer.css(
+								marginTop: changeScroll * -1
+							)
+
+							return
+				###
+
+				actualHeight = $(elem).height()
+				latestHeight = actualHeight + scrollDifference
+
+				$(elem).css('height', latestHeight)
+						.find('.parallax_layer').css('height', latestHeight)	
+
+				# update the following parallax
+				next = $(elem).next('.parallax')
+				if next.length > 0 
+					# calculate the top for the following
+					next.css(
+						'top': latestHeight
+					)
+
+				if(latestHeight < 1)
+					# move the next current parallax to the following sibling
+					# and add class for this to be hidden
+					next = currentParallax.next('.parallax')
+
+					if next.length > 0
+						currentParallax
+							.addClass('past_parallax_frame')
+							.removeClass('current_parallax_frame')
+
+						currentParallax = next
+						currentParallax
+							.addClass('current_parallax_frame')
+							.data('scroll_offset', scrolledY)
+
+				else if(latestHeight >= $(elem).data('original_height'))
+					latestHeight = $(elem).data('original_height')
+
+					# if the window is back to the original height then perhaps
+					# we need to start parallaxing the previous element then.
+					prev = currentParallax.prev(".parallax")
+
+					if prev.length > 0
+						currentParallax
+							.removeClass('current_parallax_frame')
+
+						currentParallax = prev
+							.addClass('current_parallax_frame')
+
+		# remove the loading screen
+		$("#loading").fadeOut(()->
+			$(this).remove()
+
+
+			$(window).scroll ()->
+				if scrollTimeout?
+					clearTimeout(scrollTimeout)
+
+					scrollTimeout = null
+				
+				# scrollTimeout = setTimeout(scrollHandler, 1);
+				scrollHandler()
+				scrollParallaxBackground()
+
+			scrollHandler()
+			scrollParallaxBackground()
+		)

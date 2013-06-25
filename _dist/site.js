@@ -1,17 +1,14 @@
 (function() {
   (function($, window) {
     return $(document).ready(function() {
-      var body, currentParallax, parallax, parallaxableElements, parallaxableHeight, scrollHandler, winHeight;
+      var body, currentParallax, parallax, parallaxableElements, parallaxableHeight, scrollHandler, scrollParallaxBackground, winHeight;
       parallaxableElements = $("[data-parallax-speed]");
       parallaxableHeight = $(".parallax-height");
       parallax = $(".parallax");
       body = $("body");
       currentParallax = parallax.first().addClass('current_parallax_frame');
       scrollHandler = function() {
-        var actualHeight, elem, lastScrolled, latestHeight, scrollDifference, scrolled, scrolledY, winHeight;
-        scrolledY = $(window).scrollTop();
-        winHeight = $(window).height();
-        parallaxableElements.each(function(i, elem) {
+        return parallaxableElements.each(function(i, elem) {
           var debug, maxY, minY, offset, reverseScale, speed, stop, top;
           offset = $(elem).data('parallax-offset-y');
           speed = $(elem).data('parallax-speed');
@@ -54,51 +51,136 @@
             }
           ]);
         });
-        if (currentParallax) {
-          elem = currentParallax.get(0);
-          if (scrolled < 0) {
-            scrolled = 0;
-          }
-          lastScrolled = $(elem).data('last_scrolled');
-          if (!lastScrolled) {
-            lastScrolled = 0;
-          }
-          $(elem).data('last_scrolled', scrolledY);
-          scrollDifference = lastScrolled - scrolledY;
-          actualHeight = $(elem).height();
-          latestHeight = actualHeight + scrollDifference;
-          return $(elem).css('height', latestHeight).find('.wrapper').css('height', latestHeight);
-        }
       };
       winHeight = $(window).height();
       body.css('height', body.height());
       parallax.each(function(i, elem) {
-        var wrapper;
-        wrapper = $(elem).find('.wrapper');
-        if ($(elem).outerHeight() > winHeight) {
-          $(elem).css({
-            'height': $(elem).height(),
-            'position': 'fixed',
-            'z-index': parallax.length - i
-          });
-          return wrapper.css('height', wrapper.height());
+        var css, difference, height, outer, wrapper, wrapperLength;
+        wrapper = $(elem).find('.parallax_layer');
+        wrapperLength = wrapper.height();
+        outer = $(elem).outerHeight();
+        height = $(elem).height();
+        if (wrapperLength > winHeight) {
+          css = {
+            'height': wrapperLength
+          };
+          wrapper.css('height', wrapperLength);
         } else {
-          return $(elem).css({
-            'height': winHeight - 30,
-            'position': 'fixed',
-            'z-index': parallax.length - i
+          difference = winHeight - outer;
+          css = {
+            'height': winHeight - Math.min(difference, 120)
+          };
+          $(elem).next('.parallax').css({
+            'top': winHeight - Math.min(difference, 120)
           });
         }
+        css['position'] = 'fixed';
+        css['z-index'] = parallax.length - i;
+        return $(elem).css(css).data('original_height', height);
       });
-      $(window).scroll(function() {
-        var scrollTimeout;
-        if (typeof scrollTimeout !== "undefined" && scrollTimeout !== null) {
-          clearTimeout(scrollTimeout);
-          scrollTimeout = null;
+      scrollParallaxBackground = function() {
+        var actualHeight, currentInwardScroll, elem, inwardScroll, lastScrolled, latestHeight, next, parallaxed, parallaxedHeight, prev, scrollDifference, scrollLayer, scrollLength, scrollOffset, scrolledY;
+        scrolledY = $(window).scrollTop();
+        winHeight = $(window).height();
+        if (currentParallax) {
+          elem = currentParallax.get(0);
+          lastScrolled = $(elem).data('last_scrolled');
+          if (!lastScrolled) {
+            lastScrolled = $(elem).data('scroll_offset');
+          }
+          if (!lastScrolled) {
+            lastScrolled = 0;
+          }
+          scrollOffset = $(elem).data('scroll_offset');
+          if (!scrollOffset) {
+            scrollOffset = 0;
+          }
+          $(elem).data('last_scrolled', scrolledY);
+          scrollDifference = lastScrolled - scrolledY;
+          parallaxed = $(elem).find('.parallax_layer');
+          scrollLayer = $(elem).find('.wrapper');
+          currentInwardScroll = -1 * parseInt(scrollLayer.css('marginTop').replace(/px/, ''));
+          scrollLength = scrollLayer.height();
+          parallaxedHeight = parallaxed.height();
+          inwardScroll = scrollLayer.outerHeight() - currentInwardScroll;
+          /*
+          				if scrollLayer and scrollLength > parallaxedHeight
+          					# current layer has a scroll length that is longer than
+          					# the div. There are 3 cases for this:
+          					# - i the inner div if margin top doesn't equal the
+          					# distance between the heights an
+          					# - s
+          					if scrollDifference < 0
+          						# they have scrolled down the page, therefore increasing
+          						# our negative marginTop till we hit the difference.
+          						targetDifference = (scrollLength - parallaxedHeight);
+          						changeMargin = Math.min(targetDifference, scrollDifference)
+          
+          						if(currentInwardScroll < targetDifference)
+          							changeScroll = currentInwardScroll - scrollDifference
+          
+          							# prevent scrolling too far
+          							if changeScroll > targetDifference then changeScroll = targetDifference
+          							scrollLayer.css(
+          								marginTop: changeScroll * -1
+          							)
+          
+          							return
+          					else
+          						# the user has scrolled up, we need to decrease the 
+          						# margintop till it hits 0. If it's 0 then we don't 
+          						# need to worry
+          						if currentInwardScroll > 0
+          							changeScroll = (currentInwardScroll - scrollDifference) 
+          							if(changeScroll < 0) then changeScroll = 0
+          
+          							scrollLayer.css(
+          								marginTop: changeScroll * -1
+          							)
+          
+          							return
+          */
+
+          actualHeight = $(elem).height();
+          latestHeight = actualHeight + scrollDifference;
+          $(elem).css('height', latestHeight).find('.parallax_layer').css('height', latestHeight);
+          next = $(elem).next('.parallax');
+          if (next.length > 0) {
+            next.css({
+              'top': latestHeight
+            });
+          }
+          if (latestHeight < 1) {
+            next = currentParallax.next('.parallax');
+            if (next.length > 0) {
+              currentParallax.addClass('past_parallax_frame').removeClass('current_parallax_frame');
+              currentParallax = next;
+              return currentParallax.addClass('current_parallax_frame').data('scroll_offset', scrolledY);
+            }
+          } else if (latestHeight >= $(elem).data('original_height')) {
+            latestHeight = $(elem).data('original_height');
+            prev = currentParallax.prev(".parallax");
+            if (prev.length > 0) {
+              currentParallax.removeClass('current_parallax_frame');
+              return currentParallax = prev.addClass('current_parallax_frame');
+            }
+          }
         }
-        return scrollHandler();
+      };
+      return $("#loading").fadeOut(function() {
+        $(this).remove();
+        $(window).scroll(function() {
+          var scrollTimeout;
+          if (typeof scrollTimeout !== "undefined" && scrollTimeout !== null) {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = null;
+          }
+          scrollHandler();
+          return scrollParallaxBackground();
+        });
+        scrollHandler();
+        return scrollParallaxBackground();
       });
-      return scrollHandler();
     });
   })(jQuery, window);
 

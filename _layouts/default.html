@@ -13,6 +13,9 @@
     </head>
 
     <body class="{{ page.body_class }}">
+      <div id="loading"><!-- --></div>
+      
+
       <header id="header" class="{{ page.header_color }}">
         <div class="wrapper">
           <p class="logo"><a href="/"><span></span><em>Powershop</em></a></p>
@@ -57,7 +60,7 @@
       </header>
 
       {{ content }}
-      
+
       <script type="text/javascript">
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', 'UA-5962965-1']);
