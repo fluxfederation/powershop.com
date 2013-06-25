@@ -339,7 +339,7 @@ a {
 	width: 100%;
 	left: 0;
 
-	.wrapper {
+	&.last {
 	}
 
 	.parallax_layer {
@@ -441,13 +441,15 @@ a {
 			opacity: 0.8;
 		}
 	}
-
-	&:after {
-		.down_arrow(#fff);
-	}
 	
 	&.past_parallax_frame:after {
 		display: none;
+	}
+
+	.next {
+		height: 15px;
+		width: 100%;
+		background: @purplePink;
 	}
 }
 
@@ -465,6 +467,10 @@ a {
 
 	&:after {
 		.down_arrow(@purplePink);
+	}
+
+	&.past_parallax_frame:after {
+		display: none;
 	}
 }
 
@@ -485,6 +491,10 @@ a {
 	&:after {
 		.down_arrow(@burg);
 	}
+
+	&.past_parallax_frame:after {
+		display: none;
+	}
 }
 
 #weird {
@@ -501,6 +511,10 @@ a {
 
 	&:after {
 		.down_arrow(@hotPink);
+	}
+
+	&.past_parallax_frame:after {
+		display: none;
 	}
 }
 
@@ -748,16 +762,6 @@ a {
 		background-size: 100% 100%;
 	}
 
-}
-
-.parallax-height {
-	height: 0;
-	position: relative;
-}
-
-.parallax-background {
-	position: absolute;
-	width: 100%;
 }
 
 #culture {

@@ -8,6 +8,8 @@
       body = $("body");
       currentParallax = parallax.first().addClass('current_parallax_frame');
       scrollHandler = function() {
+        var scrolledY;
+        scrolledY = $(window).scrollTop;
         return parallaxableElements.each(function(i, elem) {
           var debug, maxY, minY, offset, reverseScale, speed, stop, top;
           offset = $(elem).data('parallax-offset-y');
@@ -55,131 +57,140 @@
       winHeight = $(window).height();
       body.css('height', body.height());
       parallax.each(function(i, elem) {
-        var css, difference, height, outer, wrapper, wrapperLength;
-        wrapper = $(elem).find('.parallax_layer');
-        wrapperLength = wrapper.height();
-        outer = $(elem).outerHeight();
-        height = $(elem).height();
-        if (wrapperLength > winHeight) {
-          css = {
-            'height': wrapperLength
-          };
-          wrapper.css('height', wrapperLength);
+        var elemHeight, gap, height;
+        elemHeight = $(elem).height();
+        if (elemHeight < winHeight) {
+          height = elemHeight;
+          if (gap = $(elem).data('parallax-maxgap')) {
+            if (elemHeight < (winHeight - gap)) {
+              height = winHeight - gap;
+            }
+          }
         } else {
-          difference = winHeight - outer;
-          css = {
-            'height': winHeight - Math.min(difference, 120)
-          };
-          $(elem).next('.parallax').css({
-            'top': winHeight - Math.min(difference, 120)
-          });
+          height = winHeight;
         }
-        css['position'] = 'fixed';
-        css['z-index'] = parallax.length - i;
-        return $(elem).css(css).data('original_height', height);
+        return $(elem).css({
+          'position': 'fixed',
+          'height': height,
+          'z-index': parallax.length - i
+        });
       });
-      scrollParallaxBackground = function() {
-        var actualHeight, currentInwardScroll, elem, inwardScroll, lastScrolled, latestHeight, next, parallaxed, parallaxedHeight, prev, scrollDifference, scrollLayer, scrollLength, scrollOffset, scrolledY;
+      scrollParallaxBackground = function(callback) {
+        var actualHeight, alterHeight, currentScroll, ensureNegative, gap, lastScrolled, latestHeight, layer, maxScrollInternal, movePrevious, next, prev, scrollDifference, scrollInternal, scrollInternalMargin, scrolledY, self, wrapper, wrapperHeight;
         scrolledY = $(window).scrollTop();
         winHeight = $(window).height();
         if (currentParallax) {
-          elem = currentParallax.get(0);
-          lastScrolled = $(elem).data('last_scrolled');
-          if (!lastScrolled) {
-            lastScrolled = $(elem).data('scroll_offset');
+          self = $(currentParallax.get(0));
+          if (scrolledY < 0) {
+            scrolledY = 0;
           }
+          lastScrolled = parseInt(self.data('last_scrolled'));
           if (!lastScrolled) {
             lastScrolled = 0;
           }
-          scrollOffset = $(elem).data('scroll_offset');
-          if (!scrollOffset) {
-            scrollOffset = 0;
+          gap = self.data('parallax-maxgap');
+          if (!gap) {
+            gap = 0;
           }
-          $(elem).data('last_scrolled', scrolledY);
+          self.data('last_scrolled', scrolledY);
           scrollDifference = lastScrolled - scrolledY;
-          parallaxed = $(elem).find('.parallax_layer');
-          scrollLayer = $(elem).find('.wrapper');
-          currentInwardScroll = -1 * parseInt(scrollLayer.css('marginTop').replace(/px/, ''));
-          scrollLength = scrollLayer.height();
-          parallaxedHeight = parallaxed.height();
-          inwardScroll = scrollLayer.outerHeight() - currentInwardScroll;
-          /*
-          				if scrollLayer and scrollLength > parallaxedHeight
-          					# current layer has a scroll length that is longer than
-          					# the div. There are 3 cases for this:
-          					# - i the inner div if margin top doesn't equal the
-          					# distance between the heights an
-          					# - s
-          					if scrollDifference < 0
-          						# they have scrolled down the page, therefore increasing
-          						# our negative marginTop till we hit the difference.
-          						targetDifference = (scrollLength - parallaxedHeight);
-          						changeMargin = Math.min(targetDifference, scrollDifference)
-          
-          						if(currentInwardScroll < targetDifference)
-          							changeScroll = currentInwardScroll - scrollDifference
-          
-          							# prevent scrolling too far
-          							if changeScroll > targetDifference then changeScroll = targetDifference
-          							scrollLayer.css(
-          								marginTop: changeScroll * -1
-          							)
-          
-          							return
-          					else
-          						# the user has scrolled up, we need to decrease the 
-          						# margintop till it hits 0. If it's 0 then we don't 
-          						# need to worry
-          						if currentInwardScroll > 0
-          							changeScroll = (currentInwardScroll - scrollDifference) 
-          							if(changeScroll < 0) then changeScroll = 0
-          
-          							scrollLayer.css(
-          								marginTop: changeScroll * -1
-          							)
-          
-          							return
-          */
-
-          actualHeight = $(elem).height();
+          layer = self.find('.parallax_layer');
+          wrapper = self.find('.wrapper');
+          actualHeight = self.height();
           latestHeight = actualHeight + scrollDifference;
-          $(elem).css('height', latestHeight).find('.parallax_layer').css('height', latestHeight);
-          next = $(elem).next('.parallax');
-          if (next.length > 0) {
-            next.css({
-              'top': latestHeight
-            });
+          if (latestHeight > winHeight) {
+            latestHeight = winHeight - gap;
           }
+          if (latestHeight < 0) {
+            latestHeight = 0;
+          }
+          wrapperHeight = wrapper.outerHeight();
+          scrollInternal = wrapperHeight > winHeight;
+          alterHeight = true;
+          if (scrollInternal) {
+            maxScrollInternal = wrapperHeight - winHeight;
+            currentScroll = parseInt(wrapper.css('marginTop').replace(/px/, ''));
+            if (!currentScroll) {
+              currentScroll = 0;
+            }
+            scrollInternalMargin = currentScroll + (scrollDifference * 0.4);
+            if (currentScroll >= 0 && scrollInternalMargin >= 0) {
+              alterHeight = true;
+              if (currentScroll !== 0) {
+                wrapper.css({
+                  'marginTop': 0
+                });
+              }
+            } else if (Math.abs(currentScroll) >= maxScrollInternal && scrollInternalMargin < 0) {
+              alterHeight = true;
+              ensureNegative = Math.abs(maxScrollInternal) * -1;
+              if (currentScroll !== ensureNegative) {
+                wrapper.css({
+                  'marginTop': ensureNegative
+                });
+              }
+            } else {
+              alterHeight = false;
+              wrapper.css({
+                'marginTop': scrollInternalMargin
+              });
+              return;
+            }
+          }
+          if (alterHeight) {
+            if (!self.is(".last")) {
+              self.css('height', latestHeight);
+              layer.css('height', latestHeight);
+              self.next('.parallax').css({
+                top: latestHeight
+              });
+            }
+          }
+          movePrevious = false;
           if (latestHeight < 1) {
             next = currentParallax.next('.parallax');
             if (next.length > 0) {
               currentParallax.addClass('past_parallax_frame').removeClass('current_parallax_frame');
               currentParallax = next;
-              return currentParallax.addClass('current_parallax_frame').data('scroll_offset', scrolledY);
+              currentParallax.addClass('current_parallax_frame').removeClass('past_parallax_frame').data('last_scrolled', scrolledY);
+              next = currentParallax.next('.parallax');
+              next.css({
+                top: currentParallax.height()
+              });
             }
-          } else if (latestHeight >= $(elem).data('original_height')) {
-            latestHeight = $(elem).data('original_height');
+          } else if (currentParallax.data('parallax-maxgap')) {
+            if (latestHeight >= (winHeight - currentParallax.data('parallax-maxgap'))) {
+              movePrevious = true;
+            }
+          } else if (latestHeight >= winHeight) {
+            movePrevious = true;
+          }
+          if (movePrevious) {
             prev = currentParallax.prev(".parallax");
             if (prev.length > 0) {
-              currentParallax.removeClass('current_parallax_frame');
-              return currentParallax = prev.addClass('current_parallax_frame');
+              currentParallax.removeClass('current_parallax_frame').removeClass('past_parallax_frame');
+              currentParallax = prev.addClass('current_parallax_frame').removeClass('past_parallax_frame');
             }
           }
         }
+        if (callback != null) {
+          return callback();
+        }
       };
-      return $("#loading").fadeOut(function() {
-        $(this).remove();
-        $(window).scroll(function() {
-          var scrollTimeout;
-          if (typeof scrollTimeout !== "undefined" && scrollTimeout !== null) {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = null;
-          }
-          scrollHandler();
-          return scrollParallaxBackground();
+      scrollHandler();
+      return scrollParallaxBackground(function() {
+        return $("#loading").fadeOut(function() {
+          $(this).remove();
+          return $(window).scroll(function() {
+            var scrollTimeout;
+            if (typeof scrollTimeout !== "undefined" && scrollTimeout !== null) {
+              clearTimeout(scrollTimeout);
+              scrollTimeout = null;
+            }
+            scrollHandler();
+            return scrollParallaxBackground();
+          });
         });
-        scrollHandler();
-        return scrollParallaxBackground();
       });
     });
   })(jQuery, window);
