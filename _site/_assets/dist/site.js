@@ -55,7 +55,7 @@
         });
       };
       winHeight = $(window).height();
-      body.css('height', body.height());
+      body.css('height', body.outerHeight(true));
       parallax.each(function(i, elem) {
         var elemHeight, gap, height;
         elemHeight = $(elem).height();
