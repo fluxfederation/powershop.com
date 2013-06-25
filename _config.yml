@@ -1,4 +1,4 @@
 name: Powershop
-include: [_dist, img, fonts]
-exclude: [node_modules, src, README.md, .gitignore, package.json, Gruntfile.js]
+include: [_assets]
+exclude: [node_modules, README.md, .gitignore, package.json, Gruntfile.js]
 permalinks: pretty

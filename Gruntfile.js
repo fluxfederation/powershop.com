@@ -12,16 +12,16 @@ module.exports = function(grunt) {
           yuicompress: true
         },
         files: {
-          "_dist/prod.con.css": ["src/less/*.less"]
+          "_assets/dist/prod.css": ["_assets/src/less/*.less"]
         }
       }
     },
     uglify: {
       dist: {
         files: {
-          '_dist/prod.con.js': [
-            'src/vendor/*',
-            '_dist/site.js'
+          '_assets/dist/prod.js': [
+            '_assets/src/vendor/*.js',
+            '_assets/dist/site.js'
           ]
         }
       }
@@ -32,21 +32,21 @@ module.exports = function(grunt) {
           join: true
         },
         files: {
-          '_dist/site.js': [ 'src/coffee/*.coffee'],
+          '_assets/dist/site.js': [ '_assets/src/coffee/*.coffee'],
         }
       }
     },
     watch: {
       coffee: {
-        files: ['src/coffee/*.coffee'],
+        files: ['_assets/src/coffee/*.coffee'],
         tasks: ['coffee', 'uglify']
       },
       less: {
-        files: ['src/less/*.less'],
+        files: ['_assets/src/less/*.less'],
         tasks: ['less']
       },
       jekyll: {
-        files: ['_dist/*', 'index.html', '_layouts/*', 'about/*', 'contact/*', 'culture/*'],
+        files: ['_assets/dist/*', 'index.html', '_layouts/*', 'about/*', 'contact/*', 'culture/*'],
         tasks: ['jekyll']
       }
     }
