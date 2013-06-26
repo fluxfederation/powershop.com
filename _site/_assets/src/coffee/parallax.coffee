@@ -22,14 +22,12 @@ do ($ = jQuery, window) ->
 		# - parallax-reverse-speed:
 		#
 		scrollHandler = () ->
-			scrolledY = $(window).scrollTop
-
+			scrolledY = $(window).scrollTop()
 			parallaxableElements.each (i, elem)->
 				offset = $(elem).data('parallax-offset-y')
 				speed = $(elem).data('parallax-speed')
 				stop = $(elem).data('parallax-stop-y')
 				maxY = $(elem).data('parallax-max-y')
-				debug = $(elem).data('debug')
 				minY = $(elem).data('parallax-min-y')
 				reverseScale = $(elem).data('parallax-reverse-speed')
 
@@ -48,17 +46,11 @@ do ($ = jQuery, window) ->
 					else
 					  top = -(scrolledY * speed)
 
-				if debug?
-					console.log 'minY ' + minY
-					console.log 'top '+ top
-					console.log stop
-					console.log scrolledY
-					console.log maxY
-					console.log 'speed reverse: '+ reverseScale
-				
+
 				if minY && top < minY
 					top = minY
 
+				
 
 				$(elem).css({
 					'top': top

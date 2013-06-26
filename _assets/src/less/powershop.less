@@ -771,21 +771,16 @@ a {
 	}
 }
 
-#culture_banner {
-
-	.parallax_layer {
-		background: url(/_assets/img/pow_banner.jpg) no-repeat;
-		background-size: 100% 100%;
-	}
-
-	.spacer {
-		height: 1055px;
-	}
-}
-
 #culture {
 	background-color: @blueGray;
 
+	.banner {
+		height: 897px;
+		width: 100%;
+		background: url(/_assets/img/pow_banner.jpg) no-repeat;
+		background-size: 100% 100%;
+		min-width: 1224px;
+	}
 	h2 {
 		margin: 0;
 	}
@@ -806,7 +801,7 @@ a {
 
 	ul {
 		position: absolute;
-		left: 50%;
+		left: 50%;	
 		width: 3945px;
 		margin-left: -1953px;
 	}

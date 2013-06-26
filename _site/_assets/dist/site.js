@@ -9,14 +9,13 @@
       currentParallax = parallax.first().addClass('current_parallax_frame');
       scrollHandler = function() {
         var scrolledY;
-        scrolledY = $(window).scrollTop;
+        scrolledY = $(window).scrollTop();
         return parallaxableElements.each(function(i, elem) {
-          var debug, maxY, minY, offset, reverseScale, speed, stop, top;
+          var maxY, minY, offset, reverseScale, speed, stop, top;
           offset = $(elem).data('parallax-offset-y');
           speed = $(elem).data('parallax-speed');
           stop = $(elem).data('parallax-stop-y');
           maxY = $(elem).data('parallax-max-y');
-          debug = $(elem).data('debug');
           minY = $(elem).data('parallax-min-y');
           reverseScale = $(elem).data('parallax-reverse-speed');
           if (stop && stop <= (scrolledY - 1)) {
@@ -32,14 +31,6 @@
             } else {
               top = -(scrolledY * speed);
             }
-          }
-          if (debug != null) {
-            console.log('minY ' + minY);
-            console.log('top ' + top);
-            console.log(stop);
-            console.log(scrolledY);
-            console.log(maxY);
-            console.log('speed reverse: ' + reverseScale);
           }
           if (minY && top < minY) {
             top = minY;
