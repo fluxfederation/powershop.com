@@ -1,7 +1,6 @@
 do ($ = jQuery, window) ->  
   $(document).ready ->
-    isLocalScrolling = false
-    sections = $ "section.anchor"
+    sections = $ ".anchor"
     
     #
     # Jumper on the right handles anchors.
@@ -14,38 +13,24 @@ do ($ = jQuery, window) ->
 
       $("#jumper li").find(id).parents("li").addClass('active')
 
-    $.localScroll.hash(
-      queue: true,
-      duration: 700,
-      
-      onBefore: (e, anchor, target)->
-        isLocalScrolling = true 
-        highlightJump(anchor)
+    $("#jumper a").click (e)->
+      e.preventDefault()
 
-      onAfter: (anchor, settings)->
-        isLocalScrolling = false
-    )
+      hash = $(this).attr('href')
+      target = $(hash)
 
-    $.localScroll(
-      queue: true,
-      duration: 700,
-      hash: true,
-      
-      onBefore: (e, anchor, target)->
-        isLocalScrolling = true
-        highlightJump(anchor)
-      
-      onAfter: (anchor, settings)->
-        isLocalScrolling = false
-    );
+      if target.length > 0
+        highlightJump($(this))
+        scroll = target.data('scroll_for_parallax')
 
-    $("#jumper").localScroll()
+        $("html, body").animate({ 
+          scrollTop: scroll 
+        }, 2000);
+
+
+    
 
     $(document).scroll ()->
-      if isLocalScrolling 
-        return;
-      
-      height = $("body").height()
       scroll = $(document).scrollTop()
       offset = 120
       

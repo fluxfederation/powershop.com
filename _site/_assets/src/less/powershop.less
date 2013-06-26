@@ -21,7 +21,7 @@
 	height: 0;
 	width: 0;
 	left: 50%;
-	bottom: -12px;
+	top: 0;
 	z-index: 2;
 	margin-left: -14px;
 	border-left: 14px solid transparent;
@@ -177,7 +177,7 @@ a {
 		display: block;
 		height: 30px;
 		overflow: hidden;
-		background: url(/_assets/img/sprite.png) -30px top no-repeat;
+		background: url(/_assets/img/sprite.png) -31px top no-repeat;
 		text-indent: -9000px;
 		outline: none;
 		width: 170px;
@@ -343,11 +343,15 @@ a {
 	width: 100%;
 	left: 0;
 
-	&.last {
+	&.last {}
+
+	.parallax_content_layer {
+		position: relative;
+		overflow: hidden;
 	}
 
-	.parallax_layer {
-		position: relative;
+	.parallax_background_layer {
+		width: 100%;
 		overflow: hidden;
 	}
 }
@@ -375,7 +379,7 @@ a {
 }
 
 #loading {
-	background: #fff url();
+	background: #fff;
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -404,6 +408,7 @@ a {
 
 	.wrapper {
 		overflow: hidden;
+		padding-bottom: 75px;
 		position: relative;
 	}
 
@@ -445,16 +450,6 @@ a {
 			opacity: 0.8;
 		}
 	}
-	
-	&.past_parallax_frame:after {
-		display: none;
-	}
-
-	.next {
-		height: 15px;
-		width: 100%;
-		background: @purplePink;
-	}
 }
 
 #make_things {
@@ -468,21 +463,13 @@ a {
 		width: 40px;
 		margin-bottom: 80px;
 	}
-
-	&:after {
-		.down_arrow(@purplePink);
-	}
-
-	&.past_parallax_frame:after {
-		display: none;
-	}
 }
 
 #give {
 	background: @burg;
 
 	.wrapper {
-		padding: 175px 0 120px 0;
+		padding: 200px 0 120px 0;
 	}
 
 	h2 {
@@ -618,8 +605,10 @@ a {
 
 #map_holder {
 	height: 500px;
-	top: -500px;
-	position: relative;
+	bottom: 0;
+	position: absolute;
+	left: 0;
+	width: 100%;
 }
 
 #map {
@@ -761,26 +750,21 @@ a {
 		padding-right: 50px;
 		float: left;
 	}
+}
 
-	:after {
-		.down_arrow(@purplePink);
-	}
-
-	&.past_parallax_frame:after {
-		display: none;
-	}
+#culture_banner .banner {
+	height: 897px;
+	width: 100%;
+	background: url(/_assets/img/pow_banner.jpg) no-repeat;
+	background-size: 100% 100%;
+	position: relative;
+	min-width: 1224px;
 }
 
 #culture {
 	background-color: @blueGray;
 
-	.banner {
-		height: 897px;
-		width: 100%;
-		background: url(/_assets/img/pow_banner.jpg) no-repeat;
-		background-size: 100% 100%;
-		min-width: 1224px;
-	}
+
 	h2 {
 		margin: 0;
 	}

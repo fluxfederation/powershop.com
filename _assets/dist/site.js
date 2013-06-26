@@ -1,12 +1,10 @@
 (function() {
   (function($, window) {
     return $(document).ready(function() {
-      var body, currentParallax, parallax, parallaxableElements, parallaxableHeight, scrollHandler, scrollParallaxBackground, winHeight;
+      var body, cleanupresize, drawSceneForScroll, onResizeEnd, parallax, parallaxableElements, scrollHandler, setupSceneForScroll, winScrollY;
       parallaxableElements = $("[data-parallax-speed]");
-      parallaxableHeight = $(".parallax-height");
       parallax = $(".parallax");
       body = $("body");
-      currentParallax = parallax.first().addClass('current_parallax_frame');
       scrollHandler = function() {
         var scrolledY;
         scrolledY = $(window).scrollTop();
@@ -45,143 +43,148 @@
           ]);
         });
       };
-      winHeight = $(window).height();
+      winScrollY = $(window).scrollTop();
       body.css('height', body.outerHeight(true));
-      parallax.each(function(i, elem) {
-        var elemHeight, gap, height;
-        elemHeight = $(elem).height();
-        if (elemHeight < winHeight) {
-          height = elemHeight;
-          if (gap = $(elem).data('parallax-maxgap')) {
-            if (elemHeight < (winHeight - gap)) {
-              height = winHeight - gap;
-            }
+      setupSceneForScroll = function() {
+        var givenScrollForParallax, winHeight;
+        givenScrollForParallax = 0;
+        winHeight = $(window).outerHeight();
+        return parallax.each(function(i, elem) {
+          var background, content, contentHeight, requiresInternalScroll, self;
+          self = $(elem);
+          background = self.find('.parallax_background_layer');
+          content = self.find('.parallax_content_layer');
+          contentHeight = content.outerHeight();
+          requiresInternalScroll = contentHeight > winHeight;
+          $(elem).css({
+            'position': 'fixed',
+            'height': winHeight,
+            'top': givenScrollForParallax,
+            'z-index': i
+          });
+          $(elem).data('requires_internal_scroll', requiresInternalScroll);
+          $(elem).data('scroll_for_parallax', givenScrollForParallax);
+          if (requiresInternalScroll) {
+            return givenScrollForParallax += contentHeight;
+          } else {
+            return givenScrollForParallax += winHeight;
           }
-        } else {
-          height = winHeight;
-        }
-        return $(elem).css({
-          'position': 'fixed',
-          'height': height,
-          'z-index': parallax.length - i
         });
-      });
-      scrollParallaxBackground = function(callback) {
-        var actualHeight, alterHeight, currentScroll, ensureNegative, gap, lastScrolled, latestHeight, layer, maxScrollInternal, movePrevious, next, prev, scrollDifference, scrollInternal, scrollInternalMargin, scrolledY, self, wrapper, wrapperHeight;
-        scrolledY = $(window).scrollTop();
+      };
+      drawSceneForScroll = function(scrollY, callback) {
+        var scrollDifference, winHeight;
         winHeight = $(window).height();
-        if (currentParallax) {
-          self = $(currentParallax.get(0));
-          if (scrolledY < 0) {
-            scrolledY = 0;
-          }
-          lastScrolled = parseInt(self.data('last_scrolled'));
-          if (!lastScrolled) {
-            lastScrolled = 0;
-          }
-          gap = self.data('parallax-maxgap');
-          if (!gap) {
-            gap = 0;
-          }
-          self.data('last_scrolled', scrolledY);
-          scrollDifference = lastScrolled - scrolledY;
-          layer = self.find('.parallax_layer');
-          wrapper = self.find('.wrapper');
-          actualHeight = self.height();
-          latestHeight = actualHeight + scrollDifference;
-          if (latestHeight > winHeight) {
-            latestHeight = winHeight - gap;
-          }
-          if (latestHeight < 0) {
-            latestHeight = 0;
-          }
-          wrapperHeight = wrapper.outerHeight();
-          scrollInternal = wrapperHeight > winHeight;
-          alterHeight = true;
-          if (scrollInternal) {
-            maxScrollInternal = wrapperHeight - winHeight;
-            currentScroll = parseInt(wrapper.css('marginTop').replace(/px/, ''));
-            if (!currentScroll) {
-              currentScroll = 0;
-            }
-            scrollInternalMargin = currentScroll + (scrollDifference * 0.4);
-            if (currentScroll >= 0 && scrollInternalMargin >= 0) {
-              alterHeight = true;
-              if (currentScroll !== 0) {
-                wrapper.css({
-                  'marginTop': 0
-                });
-              }
-            } else if (Math.abs(currentScroll) >= maxScrollInternal && scrollInternalMargin < 0) {
-              alterHeight = true;
-              ensureNegative = Math.abs(maxScrollInternal) * -1;
-              if (currentScroll !== ensureNegative) {
-                wrapper.css({
-                  'marginTop': ensureNegative
-                });
-              }
-            } else {
-              alterHeight = false;
-              wrapper.css({
-                'marginTop': scrollInternalMargin
-              });
-              return;
-            }
-          }
-          if (alterHeight) {
-            if (!self.is(".last")) {
-              self.css('height', latestHeight);
-              layer.css('height', latestHeight);
-              self.next('.parallax').css({
-                top: latestHeight
-              });
-            }
-          }
-          movePrevious = false;
-          if (latestHeight < 1) {
-            next = currentParallax.next('.parallax');
-            if (next.length > 0) {
-              currentParallax.addClass('past_parallax_frame').removeClass('current_parallax_frame');
-              currentParallax = next;
-              currentParallax.addClass('current_parallax_frame').removeClass('past_parallax_frame').data('last_scrolled', scrolledY);
-              next = currentParallax.next('.parallax');
-              next.css({
-                top: currentParallax.height()
-              });
-            }
-          } else if (currentParallax.data('parallax-maxgap')) {
-            if (latestHeight >= (winHeight - currentParallax.data('parallax-maxgap'))) {
-              movePrevious = true;
-            }
-          } else if (latestHeight >= winHeight) {
-            movePrevious = true;
-          }
-          if (movePrevious) {
-            prev = currentParallax.prev(".parallax");
-            if (prev.length > 0) {
-              currentParallax.removeClass('current_parallax_frame').removeClass('past_parallax_frame');
-              currentParallax = prev.addClass('current_parallax_frame').removeClass('past_parallax_frame');
-            }
-          }
+        if (scrollY < 0) {
+          scrollY = 0;
         }
+        scrollDifference = scrollY - winScrollY;
+        parallax.each(function(i, elem) {
+          var alterHeight, background, content, contentHeight, currentMargin, debugFlag, differenceBetween, heightForFrame, marginTopForContent, maxInternalScroll, minScroll, positionForFrame, self, _ref;
+          self = $(elem);
+          minScroll = self.data('scroll_for_parallax');
+          background = self.find('.parallax_background_layer');
+          content = self.find('.parallax_content_layer');
+          contentHeight = content.outerHeight();
+          maxInternalScroll = 0;
+          if (self.data('requires_internal_scroll')) {
+            maxInternalScroll = contentHeight - winHeight;
+          }
+          if (scrollY > (minScroll - winHeight)) {
+            if (scrollY > (minScroll + contentHeight)) {
+              heightForFrame = 0;
+              positionForFrame = 0;
+              marginTopForContent = (_ref = maxInternalScroll > 0) != null ? _ref : {
+                maxInternalScroll: 0
+              };
+              debugFlag = 1;
+              self.addClass('past_frame').removeClass('future_frame current_frame');
+            } else {
+              self.addClass('current_frame').removeClass('future_frame past_frame');
+              if (minScroll > scrollY) {
+                heightForFrame = winHeight - self.prev('.parallax').height();
+                positionForFrame = winHeight - heightForFrame;
+                marginTopForContent = 0;
+                debugFlag = 4;
+              } else {
+                positionForFrame = 0;
+                if (maxInternalScroll > 0) {
+                  differenceBetween = scrollY - minScroll;
+                  if (differenceBetween > maxInternalScroll) {
+                    alterHeight = differenceBetween - maxInternalScroll;
+                    differenceBetween = maxInternalScroll;
+                    heightForFrame = winHeight - alterHeight;
+                    marginTopForContent = maxInternalScroll;
+                    debugFlag = 3;
+                  } else {
+                    currentMargin = Math.abs(parseInt(content.css('marginTop').replace(/px/, '')));
+                    if (!currentMargin) {
+                      currentMargin = 0;
+                    }
+                    heightForFrame = winHeight;
+                    marginTopForContent = currentMargin + scrollDifference;
+                    debugFlag = 3.5;
+                  }
+                } else {
+                  heightForFrame = winHeight - (scrollY - minScroll);
+                  marginTopForContent = 0;
+                  debugFlag = 2;
+                }
+              }
+            }
+          } else {
+            heightForFrame = winHeight;
+            positionForFrame = minScroll;
+            debugFlag = 5;
+            marginTopForContent = 0;
+            self.addClass('future_frame').removeClass('current_frame past_frame');
+          }
+          if (heightForFrame < 0) {
+            heightForFrame = 0;
+          }
+          if (positionForFrame < 0) {
+            positionForFrame = 0;
+          }
+          self.attr('data-parallax-frame-debug', debugFlag);
+          if (self.data('parallax-offset-height')) {
+            heightForFrame += self.data('parallax-offset-height');
+          }
+          self.css({
+            'height': heightForFrame,
+            'top': positionForFrame
+          });
+          background.css({
+            'height': heightForFrame
+          });
+          return content.css({
+            'marginTop': marginTopForContent * -1
+          });
+        });
+        winScrollY = scrollY;
         if (callback != null) {
           return callback();
         }
       };
-      scrollHandler();
-      return scrollParallaxBackground(function() {
+      setupSceneForScroll();
+      drawSceneForScroll($(window).scrollTop(), function() {
+        scrollHandler();
         return $("#loading").fadeOut(function() {
-          $(this).remove();
           return $(window).scroll(function() {
-            var scrollTimeout;
-            if (typeof scrollTimeout !== "undefined" && scrollTimeout !== null) {
-              clearTimeout(scrollTimeout);
-              scrollTimeout = null;
-            }
             scrollHandler();
-            return scrollParallaxBackground();
+            return drawSceneForScroll($(window).scrollTop());
           });
         });
+      });
+      cleanupresize = function() {
+        setupSceneForScroll();
+        return drawSceneForScroll($(window).scrollTop(), function() {
+          return $("#loading").fadeOut();
+        });
+      };
+      onResizeEnd = false;
+      return $(window).resize(function() {
+        $("#loading").show();
+        clearTimeout(onResizeEnd);
+        return onResizeEnd = setTimeout(cleanupresize, 100);
       });
     });
   })(jQuery, window);
@@ -362,7 +365,7 @@
           };
           map = new google.maps.Map($("#map").get(0), options);
           image = {
-            url: '/img/face.png',
+            url: '/_assets/img/face.png',
             size: new google.maps.Size(62, 62),
             origin: new google.maps.Point(0, 0),
             anchor: new google.maps.Point(31, 31)
@@ -380,9 +383,8 @@
 
   (function($, window) {
     return $(document).ready(function() {
-      var highlightJump, isLocalScrolling, sections;
-      isLocalScrolling = false;
-      sections = $("section.anchor");
+      var highlightJump, sections;
+      sections = $(".anchor");
       highlightJump = function(anchor) {
         var id;
         $("#jumper li").removeClass('active');
@@ -391,36 +393,21 @@
         id = id + "]";
         return $("#jumper li").find(id).parents("li").addClass('active');
       };
-      $.localScroll.hash({
-        queue: true,
-        duration: 700,
-        onBefore: function(e, anchor, target) {
-          isLocalScrolling = true;
-          return highlightJump(anchor);
-        },
-        onAfter: function(anchor, settings) {
-          return isLocalScrolling = false;
+      $("#jumper a").click(function(e) {
+        var hash, scroll, target;
+        e.preventDefault();
+        hash = $(this).attr('href');
+        target = $(hash);
+        if (target.length > 0) {
+          highlightJump($(this));
+          scroll = target.data('scroll_for_parallax');
+          return $("html, body").animate({
+            scrollTop: scroll
+          }, 2000);
         }
       });
-      $.localScroll({
-        queue: true,
-        duration: 700,
-        hash: true,
-        onBefore: function(e, anchor, target) {
-          isLocalScrolling = true;
-          return highlightJump(anchor);
-        },
-        onAfter: function(anchor, settings) {
-          return isLocalScrolling = false;
-        }
-      });
-      $("#jumper").localScroll();
       return $(document).scroll(function() {
-        var active, height, offset, scroll;
-        if (isLocalScrolling) {
-          return;
-        }
-        height = $("body").height();
+        var active, offset, scroll;
         scroll = $(document).scrollTop();
         offset = 120;
         if (sections.length > 0) {

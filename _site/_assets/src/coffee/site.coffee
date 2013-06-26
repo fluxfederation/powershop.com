@@ -226,7 +226,7 @@ do ($ = jQuery, window) ->
         map = new google.maps.Map( $("#map").get(0), options)
 
         image = 
-          url: '/img/face.png',
+          url: '/_assets/img/face.png',
           size: new google.maps.Size(62, 62),
           origin: new google.maps.Point(0,0)
           anchor: new google.maps.Point(31, 31)

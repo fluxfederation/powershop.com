@@ -1,11 +1,11 @@
 do ($ = jQuery, window) -> 
-	$(document).ready ->
+	$(document).ready ->	
 		# standard DOM node that parallaxs on a separate layer
 		parallaxableElements = $ "[data-parallax-speed]"
-		parallaxableHeight = $ ".parallax-height"
+
+		# full page frames
 		parallax = $ ".parallax"
 		body = $ "body"
-		currentParallax = parallax.first().addClass('current_parallax_frame')
 
 		#
 		# Basic way to parallax elements in the DOM.
@@ -70,226 +70,235 @@ do ($ = jQuery, window) ->
 
 		# Lock the body height, since we're converting everything to fixed we
 		# need to leave the scrollbar in tack
-		winHeight = $(window).height()
-		body.css('height', body.outerHeight(true));
 
 		# set a default size and shape on each of the parallax sections on the
 		# story board. Each story board is the height of the browser window.
 		#
 		# We have an internal parallax layer object which has the texture of the
-		# parallax and the override.
-		parallax.each (i, elem)->
-			elemHeight = $(elem).height()
+		# parallax and the content layer.
+		#
+		# This helper sets up all the look ups so that the actual scroll handler
+		# is much faster to process
+		winScrollY = $(window).scrollTop()
+		body.css('height', body.outerHeight(true));
 
-			if elemHeight < winHeight
-				height = elemHeight
+		setupSceneForScroll = ()->
 
-				# allow specific pages (i.e home) to specify the maximum gap
-				# under the element. For instance we only want solid color.
-				if gap = $(elem).data('parallax-maxgap')
-					if elemHeight < (winHeight - gap)
-						height = winHeight - gap
-			else
-				height = winHeight
+			# amount of scrolling to hit this given parallax at the bottom 
+			# of the page. The amount of scrolling is the sum of all the 
+			# scrolling done 
+			givenScrollForParallax = 0
 
-			$(elem).css(
-				'position': 'fixed',
-				'height': height
-				'z-index': parallax.length - i
+			# Each parallax will be the height of the window.
+			winHeight = $(window).outerHeight()
+
+			parallax.each( (i, elem)->
+				self = $(elem)
+				background = self.find('.parallax_background_layer')
+				content = self.find('.parallax_content_layer')
+				contentHeight = content.outerHeight()
+				requiresInternalScroll = contentHeight > winHeight
+
+				$(elem).css(
+					'position': 'fixed',
+					'height': winHeight
+					'top': givenScrollForParallax,
+					'z-index': i
+				)
+
+				$(elem).data('requires_internal_scroll', requiresInternalScroll)
+				$(elem).data('scroll_for_parallax', givenScrollForParallax)
+
+				# Mark the scroll position for the following parallax to come 
+				# into play. 
+				if requiresInternalScroll
+					givenScrollForParallax += contentHeight
+				else
+					givenScrollForParallax += winHeight
 			)
 
 
-		# The content within the parallax may potentially be longer than the
-		# browser, so to account for that, any scrolling first takes care of that
-		# at a given speed. Once that has been expended, we go back to swiping
-		# the height.
-		#
-		# The converse is when scrolling up, we translate the height to the full
-		# browser size then target the margin of the wrapper inside the div.
-		#
-		# @param func callback
-		scrollParallaxBackground = (callback)->
-			scrolledY = $(window).scrollTop()
-			winHeight = $(window).height();
+		# Logic for drawing the scene for a given scroll value. We have to look
+		# at the full window since scrolling next and previous is unreliable and
+		# changes in speed scrolling can result in height changes.
+		drawSceneForScroll = (scrollY, callback)->
+			winHeight = $(window).height()
 
-			if currentParallax
-				self = $(currentParallax.get(0))
+			# disable inertia scrolling
+			if scrollY < 0 then scrollY = 0
 
-				# disable inertia scrolling
-				if scrolledY < 0 then scrolledY = 0
+			# will be positive when the user scrolled down the page. 
+			# negative if the user has scrolled up.
+			scrollDifference = scrollY - winScrollY
 
-				# keep track of the value we last scrolled
-				lastScrolled = parseInt(self.data 'last_scrolled')
-				if not lastScrolled then lastScrolled = 0
 
-				# sometimes we really want a gap
-				gap = self.data('parallax-maxgap')
-				if not gap then gap = 0
+			parallax.each( (i, elem)->
+				self = $(elem)
+				minScroll = self.data('scroll_for_parallax')
+				background = self.find('.parallax_background_layer')
+				content = self.find('.parallax_content_layer')
+				contentHeight = content.outerHeight();
+				maxInternalScroll = 0
+				
+				if self.data('requires_internal_scroll')
+					maxInternalScroll = contentHeight - winHeight
 
-				# store our last scroll and calculate the distance traveled so
-				# we can alter the frame as required
-				self.data 'last_scrolled', scrolledY
-
-				scrollDifference = lastScrolled - scrolledY
-
-				layer = self.find('.parallax_layer')
-				wrapper = self.find('.wrapper')
-
-				actualHeight = self.height()
-
-				latestHeight = actualHeight + scrollDifference
-
-				# max height is window original_height
-				if latestHeight > winHeight then latestHeight = winHeight - gap
-				if latestHeight < 0 then latestHeight = 0
-
-				# determine if we need to scroll the internal content or the
-				# story board. If the content on the story board fits on a single
-				# screen then we don't need to waste cycles.
-				wrapperHeight = wrapper.outerHeight()
-				scrollInternal = (wrapperHeight > winHeight)
-				alterHeight = true
-
-				if scrollInternal
-					maxScrollInternal = wrapperHeight - winHeight
-
-					# calculate the amount of current scroll and what we have to
-					# change there. The scroll is represented in the CSS as a
-					# negative value (-yd tends to 0) to replace scroll
-					currentScroll = parseInt(wrapper.css('marginTop').replace(/px/, ''))
-					if not currentScroll then currentScroll = 0
-
-					# scroll difference comes from the users scroll, ratioise
-					# this to have a gentle parallax. The value will be positive
-					# if the user has scrolled down
-					scrollInternalMargin = currentScroll + (scrollDifference * 0.4)
-
-					# the previous check only checked to see if we may need to
-					# scroll this internal wrapper, it didn't do any more complex
-					# checks on the top of scroll.
-					#
-					# Things we need to check:
-					#	- scroll must be
-					#	- we can only scroll to the maximum scroll defined
-					#	- we can only scroll
-					#
-					# If the current scroll is 0 and this will make the scroll
-					# positive (e.g > 0) then we have hit the top of the story
-					# frame and can revert back to height. (scrolling up)
-					if currentScroll >= 0 and scrollInternalMargin >= 0
-						alterHeight = true
-
-						if currentScroll != 0
-							wrapper.css(
-								'marginTop': 0
-							)
-
-					# If the current scroll is at or greater than the maximum
-					# and the scroll value would make this even greater
-					# (remember margin will be a negative value) then we have
-					# hit the end of the frame and can go back to height
-					# (scrolling down)
-					else if Math.abs(currentScroll) >= maxScrollInternal and scrollInternalMargin < 0
-						alterHeight = true
-						ensureNegative = Math.abs(maxScrollInternal) * -1
-
-						if currentScroll != ensureNegative
-							wrapper.css(
-								'marginTop': ensureNegative
-							)
-
-					# if we're scrolling internally then we don't need to worry
-					# about any of the following behaviour
-					else
-						alterHeight = false
-						wrapper.css(
-							'marginTop': scrollInternalMargin
-						)
-
-						return
-
-				if alterHeight
-					# redraw the height of the element *except* in the case that
-					# it is the last parallax screen. On the last screen we
-					# don't touch the height.
-					if not self.is(".last")
-						self.css('height', latestHeight)
-						layer.css('height', latestHeight)
-
-						# if we're altering the height, alter the top of the
-						# following section. By default, we want to keep the
-						# next section at the bottom to allow the background to
-						# peak through
-						self.next('.parallax').css(
-							top: latestHeight
-						)
-
-				# If the latest height of the current parallax is less than 0
-				# then the user has moved onto the next story frame. So move the
-				# internal references.
+				# Handle rendering a single parallax frame onto the scene for
+				# a given scroll value. Their are 5 positions that a parallax
+				# may be in
 				#
-				# Moving down the page
-				movePrevious = false
+				# 	1 - off and above
+				#		all we want is to ensure this is 0, 0 and hidden
+				#	2 - sliding off the top
+				#		then we just need to move the height by the scroll
+				#	3 - full height
+				#		at top 0, full height and we may need to scroll internally
+				#	4 - sliding up off the bottom
+				#		the previous slide height needs to change
+				#	5 - completely off the radar
+				#		not close to it yet.
 
-				if latestHeight < 1
-					next = currentParallax.next('.parallax')
+				# The parallax changes 3 variables, height, position and margin
+				# of the internal content. Height is used to story board the
+				# content away or in, positioning is used to bring the next 
+				# story up, or take it down and margin used to scroll content
+				# inside the frame without affecting the height.
+				if scrollY > (minScroll - winHeight)
+					if scrollY > (minScroll + contentHeight)
+						# 1, off the top
+						heightForFrame = 0
+						positionForFrame = 0
+						marginTopForContent = (maxInternalScroll > 0) ? maxInternalScroll : 0
+						debugFlag = 1
+						self.addClass('past_frame').removeClass('future_frame current_frame')
+					else 
+						self.addClass('current_frame').removeClass('future_frame past_frame')
 
-					if next.length > 0
-						currentParallax
-							.addClass('past_parallax_frame')
-							.removeClass('current_parallax_frame')
+						if minScroll > scrollY
+							# 4, We haven't quite scrolled enough to have the frame
+							# fill the page, so we need to alter the height of the
+							# element. Use the height of the previous frame to give
+							# an indication on behaviour
 
-						currentParallax = next
-						currentParallax
-							.addClass('current_parallax_frame')
-							.removeClass('past_parallax_frame')
-							.data('last_scrolled', scrolledY)
+							heightForFrame = winHeight - self.prev('.parallax').height()
+							positionForFrame = winHeight - heightForFrame
+							marginTopForContent = 0
+							debugFlag = 4
+						else
+							positionForFrame = 0
 
-						next = currentParallax.next('.parallax')
-						next.css(
-							top: currentParallax.height()
-						)
+							# check to see if we need to worry about internal 
+							# scrolling and hey, if we do then if it's already been
+							# done then go back to sorting out the height of the 
+							# element on the page
+							if maxInternalScroll > 0
+								# this is the tricky beast. Determining whether
+								# we need to scroll the user. Take the scroll,
+								# look at the scroll required to get to 
+								# winHeight then the difference tells us how much
+								# to alter the margin and height
+								differenceBetween = scrollY - minScroll
+								
+								if differenceBetween > maxInternalScroll
+									# scrolled past the maximum internal scroll
+									# so take the overflow and apply it to the
+									# height of the element.
+									alterHeight = differenceBetween - maxInternalScroll
+									differenceBetween = maxInternalScroll
 
-				else if currentParallax.data('parallax-maxgap')
-					if latestHeight >= (winHeight - currentParallax.data('parallax-maxgap'))
-						movePrevious = true
+									heightForFrame = winHeight - alterHeight
+									marginTopForContent = maxInternalScroll
+									debugFlag = 3
+								else 
+									# have not scrolled past the maximum so leave
+									# the height alone and alter the margin by the
+									# same distance the user scrolled
+									currentMargin = Math.abs(parseInt(content.css('marginTop').replace(/px/, '')))
+									if not currentMargin then currentMargin = 0
 
-				else if latestHeight >= winHeight
-					# if the window is back to the original height then perhaps
-					# we need to start parallaxing the previous element then.
-					#
-					#
-					# Moving up the page
-					movePrevious = true
+									heightForFrame = winHeight
 
-				if movePrevious
-					prev = currentParallax.prev(".parallax")
+									# needs to be a positive value as the -1 * 
+									# will take care of making it negative
+									marginTopForContent = (currentMargin + scrollDifference)
+									debugFlag = 3.5
+							else
+								# no internal scroll to content with, so we can 
+								# go back to changing the height of the element
+								heightForFrame = winHeight - (scrollY - minScroll)
+								marginTopForContent = 0
+								debugFlag = 2
+				else 
+					# 5 scroll Y is less than the minimum to trigger our interests
+					heightForFrame = winHeight
+					positionForFrame = minScroll
+					debugFlag = 5
+					marginTopForContent = 0
 
-					if prev.length > 0
-						currentParallax
-							.removeClass('current_parallax_frame')
-							.removeClass('past_parallax_frame') # just in case
-						currentParallax = prev
-							.addClass('current_parallax_frame')
-							.removeClass('past_parallax_frame')
+					self.addClass('future_frame').removeClass('current_frame past_frame')
+				
+				# safety check
+				if heightForFrame < 0
+					heightForFrame = 0
+
+				if positionForFrame < 0
+					positionForFrame = 0
+
+				self.attr('data-parallax-frame-debug', debugFlag)
+
+				# some layers need to sit over the previous
+				if self.data('parallax-offset-height')
+					heightForFrame += self.data('parallax-offset-height')
+
+				self.css(
+					'height': heightForFrame
+					'top': positionForFrame
+				)
+
+				background.css(
+					'height': heightForFrame
+				)
+
+				content.css(
+					'marginTop': marginTopForContent * -1
+				)
+		 	)
+
+			# update the last scroll value
+			winScrollY = scrollY;
 
 			if callback?
 				callback()
 
 		# remove the loading screen
-		scrollHandler()
-		scrollParallaxBackground(()->
+		setupSceneForScroll()
+
+		# draw the initial scene
+		drawSceneForScroll($(window).scrollTop(), ()->
+			scrollHandler()
+
 			$("#loading").fadeOut(()->
-				$(this).remove()
-
 				$(window).scroll ()->
-					if scrollTimeout?
-						clearTimeout(scrollTimeout)
-
-						scrollTimeout = null
-
-					# scrollTimeout = setTimeout(scrollHandler, 1);
 					scrollHandler()
-					scrollParallaxBackground()
+					drawSceneForScroll($(window).scrollTop())
 			)
+		)
+
+		# When resizing the browser, show the loading screen, fix up all our
+		# positioning then reveal
+		cleanupresize = ()->
+			setupSceneForScroll()
+
+			drawSceneForScroll($(window).scrollTop(), ()->
+				$("#loading").fadeOut()
+			)
+
+		onResizeEnd = false;
+
+		$(window).resize( ()->
+			$("#loading").show()
+
+			clearTimeout(onResizeEnd)
+
+			onResizeEnd = setTimeout(cleanupresize, 100)
 		)
