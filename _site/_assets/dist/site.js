@@ -50,25 +50,23 @@
         givenScrollForParallax = 0;
         winHeight = $(window).outerHeight();
         return parallax.each(function(i, elem) {
-          var background, content, contentHeight, requiresInternalScroll, self;
+          var background, content, contentHeight, elemHeight, requiresInternalScroll, self, _ref;
           self = $(elem);
           background = self.find('.parallax_background_layer');
           content = self.find('.parallax_content_layer');
           contentHeight = content.outerHeight();
           requiresInternalScroll = contentHeight > winHeight;
+          elemHeight = (_ref = contentHeight > winHeight) != null ? _ref : {
+            contentHeight: winHeight
+          };
           $(elem).css({
             'position': 'fixed',
-            'height': winHeight,
+            'height': elemHeight,
             'top': givenScrollForParallax,
             'z-index': i
           });
-          $(elem).data('requires_internal_scroll', requiresInternalScroll);
           $(elem).data('scroll_for_parallax', givenScrollForParallax);
-          if (requiresInternalScroll) {
-            return givenScrollForParallax += contentHeight;
-          } else {
-            return givenScrollForParallax += winHeight;
-          }
+          return givenScrollForParallax += elemHeight;
         });
       };
       drawSceneForScroll = function(scrollY, callback) {
@@ -79,7 +77,7 @@
         }
         scrollDifference = scrollY - winScrollY;
         parallax.each(function(i, elem) {
-          var alterHeight, background, content, contentHeight, currentMargin, debugFlag, differenceBetween, heightForFrame, marginTopForContent, maxInternalScroll, minScroll, positionForFrame, self, _ref;
+          var background, content, contentHeight, debugFlag, heightForFrame, marginTopForContent, maxInternalScroll, minScroll, positionForFrame, self, _ref;
           self = $(elem);
           minScroll = self.data('scroll_for_parallax');
           background = self.find('.parallax_background_layer');
@@ -107,28 +105,9 @@
                 debugFlag = 4;
               } else {
                 positionForFrame = 0;
-                if (maxInternalScroll > 0) {
-                  differenceBetween = scrollY - minScroll;
-                  if (differenceBetween > maxInternalScroll) {
-                    alterHeight = differenceBetween - maxInternalScroll;
-                    differenceBetween = maxInternalScroll;
-                    heightForFrame = winHeight - alterHeight;
-                    marginTopForContent = maxInternalScroll;
-                    debugFlag = 3;
-                  } else {
-                    currentMargin = Math.abs(parseInt(content.css('marginTop').replace(/px/, '')));
-                    if (!currentMargin) {
-                      currentMargin = 0;
-                    }
-                    heightForFrame = winHeight;
-                    marginTopForContent = currentMargin + scrollDifference;
-                    debugFlag = 3.5;
-                  }
-                } else {
-                  heightForFrame = winHeight - (scrollY - minScroll);
-                  marginTopForContent = 0;
-                  debugFlag = 2;
-                }
+                heightForFrame = winHeight - (scrollY - minScroll);
+                marginTopForContent = 0;
+                debugFlag = 2;
               }
             }
           } else {

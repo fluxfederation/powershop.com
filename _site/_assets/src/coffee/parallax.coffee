@@ -98,23 +98,20 @@ do ($ = jQuery, window) ->
 				content = self.find('.parallax_content_layer')
 				contentHeight = content.outerHeight()
 				requiresInternalScroll = contentHeight > winHeight
+				elemHeight = (contentHeight > winHeight) ? contentHeight : winHeight
 
 				$(elem).css(
 					'position': 'fixed',
-					'height': winHeight
+					'height': elemHeight
 					'top': givenScrollForParallax,
 					'z-index': i
 				)
 
-				$(elem).data('requires_internal_scroll', requiresInternalScroll)
 				$(elem).data('scroll_for_parallax', givenScrollForParallax)
 
 				# Mark the scroll position for the following parallax to come 
 				# into play. 
-				if requiresInternalScroll
-					givenScrollForParallax += contentHeight
-				else
-					givenScrollForParallax += winHeight
+				givenScrollForParallax += elemHeight
 			)
 
 
@@ -187,47 +184,9 @@ do ($ = jQuery, window) ->
 						else
 							positionForFrame = 0
 
-							# check to see if we need to worry about internal 
-							# scrolling and hey, if we do then if it's already been
-							# done then go back to sorting out the height of the 
-							# element on the page
-							if maxInternalScroll > 0
-								# this is the tricky beast. Determining whether
-								# we need to scroll the user. Take the scroll,
-								# look at the scroll required to get to 
-								# winHeight then the difference tells us how much
-								# to alter the margin and height
-								differenceBetween = scrollY - minScroll
-								
-								if differenceBetween > maxInternalScroll
-									# scrolled past the maximum internal scroll
-									# so take the overflow and apply it to the
-									# height of the element.
-									alterHeight = differenceBetween - maxInternalScroll
-									differenceBetween = maxInternalScroll
-
-									heightForFrame = winHeight - alterHeight
-									marginTopForContent = maxInternalScroll
-									debugFlag = 3
-								else 
-									# have not scrolled past the maximum so leave
-									# the height alone and alter the margin by the
-									# same distance the user scrolled
-									currentMargin = Math.abs(parseInt(content.css('marginTop').replace(/px/, '')))
-									if not currentMargin then currentMargin = 0
-
-									heightForFrame = winHeight
-
-									# needs to be a positive value as the -1 * 
-									# will take care of making it negative
-									marginTopForContent = (currentMargin + scrollDifference)
-									debugFlag = 3.5
-							else
-								# no internal scroll to content with, so we can 
-								# go back to changing the height of the element
-								heightForFrame = winHeight - (scrollY - minScroll)
-								marginTopForContent = 0
-								debugFlag = 2
+							heightForFrame = winHeight - (scrollY - minScroll)
+							marginTopForContent = 0
+							debugFlag = 2
 				else 
 					# 5 scroll Y is less than the minimum to trigger our interests
 					heightForFrame = winHeight
