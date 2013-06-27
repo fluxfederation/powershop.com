@@ -80,9 +80,9 @@ do ($ = jQuery, window) ->
 		# This helper sets up all the look ups so that the actual scroll handler
 		# is much faster to process
 		winScrollY = $(window).scrollTop()
-		body.css('height', body.outerHeight(true));
 
 		setupSceneForScroll = ()->
+			body.css('height', body.outerHeight(true));
 
 			# amount of scrolling to hit this given parallax at the bottom 
 			# of the page. The amount of scrolling is the sum of all the 
@@ -98,13 +98,13 @@ do ($ = jQuery, window) ->
 				content = self.find('.parallax_content_layer')
 				contentHeight = content.outerHeight()
 				requiresInternalScroll = contentHeight > winHeight
-				elemHeight = (contentHeight > winHeight) ? contentHeight : winHeight
+				elemHeight = if (contentHeight > winHeight) then contentHeight else winHeight
 
 				$(elem).css(
 					'position': 'fixed',
 					'height': elemHeight
 					'top': givenScrollForParallax,
-					'z-index': i
+					'z-index': parallax.length - i
 				)
 
 				$(elem).data('scroll_for_parallax', givenScrollForParallax)
@@ -176,8 +176,8 @@ do ($ = jQuery, window) ->
 							# fill the page, so we need to alter the height of the
 							# element. Use the height of the previous frame to give
 							# an indication on behaviour
-
-							heightForFrame = winHeight - self.prev('.parallax').height()
+							bottomOfBrowser = scrollY + winHeight
+							heightForFrame = bottomOfBrowser - self.data('scroll_for_parallax')
 							positionForFrame = winHeight - heightForFrame
 							marginTopForContent = 0
 							debugFlag = 4
@@ -230,9 +230,10 @@ do ($ = jQuery, window) ->
 				callback()
 
 		# remove the loading screen
-		setupSceneForScroll()
+		# setupSceneForScroll()
 
 		# draw the initial scene
+		###
 		drawSceneForScroll($(window).scrollTop(), ()->
 			scrollHandler()
 
@@ -242,22 +243,6 @@ do ($ = jQuery, window) ->
 					drawSceneForScroll($(window).scrollTop())
 			)
 		)
+		###
+		$("#loading").fadeOut()
 
-		# When resizing the browser, show the loading screen, fix up all our
-		# positioning then reveal
-		cleanupresize = ()->
-			setupSceneForScroll()
-
-			drawSceneForScroll($(window).scrollTop(), ()->
-				$("#loading").fadeOut()
-			)
-
-		onResizeEnd = false;
-
-		$(window).resize( ()->
-			$("#loading").show()
-
-			clearTimeout(onResizeEnd)
-
-			onResizeEnd = setTimeout(cleanupresize, 100)
-		)

@@ -1,7 +1,7 @@
 (function() {
   (function($, window) {
     return $(document).ready(function() {
-      var body, cleanupresize, drawSceneForScroll, onResizeEnd, parallax, parallaxableElements, scrollHandler, setupSceneForScroll, winScrollY;
+      var body, drawSceneForScroll, parallax, parallaxableElements, scrollHandler, setupSceneForScroll, winScrollY;
       parallaxableElements = $("[data-parallax-speed]");
       parallax = $(".parallax");
       body = $("body");
@@ -44,26 +44,24 @@
         });
       };
       winScrollY = $(window).scrollTop();
-      body.css('height', body.outerHeight(true));
       setupSceneForScroll = function() {
         var givenScrollForParallax, winHeight;
+        body.css('height', body.outerHeight(true));
         givenScrollForParallax = 0;
         winHeight = $(window).outerHeight();
         return parallax.each(function(i, elem) {
-          var background, content, contentHeight, elemHeight, requiresInternalScroll, self, _ref;
+          var background, content, contentHeight, elemHeight, requiresInternalScroll, self;
           self = $(elem);
           background = self.find('.parallax_background_layer');
           content = self.find('.parallax_content_layer');
           contentHeight = content.outerHeight();
           requiresInternalScroll = contentHeight > winHeight;
-          elemHeight = (_ref = contentHeight > winHeight) != null ? _ref : {
-            contentHeight: winHeight
-          };
+          elemHeight = contentHeight > winHeight ? contentHeight : winHeight;
           $(elem).css({
             'position': 'fixed',
             'height': elemHeight,
             'top': givenScrollForParallax,
-            'z-index': i
+            'z-index': parallax.length - i
           });
           $(elem).data('scroll_for_parallax', givenScrollForParallax);
           return givenScrollForParallax += elemHeight;
@@ -77,7 +75,7 @@
         }
         scrollDifference = scrollY - winScrollY;
         parallax.each(function(i, elem) {
-          var background, content, contentHeight, debugFlag, heightForFrame, marginTopForContent, maxInternalScroll, minScroll, positionForFrame, self, _ref;
+          var background, bottomOfBrowser, content, contentHeight, debugFlag, heightForFrame, marginTopForContent, maxInternalScroll, minScroll, positionForFrame, self, _ref;
           self = $(elem);
           minScroll = self.data('scroll_for_parallax');
           background = self.find('.parallax_background_layer');
@@ -99,7 +97,8 @@
             } else {
               self.addClass('current_frame').removeClass('future_frame past_frame');
               if (minScroll > scrollY) {
-                heightForFrame = winHeight - self.prev('.parallax').height();
+                bottomOfBrowser = scrollY + winHeight;
+                heightForFrame = bottomOfBrowser - self.data('scroll_for_parallax');
                 positionForFrame = winHeight - heightForFrame;
                 marginTopForContent = 0;
                 debugFlag = 4;
@@ -143,28 +142,19 @@
           return callback();
         }
       };
-      setupSceneForScroll();
-      drawSceneForScroll($(window).scrollTop(), function() {
-        scrollHandler();
-        return $("#loading").fadeOut(function() {
-          return $(window).scroll(function() {
-            scrollHandler();
-            return drawSceneForScroll($(window).scrollTop());
-          });
-        });
-      });
-      cleanupresize = function() {
-        setupSceneForScroll();
-        return drawSceneForScroll($(window).scrollTop(), function() {
-          return $("#loading").fadeOut();
-        });
-      };
-      onResizeEnd = false;
-      return $(window).resize(function() {
-        $("#loading").show();
-        clearTimeout(onResizeEnd);
-        return onResizeEnd = setTimeout(cleanupresize, 100);
-      });
+      /*
+      		drawSceneForScroll($(window).scrollTop(), ()->
+      			scrollHandler()
+      
+      			$("#loading").fadeOut(()->
+      				$(window).scroll ()->
+      					scrollHandler()
+      					drawSceneForScroll($(window).scrollTop())
+      			)
+      		)
+      */
+
+      return $("#loading").fadeOut();
     });
   })(jQuery, window);
 
