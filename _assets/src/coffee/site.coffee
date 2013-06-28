@@ -23,31 +23,14 @@ do ($ = jQuery, window) ->
     getHeaderBackground = ()->
       scroll = $(window).scrollTop()
 
-      # the homepage starts on white, so don't fade background in till they go
-      # past the second section. One thing we do need to do on the homepage is
-      # if scroll > 0.
-      if onHomePage
-        if scroll > 0 
-          $(".logo em").fadeOut()
-        else
-          $(".logo em").fadeIn()
+      if scroll >= 140 
+        return 'rgba(0, 0, 0, 0.2)'
+      else if scroll < 1 
+        return 'rgba(0, 0, 0, 0)'
+      
+      op = (scroll/140) / 5; 
 
-        if scroll >= ($("#make_things").position().top)
-          return 'rgba(0, 0, 0, 0.2)';
-        else
-          # still on the white. the bar should be solid 
-          endWelcome = $("#welcome").offset().top + $("#welcome").height()
-
-          return 'rgba(0, 0, 0, 0)';
-      else
-        if scroll >= 140 
-          return 'rgba(0, 0, 0, 0.2)'
-        else if scroll < 1 
-          return 'rgba(0, 0, 0, 0)'
-        
-        op = (scroll/140) / 5; 
-
-        return 'rgba(0, 0, 0, '+ op + ')'
+      return 'rgba(0, 0, 0, '+ op + ')'
 
 
     # 
@@ -210,31 +193,40 @@ do ($ = jQuery, window) ->
     #
     # On the homepage we have a google map for the office location.
     #
-    if $("#map").length > 0
+    maps = $(".google_map")
+
+    if maps.length > 0
+      $('.map .vcard').hide();
+
+      $('.map h3').click ()->
+        vard = $(this).siblings('.vcard')
+
+        if vard.is(':visible')
+          vard.slideUp()
+        else
+          vard.slideDown()
+
       google.maps.event.addDomListener(window, 'load', ()->
-        options =
-          center: new google.maps.LatLng(-41.287997, 174.781469),
-          zoom: 16,
-          disableDefaultUI: true,
-          draggable: false, 
-          panControl: false, 
-          scaleControl: false,
-          scrollwheel: false,
-          mapTypeId: google.maps.MapTypeId.ROADMAP,
-          styles: window.map_styles
+        maps.each (i, elem)->
 
-        map = new google.maps.Map( $("#map").get(0), options)
+          options =
+            center: new google.maps.LatLng($(elem).data('center-lat'), $(elem).data('center-lng')),
+            zoom: 15,
+            disableDefaultUI: true,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            styles: window.map_styles
 
-        image = 
-          url: '/_assets/img/face.png',
-          size: new google.maps.Size(62, 62),
-          origin: new google.maps.Point(0,0)
-          anchor: new google.maps.Point(31, 31)
+          map = new google.maps.Map($(elem).get(0), options)
 
-        marker = new google.maps.Marker(
-          position: new google.maps.LatLng(-41.287622, 174.776166),
-          map: map,
-          icon: image,
-          animation: google.maps.Animation.DROP,
-        )
+          image = 
+            url: $(elem).data('marker'),
+            size: new google.maps.Size(30, 30),
+            origin: new google.maps.Point(0,0)
+            anchor: new google.maps.Point(15, 15)
+
+          marker = new google.maps.Marker(
+            position: new google.maps.LatLng($(elem).data('marker-lat'), $(elem).data('marker-lng')),
+            map: map,
+            icon: image
+          )
       )

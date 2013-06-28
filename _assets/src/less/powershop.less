@@ -46,16 +46,17 @@
 
 .hr(@color) {
 	position: relative;
-	padding-bottom: 24px;
+	padding-bottom: 29px;
 	margin-bottom: 35px;
 
 	&:after {
 		content: " ";
-		width: 100px;
+		width: 75px;
 		height: 1px;
 		left: 0;
 		position: absolute;
 		bottom: 0;
+		opacity: 0.2;
 		background: @color;
 	}
 }
@@ -142,7 +143,7 @@ h1, h2, h3 {
 h3 {
 	font-size: 25px;
 	margin-bottom: 10px;
-	line-height: 35px;
+	line-height: 30px;
 }
 
 p {
@@ -159,7 +160,7 @@ strong {
 
 a {
 	color: #F8E5E4;
-	text-decoration: underline;
+	text-decoration: none;
 
 	&:hover,
 	&:focus {
@@ -204,40 +205,11 @@ a {
 		display: block;
 		width: 31px;
 		height: 30px;
-		overflow: hidden;
-	}
-
-	span {
-		display: block;
-		float: left;
-		height: 30px;
-		background: url(/_assets/img/sprite.png) no-repeat;
-		outline: none;
-		width: 31px;
-	}
-
-	em {
-		display: block;
-		height: 30px;
-		overflow: hidden;
-		background: url(/_assets/img/sprite.png) -31px top no-repeat;
 		text-indent: -9000px;
+		overflow: hidden;
+		background: url(/_assets/img/sprite.png) 0 -30px no-repeat;
 		outline: none;
-		width: 170px;
 	}
-}
-
-.home .logo a {
-	width: 201px;
-}
-
-.white .logo span,
-.white .logo em {
-	background-position: 0 -30px;
-}
-
-.pink .logo a {
-	background-position: 0 0;
 }
 
 .show_nav {
@@ -245,7 +217,7 @@ a {
 	width: 25px;
 	height: 25px;
 	cursor: pointer;
-	background: url(/_assets/img/sprite.png) -200px -3px no-repeat;
+	background: url(/_assets/img/sprite.png) -200px -33px no-repeat;
 	text-indent: -90000px;
 	outline: none;
 
@@ -404,23 +376,6 @@ a {
  * Home Page
  * --------------------------------------------------------
  */
-
-.home .grid-3 h3 {
-	position: relative;
-	padding-bottom: 30px;
-	margin-bottom: 30px;
-
-	&:after {
-		content: " ";
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		background: rgba(255, 255, 255, 0.4);
-		height: 1px;
-		width: 50%;
-	}
-}
-
 #loading {
 	background: #fff;
 	position: fixed;
@@ -446,21 +401,24 @@ a {
 }
 
 #welcome {
-	background: #FDFCFC;
+	background: @hotPink;
 	position: relative;
+
+	&:after {
+		.down_arrow(#fff);
+	}
 
 	.wrapper {
 		overflow: hidden;
-		padding-bottom: 75px;
+		padding-bottom: 25px;
 		position: relative;
 	}
 
 	h1 {
-		margin: 200px 0 80px;
-		text-transform: none;
-		color: @hotPink;
+		margin: 80px 0 60px;
+		color: @cream;
 		font-size: 130px;
-		line-height: 1;
+		line-height: 120px;
 		text-align: center;
 	}
 
@@ -470,7 +428,7 @@ a {
 		line-height: 35px;
 		max-width: 640px;
 		margin: 0 auto 45px;
-		color: @hotPink;
+		color: @cream;
 	}
 
 	a {
@@ -495,6 +453,71 @@ a {
 	}
 }
 
+#welcome_jump {
+	background: #fff;
+
+	.wrapper {
+		padding: 50px 0;
+	}
+
+	&:after {
+		.down_arrow(#fff);
+	}
+
+	a {
+		display: block;
+		overflow: hidden;
+		outline: none;
+		padding: 20px 0 30px 20px;
+		border: 2px solid @hotPink;
+
+
+		&:hover,
+		&:focus {
+			opacity: 0.7;
+		}
+	}
+
+	h2 {
+		float: left;
+		font-size: 80px;
+		padding-right: 15px;
+		margin: 0;
+		line-height: 1;
+		color: @hotPink;
+	}
+
+	p {
+		float: left;
+		font-size: 19px;
+		line-height: 25px;
+		margin: 18px 0 0 0;
+		width: 230px;
+		font-weight: 300;
+		position: relative;
+		color: @hotPink;
+	}
+
+	span {
+		position: relative;
+		
+		&:after {
+			content: " ";
+			display: block;
+			height: 14px;
+			position: absolute;
+			bottom: 6px;
+			right: -25px;
+			width: 14px;
+			background: url(/_assets/img/sprite.png) -91px -63px no-repeat;
+		}	
+	}
+
+	.first a {
+		border-right: none;
+	}
+}
+
 #make_things {
 	background: @purplePink;
 
@@ -504,7 +527,18 @@ a {
 
 	h2 {
 		width: 40px;
-		margin-bottom: 80px;
+		color: @cream;
+		margin-bottom: 120px;
+	}
+
+	h3 {
+		color: @cream;
+
+		.hr(#fff);
+	}
+
+	&:after {
+		.down_arrow(@purplePink);
 	}
 }
 
@@ -512,14 +546,18 @@ a {
 	background: @burg;
 
 	.wrapper {
-		padding: 200px 0 120px 0;
+		padding: 175px 0 120px 0;
 	}
 
 	h2 {
-		text-align: left;
-		width: 220px;
-		margin-bottom: 60px;
+		text-align: right;
+		width: 36.3636%;
+		margin-bottom: 120px;
 		float: right;
+	}
+
+	h3 {
+		.hr(#fff);
 	}
 
 	&:after {
@@ -540,7 +578,11 @@ a {
 
 	h2 {
 		width: 40px;
-		padding-bottom: 80px;
+		padding-bottom: 120px;
+	}
+
+	h3 {
+		.hr(#fff);
 	}
 
 	&:after {
@@ -553,17 +595,15 @@ a {
 }
 
 #contact {
-	background: @lightGray;
+	background: #fff;
 
 	.wrapper {
-		padding: 120px 0 500px; /* map */
+		padding: 120px 0 0; /* map */
 	}
 
 	h2 {
 		color: @hotPink;
-		font-size: 80px;
-		line-height: 1;
-		margin-bottom: 60px;
+		margin-bottom: 30px;
 		text-align: center;
 	}
 
@@ -602,6 +642,10 @@ a {
 		font-style: normal;
 	}
 
+	.social {
+		margin-bottom: 120px;
+	}
+
 	.icon {
 		display: block;
 		height: 100px;
@@ -616,51 +660,151 @@ a {
 	.twitter .icon { background-position: -274px 25px; }
 	.facebook .icon { background-position: -425px 25px; }
 	.skype .icon { background-position: -578px 25px; }
+}
 
+#maps_holder {
+	height: 500px;
+	width: 100%;
+}
 
-	.vcard {
+#contact .map h2 {
+	color: #fff;
+}
+
+.map {
+	width: 25%;
+	height: 500px;
+	float: left;
+	display: inline;
+	background: #ddd;
+	position: relative;
+
+	&:after {
+		display: block;
+		content: " ";
+		height: 500px;
+		width: 1px;
 		position: absolute;
-		z-index: 2;
-		background: @burg;
-		height: 260px;
-		width: 260px;
-		color: #F8F4F3;
-		font-size: 25px;
-		line-height: 35px;
-		border-radius: 260px;
-		font-weight: 100;
-		left: 50%;
-		bottom: 120px;
-
-		.content {
-			padding: 50px 0 0 50px;
-		}
+		top: 0; right: 0;
+		background: #f8f5f4;
+		z-index: 100;
+	}
+	h3 {
+		text-transform: uppercase;
+		font-weight: 300;
+		letter-spacing: 3px;
+		width: 100%;
+		font-size: 18px;
+		color: #fff;
+		text-align: center;
+		padding: 15px 0;
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 3;
+		margin: 0;
+		line-height: 20px;
 
 		span {
-			display: block;
+			position: relative;
 
-			span {
-				display: inline;
+			&:after {
+				content: " ";
+				display: none;
+				height: 7px;
+				width: 12px;
+				top: 50%;
+				margin-top: -3px;
+				position: absolute;
+				right: -25px;
+				background: url(/_assets/img/sprite.png) -91px -79px no-repeat;
+			}
+		}
+
+		&:hover {
+			cursor: pointer;
+
+			span:after {
+				display: block;
 			}
 		}
 	}
+
+	.vcard {
+		position: absolute;
+		top: 50px;
+		left: 0;
+		z-index: 2;
+		width: 100%;
+		font-weight: 200;
+		color: #fff;
+
+		display: block;
+		font-size: 18px;
+		line-height: 25px;
+		
+		div {
+			display: block;
+		}
+
+		&:before {
+			content: " ";
+			height: 1px;
+			width: 60px;
+			opacity: 0.1;
+			background: #fff;
+			position: absolute;
+			top: 0;
+			left: 50%;
+			margin-left: -30px;
+		}
+	}
+
+	.content {
+		padding: 20px;
+	}
 }
 
-#map_holder {
-	height: 500px;
-	bottom: 0;
-	position: absolute;
-	left: 0;
-	width: 100%;
+#map_wellington,
+#map_auckland { 
+	h3 {
+		background: #BC216B;
+	}
+
+	.vcard {
+		background: #BC216B;
+	}
 }
 
-#map {
-	width: 100%;
+#map_melbourne { 
+	h3 {
+		background: @hotPink;
+	}
+
+	.vcard {
+		background: @hotPink;
+	}
+}
+
+
+#map_masterton { 
+	h3 {
+		background: @burg;
+	}
+
+	.vcard {
+		background: @burg;
+	}
+}
+
+.google_map {
 	height: 500px;
 	position: absolute;
 	top: 0;
-	left: 0;
+	z-index: 0;
+	width: 100%;
 }
+
 
 .people_popup {
 	display: none;
@@ -817,8 +961,6 @@ a {
 	.i2 {
 		top: 470px;
 		margin-left: -400px;
-
-		width: 17px;
 		height: 20px;
 		background-position: -61px 0;
 	}
@@ -833,8 +975,8 @@ a {
 	}
 
 	.i4 {
-		top: 540px;
-		left: -420px;
+		top: 225px;
+		margin-left: -345px;
 		width: 21px;
 		height: 51px;
 		background-position: -78px 0;

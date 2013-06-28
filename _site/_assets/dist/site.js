@@ -160,7 +160,7 @@
 
   (function($, window) {
     return $(document).ready(function() {
-      var content, fadeIn, getHeaderBackground, header, isLocalScrolling, loadImages, loadedOfficePics, nav, officePhotoScroller, officePhotos, onHomePage, page, sections;
+      var content, fadeIn, getHeaderBackground, header, isLocalScrolling, loadImages, loadedOfficePics, maps, nav, officePhotoScroller, officePhotos, onHomePage, page, sections;
       sections = $(".section");
       content = $("#content");
       nav = $("#nav");
@@ -174,29 +174,15 @@
         opacity: 0
       });
       getHeaderBackground = function() {
-        var endWelcome, op, scroll;
+        var op, scroll;
         scroll = $(window).scrollTop();
-        if (onHomePage) {
-          if (scroll > 0) {
-            $(".logo em").fadeOut();
-          } else {
-            $(".logo em").fadeIn();
-          }
-          if (scroll >= ($("#make_things").position().top)) {
-            return 'rgba(0, 0, 0, 0.2)';
-          } else {
-            endWelcome = $("#welcome").offset().top + $("#welcome").height();
-            return 'rgba(0, 0, 0, 0)';
-          }
-        } else {
-          if (scroll >= 140) {
-            return 'rgba(0, 0, 0, 0.2)';
-          } else if (scroll < 1) {
-            return 'rgba(0, 0, 0, 0)';
-          }
-          op = (scroll / 140) / 5;
-          return 'rgba(0, 0, 0, ' + op + ')';
+        if (scroll >= 140) {
+          return 'rgba(0, 0, 0, 0.2)';
+        } else if (scroll < 1) {
+          return 'rgba(0, 0, 0, 0)';
         }
+        op = (scroll / 140) / 5;
+        return 'rgba(0, 0, 0, ' + op + ')';
       };
       $(window).scroll(function() {
         var current, latest, scroll;
@@ -318,32 +304,40 @@
           }
         });
       }
-      if ($("#map").length > 0) {
+      maps = $(".google_map");
+      if (maps.length > 0) {
+        $('.map .vcard').hide();
+        $('.map h3').click(function() {
+          var vard;
+          vard = $(this).siblings('.vcard');
+          if (vard.is(':visible')) {
+            return vard.slideUp();
+          } else {
+            return vard.slideDown();
+          }
+        });
         return google.maps.event.addDomListener(window, 'load', function() {
-          var image, map, marker, options;
-          options = {
-            center: new google.maps.LatLng(-41.287997, 174.781469),
-            zoom: 16,
-            disableDefaultUI: true,
-            draggable: false,
-            panControl: false,
-            scaleControl: false,
-            scrollwheel: false,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            styles: window.map_styles
-          };
-          map = new google.maps.Map($("#map").get(0), options);
-          image = {
-            url: '/_assets/img/face.png',
-            size: new google.maps.Size(62, 62),
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(31, 31)
-          };
-          return marker = new google.maps.Marker({
-            position: new google.maps.LatLng(-41.287622, 174.776166),
-            map: map,
-            icon: image,
-            animation: google.maps.Animation.DROP
+          return maps.each(function(i, elem) {
+            var image, map, marker, options;
+            options = {
+              center: new google.maps.LatLng($(elem).data('center-lat'), $(elem).data('center-lng')),
+              zoom: 15,
+              disableDefaultUI: true,
+              mapTypeId: google.maps.MapTypeId.ROADMAP,
+              styles: window.map_styles
+            };
+            map = new google.maps.Map($(elem).get(0), options);
+            image = {
+              url: $(elem).data('marker'),
+              size: new google.maps.Size(30, 30),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(15, 15)
+            };
+            return marker = new google.maps.Marker({
+              position: new google.maps.LatLng($(elem).data('marker-lat'), $(elem).data('marker-lng')),
+              map: map,
+              icon: image
+            });
           });
         });
       }
