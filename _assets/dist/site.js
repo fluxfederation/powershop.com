@@ -154,7 +154,8 @@
       		)
       */
 
-      return $("#loading").fadeOut();
+      $("#loading").fadeOut();
+      return $("#nav .show_nav").click();
     });
   })(jQuery, window);
 
@@ -206,9 +207,6 @@
       });
       $(".show_nav").click(function(e) {
         e.preventDefault();
-        page.css({
-          overflow: 'hidden'
-        });
         header.css({
           background: 'rgba(0, 0, 0, 0.8)',
           height: '100%'
@@ -219,9 +217,6 @@
       });
       $(".close_nav").click(function(e) {
         e.preventDefault();
-        page.css({
-          'overflow-y': 'scroll'
-        });
         header.css({
           background: getHeaderBackground(),
           height: '50px'
@@ -316,7 +311,7 @@
             return vard.slideDown();
           }
         });
-        return google.maps.event.addDomListener(window, 'load', function() {
+        google.maps.event.addDomListener(window, 'load', function() {
           return maps.each(function(i, elem) {
             var image, map, marker, options;
             options = {
@@ -340,6 +335,7 @@
             });
           });
         });
+        return $();
       }
     });
   })(jQuery, window);

@@ -63,11 +63,6 @@ do ($ = jQuery, window) ->
     $(".show_nav").click (e)->
       e.preventDefault()
 
-      # lock scrolling the page. Scrolling is now for inside the navigation
-      # rather than the whole body
-      page.css
-        overflow: 'hidden'
-
       header.css(
         background: 'rgba(0, 0, 0, 0.8)',
         height: '100%'
@@ -84,11 +79,7 @@ do ($ = jQuery, window) ->
     #
     $(".close_nav").click (e)->
       e.preventDefault()
-      
-      page.css({
-       'overflow-y': 'scroll'
-      })
-      
+
       header.css(
         background: getHeaderBackground()
         height: '50px'
@@ -230,3 +221,5 @@ do ($ = jQuery, window) ->
             icon: image
           )
       )
+
+      $()

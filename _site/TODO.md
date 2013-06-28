@@ -1,7 +1,7 @@
 - Home
 	* Responsive view
 	* Pagination buttons on contact page section
-	
+
 - Culture
 	* Check widths and margins on intro
 	* Parallax banner positioning
@@ -36,4 +36,5 @@
 	* 404 page template
 	* Humans.txt
 	* Menu 
+	* Fix jumper menu
 	* New loading screen
