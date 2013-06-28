@@ -3,3 +3,33 @@ layout: default
 title: Contact Powershop - a better Power Company
 body_class: contact
 ---
+<nav id="jumper">
+	<ol class="semantic">
+		<li class="active"><a href="#contact">Contact</a></li>
+		<li><a href="#find">Find</a></li>
+	</ol>
+</nav>
+
+<section id="contact_welcome" class="anchor parallax down">
+	<div class="parallax_background_layer">
+		<div class="parallax_content_layer">
+			<div class="wrapper">
+				<h1 class="yell">Contact us</h1>
+
+				<p>Get in touch with us to get the ball rolling.</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section id="contact" class="anchor parallax">
+	<div class="parallax_background_layer">
+		<div class="parallax_content_layer">
+			<div class="wrapper">
+				{% include contact.html %}
+			</div>
+
+			{% include maps.html %}
+		</div>
+	</div>
+</section>

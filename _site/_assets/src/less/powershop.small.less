@@ -1,6 +1,46 @@
-/* screens smaller than 620px, plus for mobile */
-@media screen and (max-width: 620px) {
+/* screens smaller than 580px / mobile */
+@import "vars.less";
+
+@media screen and (max-width: 580px) {
+	.wrapper {
+		width: 90%;
+	}
 	.yell {
-		font-size: 40px;
+		font-size: 60px;
+		line-height: 55px;
+	}
+
+	.grid-55 {
+		width: 100%;
+		float: none;
+		margin-bottom: 20px;
+		display: block;
+	}
+
+	#give h2 {
+		width: 100%;
+		text-align: left;
+	}
+
+	#jumper {
+		display: none;
+	}
+
+	#welcome h1 {
+		font-size: 45px;
+		line-height: 50px;
+	}
+
+	#welcome p {
+		font-size: 18px;
+		line-height: 25px;
+	}
+
+	#welcome_jump h2 {
+		font-size: 45px;
+	}
+
+	#welcome_jump .first a {
+		border-right: 2px solid @hotPink;
 	}
 }

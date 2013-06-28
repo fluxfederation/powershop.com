@@ -1,6 +1,6 @@
 @import "elements.less";
 @import "grid.less";
-
+@import "vars.less";
 /* 
  * -------------------------------------------------------- 
  * Core styles 
@@ -8,13 +8,6 @@
  * Vertical Rhythm: 5px 
  * -------------------------------------------------------- 
  */
-
-@hotPink: #F90D6A;
-@purplePink: #BC216B;
-@blueGray: #22292e;
-@burg: #662244;
-@lightGray: #F8F5F4;
-@cream: #F8E5E4;
 
 .down_arrow(@color) {
 	content: " ";
@@ -227,8 +220,12 @@ a {
 	}
 }
 
-.white .show_nav {
-	background-position: -200px -33px;
+.pink .logo a {
+	background-position: 0 0;
+}
+
+.pink .show_nav {
+	background-position: -200px -3px;
 }
 
 .close_nav {
@@ -503,8 +500,8 @@ a {
 	background: @hotPink;
 	position: relative;
 
-	&:after {
-		.down_arrow(#fff);
+	&.down:after {
+		.down_arrow(@hotPink);
 	}
 
 	.wrapper {
@@ -761,8 +758,39 @@ a {
 	.skype .icon { background-position: -578px 25px; }
 }
 
+#contact_welcome {
+	background: @blueGray;
+	position: relative;
+
+	&:after {
+		.down_arrow(@blueGray);
+	}
+
+	.wrapper {
+		overflow: hidden;
+		padding-bottom: 25px;
+		position: relative;
+	}
+
+	h1 {
+		margin: 80px 0 60px;
+		color: @cream;
+		font-size: 130px;
+		line-height: 120px;
+		text-align: center;
+	}
+
+	p {
+		text-align: center;
+		font-size: 25px;
+		line-height: 35px;
+		max-width: 640px;
+		margin: 0 auto 45px;
+		color: @cream;
+	}
+}
+
 #maps {
-	height: 500px;
 	width: 100%;
 }
 
@@ -1339,6 +1367,7 @@ a {
 		padding-top: 15px;
 		line-height: 35px;
 		max-width: 430px;
+		min-width: 400px;
 		text-align: left;
 		min-height: 130px;
 	}
@@ -1412,10 +1441,10 @@ a {
 		opacity: 0.6;
 		position: absolute;
 		top: 0;
-		width: 100%;
+		width: 300px;
 		right: 100%;
 		text-align: right;
-		margin-top: -35px;
+		margin-top: -30px;
 		margin-right: 10px;
 		
 		-webkit-transform: rotate(-90deg);
@@ -1707,4 +1736,8 @@ a {
 p.larger {
 	font-size: 25px;
 	line-height: 35px;
+}
+
+.nl {
+	display: block;
 }

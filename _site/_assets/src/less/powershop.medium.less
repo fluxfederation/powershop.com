@@ -1,8 +1,56 @@
-/* medium view 940px */
-@media screen and (max-width: 940px) {
+/* medium view 880px, columns are 72px wide  */
+@import "vars.less";
+
+@media screen and (max-width: 879px) {
+	/* helpers */
+	.grid-3 {
+		width: 100%;
+		float: none;
+		display: block;
+	}
+
 	.yell {
 		font-size: 90px;
+		line-height: 85px;
 	}
+
+	.push-1 {
+		margin-left: 0;
+	}
+
+	h3 .nl {
+		display: inline;
+	}
+
+	/* homepage */
+	#welcome_jump h2 {
+		font-size: 60px;
+		float: none;
+		text-align: center;
+	}
+
+	#welcome_jump p {
+		margin-top: 8px;
+		text-align: center;
+		margin: 0 auto;
+		width: auto;
+		max-width: 100%;
+	}
+
+	#welcome_jump a {
+		padding: 20px 30px 30px 20px;
+	}
+
+	#welcome h1 {
+		font-size: 75px;
+		line-height: 85px;
+	}
+
+	#welcome p {
+		font-size: 20px;
+		line-height: 30px;
+	}
+
 
 	#shit_hot {
 		padding-top: 80px;
@@ -10,5 +58,37 @@
 		h1 {
 			width: 100%;
 		}
+	}
+
+	#contact {
+		.social {
+			text-align: center;
+		}
+
+		a {
+			padding-bottom: 30px;
+		}
+
+		.icon  {
+			width: 70px;
+			height: 70px;
+			float: none;
+		}
+
+		.mail .icon { background-position: 12px 12px; }
+		.phone .icon { background-position: -140px 12px; }
+		.twitter .icon { background-position: -287px 11px; }
+		.facebook .icon { background-position: -441px 12px; }
+		.skype .icon { background-position: -591px 11px; }
+	}
+
+	#give .grid-3,
+	#make_things .grid-3,
+	#weird .grid-3 {
+		padding-bottom: 20px;
+	}
+
+	.map {
+		width: 50%;
 	}
 }

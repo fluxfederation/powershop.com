@@ -21,6 +21,7 @@ do ($ = jQuery, window) ->
     # the time we hit the first text (~180px) we need to have it up.
     #
     getHeaderBackground = ()->
+      
       scroll = $(window).scrollTop()
 
       if scroll >= 140 

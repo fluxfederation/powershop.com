@@ -1,6 +1,6 @@
 - Home
 	* Responsive view
-	* Pagination buttons on contact page section
+	* Pagination buttons on contact page section need do not be white
 
 - Culture
 	* Check widths and margins on intro
@@ -26,15 +26,19 @@
 	* Investigate height issue with people
 
 - Contact Page
-	* Copy from homepage
-
+	* Not sure if it needs something
+	* Fix header style
+	
 - Timeline
 	* Build
-	* Responsive
+	* Responsive view
+	* Carousel
 
-- Overall
-	* 404 page template
-	* Humans.txt
-	* Menu 
-	* Fix jumper menu
-	* New loading screen
+- Menu
+	* Mobile Menu
+	* Fix close icon
+
+
+- Before go live
+	* GA code
+	* Check email for apply
