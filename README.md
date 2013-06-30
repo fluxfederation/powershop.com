@@ -6,21 +6,15 @@
 - Grunt.JS
 - Ruby
 
+## Setup
+
+	npm install
+
 ## Grunt
 
 Grunt is used to generate combined files, to regenerate files run: 
 
 	grunt watch
 
-## Jekyll
-
-To generate the static export of the website run:
-
-	jekyll site
-
-
-Or, while developing run the server:
-
-	jekyll serve --watch
-
-Check the _config.yml file for jekyll server configuration
+Grunt watch is configured to generate all the assets as required and run jekyll
+to export the website to the `_site` folder.

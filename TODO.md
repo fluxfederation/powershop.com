@@ -1,30 +1,33 @@
 - Home
 	* Pagination buttons on contact page section need do not be white
+	* Browser testing
 
 - Culture
-	* Add arrows
 	* Apply now to mailto
 	* Browser testing
 
 - About
-	* Animate pow
 	* Fade in design thinking content
 	* Stats count up numbers
+	* Responsive testing
+	* Browser testing
 	* Our people hover and navigation
-	* Investigate height issue with people
 
 - Contact Page
 	* Not sure if it needs something
 	* Fix header style
+	* Browser testing
 
 - Timeline
 	* Build
 	* Responsive view
 	* Carousel
+	* Browser testing
 
 - Menu
 	* Mobile Menu
 	* Fix close icon
+	* Fix background color (shouldn't use get header colour)
 
 
 - Overall
@@ -34,3 +37,5 @@
 - Before go live
 	* GA code
 	* Check email for apply
+	* Clear out assets/src/vendor of things no longer in use
+		- jquery.path, jquery.tweet, jquery.scrollPath

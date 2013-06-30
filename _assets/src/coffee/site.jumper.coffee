@@ -1,7 +1,33 @@
 do ($ = jQuery, window) ->  
   $(document).ready ->
+    isLocalScrolling = false
     sections = $ ".anchor"
     
+    $.localScroll.hash(
+      queue: true,
+      duration: 700,
+      
+      onBefore: (e, anchor, target)->
+        isLocalScrolling = true 
+        highlightJump(anchor)
+ 
+      onAfter: (anchor, settings)->
+        isLocalScrolling = false
+    )
+ 
+    $.localScroll(
+      queue: true,
+      duration: 700,
+      hash: true,
+      
+      onBefore: (e, anchor, target)->
+        isLocalScrolling = true
+        highlightJump(anchor)
+      
+      onAfter: (anchor, settings)->
+        isLocalScrolling = false
+    );
+
     #
     # Jumper on the right handles anchors.
     #
@@ -22,15 +48,17 @@ do ($ = jQuery, window) ->
       if target.length > 0
         highlightJump($(this))
         scroll = target.data('scroll_for_parallax')
-
+        isLocalScrolling = true
         $("html, body").animate({ 
           scrollTop: scroll 
-        }, 2000);
-
-
-    
+        }, 2000, ()->
+          isLocalScrolling = false
+        )
 
     $(document).scroll ()->
+      if isLocalScrolling 
+        return;
+
       scroll = $(document).scrollTop()
       offset = 120
       

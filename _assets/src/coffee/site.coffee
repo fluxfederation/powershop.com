@@ -1,4 +1,7 @@
 do ($ = jQuery, window) ->
+  #
+  # Operations to help with Vector manipulation which we use for bézier curves.
+  #
   $.vector =
     rotate: (p, degrees)->
       radians = degrees * Math.PI / 180
@@ -16,6 +19,13 @@ do ($ = jQuery, window) ->
     minus: (a, b)->
       [a[0]-b[0], a[1]-b[1]]
   
+  # 
+  # Draw a bézier line. Supports mapping a given point along the curve. 
+  #
+  # > $.path.bezier.css(p)
+  #
+  # Where P is a percentage (0 to 1) of the drawing along the line
+  #
   $.path.bezier = (params, rotate)->
     params.start = $.extend( {angle: 0, length: 0.3333}, params.start )
     params.end = $.extend( {angle: 0, length: 0.3333}, params.end )
@@ -143,6 +153,7 @@ do ($ = jQuery, window) ->
     # photos. The user can swipe till there are no more photos to unvisible
     # on the page.
     #
+    officePhotos = $ "#office_photos"
     officePhotoScroller = $ "ul", officePhotos
 
     #
@@ -168,8 +179,8 @@ do ($ = jQuery, window) ->
             $(elem).data('img-loaded', true)
 
             path = $(elem).data('image')
-            img = $("<img />").attr('src', path).hide().on 'dragstart', (event) ->
-              event.preventDefault()
+            img = $("<img />").attr('src', path).hide().on 'dragstart', (e) ->
+              e.preventDefault()
 
             setTimeout(()->
               $(elem).append(img).imagesLoaded().always (instance)->
@@ -278,11 +289,7 @@ do ($ = jQuery, window) ->
       )
 
 
-    # Culture page
-    $('.parallax_section').parallax(
-      scroll_factor: 0.5
-    )
-
+    #
     # The icons on the roles section come in as the users scroll into the 
     # page.
     # 
@@ -319,10 +326,10 @@ do ($ = jQuery, window) ->
           faces.each (i, elem)->
             offset = i - median
             $(elem).css 'left', (offset + (offset * Math.PI)) * 86
-
-      
-
+ 
+    #
     # On the about page, animate in stuff
+    #
     product = $("#product")
 
     if product.length > 0
@@ -399,7 +406,9 @@ do ($ = jQuery, window) ->
             opacity : o
             marginLeft: position.x
 
+    #
     # Customer testimonials scroller
+    #
     say = $("#customers_say")
 
     if say.length > 0
@@ -601,6 +610,14 @@ do ($ = jQuery, window) ->
         , 300)
 
 
+    # 
+    # Load parallax backgrounded sections. For other parallax uses (like quotes)
+    # use the parallax_background
+    #
+    $('.parallax_section').parallax(
+      scroll_factor: 0.5
+    )
+
     #
     # Parallax backgrounds
     #
@@ -613,6 +630,7 @@ do ($ = jQuery, window) ->
 
           $(elem).css('background-position', pos)
 
+
     # 
     # Now we can actually do something useful.
     # 
@@ -624,18 +642,30 @@ do ($ = jQuery, window) ->
       $.each scrollHandlers, (i, callback)->
         callback(scrollY, winHeight, winWidth)
     
+
+    # 
+    # On scroll, rerender the frame
+    #
     $(window).scroll ()->
       renderFrame()
 
-    $(window).resize ()->
-      $("#loading").fadeIn( ()->
+
+    resizeTimer = 0
+
+    onResize = ()->
         renderFrame()
 
         $("#loading").fadeOut();
-      )
 
-    renderFrame();
+    $(window).resize ()->
+      $("#loading").fadeIn()
 
-    $("#loading").fadeOut();
+      clearTimeout(resizeTimer)
 
+      resizeTimer = setTimeout(onResize, 500)
+
+    # render the initial frame
+    onResize();
+
+    # 
     $("#pow").addClass('show');
