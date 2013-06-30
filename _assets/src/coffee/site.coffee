@@ -396,10 +396,226 @@ do ($ = jQuery, window) ->
 
           $(elem).css
             top: position.y
-            opacity: o
+            opacity : o
             marginLeft: position.x
 
-    # Handler for rendering the view of the application
+    # Customer testimonials scroller
+    say = $("#customers_say")
+
+    if say.length > 0
+      # user can cycle through some of the testimonials on the page. The scroll
+      # is endless, so last item is added to the start
+      $("li:first", say).addClass('showing').siblings().hide()
+
+      # hide the current testimonial animation.
+      hideCurrentTestimonial = (back)->
+        current = $(".showing", say)
+        grid = $(".grid-55", current)
+        height = current.outerHeight(true)
+
+        say.css('height', height)
+        grid.css(
+          'height': height
+        )
+
+        img = current.find('img')
+        txt = current.find('.padd-off')
+
+        img.animate({ 
+          marginTop: '-300px',
+          opacity: 0
+        }, 600, 'easeInOutBack')
+
+        posLeft = txt.offset().left - 60
+        txtWidth = txt.width()
+
+        txt.css(
+         width: txtWidth,
+         position: 'absolute',
+         left: posLeft
+        )
+
+        txt.animate({ 
+          opacity: 0
+          left: $(window).width()
+        }, 600, 'easeOutQuint', ()->
+          # hide the testimonial
+          current.hide().removeClass('showing');
+
+          # clean up
+          img.css('marginTop', 0)
+          txt.css(
+            'width': 'auto',
+            'position': 'static'
+          )
+
+          grid.css(
+            'height': 'auto'
+          )
+
+          # bring in the next element to focus
+          if back
+            next = current.prev('li')
+
+            if next.length < 1
+              next = $("li", say).last()
+
+          else
+            next = current.next('li')
+
+            if next.length < 1
+              next = $("li", say).first()
+
+          next.addClass('showing')
+
+          say.animate({
+            height: next.outerHeight(true)
+          })
+
+          nextImg = next.find('img')
+          nextTxt = next.find('.padd-off')
+          nextGrid = next.find('.grid-55')
+
+          nextGrid.css(
+            height: height
+          )
+
+          nextTxt.css(
+            opacity: 0,
+            left: $(window).width(),
+            position: 'absolute',
+            width: txtWidth
+          )
+          
+          nextImg.css(
+            'marginTop': '-300px',
+            'opacity': 0
+          )
+
+          next.show();
+
+          nextTxt.animate({
+            'opacity': 1,
+            'left': posLeft
+          }, 'easeOutQuint', ()->
+              nextImg.animate({
+                'marginTop': 0,
+                'opacity': 1
+              }, 'easeInOutBack', ()->
+                # clear explict heights
+                say.css('height', '')
+                nextTxt.css('position', 'static')
+
+                # animate the container to the height of
+              )
+          )
+        )
+
+
+      prev = $("<a></a>").addClass('prev_test')
+      prev.click (e)->
+        # prev
+        e.preventDefault()
+        hideCurrentTestimonial(true)
+
+      next = $("<a></a>").addClass('next_test')
+      next.click (e)->
+        # next
+        e.preventDefault()
+        hideCurrentTestimonial()
+
+
+      say.append(prev);
+      say.append(next);
+
+    # 
+    # Our peoples page. Clicking the users face should reveal the content popup
+    #
+    people = $("#our_people")
+
+    if people.length > 0
+      #
+      # close icon on the popup
+      #
+      $(".close", people).click (e)->
+        e.preventDefault();
+
+        # hide nav
+        $(".popup_nav", people).fadeOut()
+
+        # hide any open ones
+        $(".people_popup").animate(
+          top: '-1200px',
+          ()->
+            $(".people_popup").find('.reveal_content').removeClass('.reveal_content').hide()
+
+        )
+
+      # 
+      # Click a users face to open the popup
+      #
+      $(".face", people).click (e)->
+        e.preventDefault()
+
+        # fade in the correct staff member from the top of the page
+        details = $($(this).find('a').attr('href')).show()
+
+        # animate it down
+        $(".people_popup").animate(
+          top: 0,
+          ()->
+            # bring in content
+            details.addClass('reveal_content');
+
+            # show navigation
+            $(".popup_nav", people).fadeIn()
+        )
+
+      #
+      # Navigating between the staff members while the popup is open
+      #
+      $(".popup_nav a").click (e)->
+        e.preventDefault()
+
+        takeNext = true unless $(this).hasClass('prev')
+        current = $(".reveal_content")
+
+        if not takeNext
+          next = current.prev('.person_detail')
+
+          if next.length < 1
+            next = $(".person_detail").last()
+        else
+          next = current.next('.person_detail')
+
+          if next.length < 1
+            next = $(".person_detail").first()
+
+
+        current.removeClass('reveal_content')
+
+        setTimeout( ()->
+          next.show()
+          next.addClass('reveal_content')
+          current.hide()
+        , 300)
+
+
+    #
+    # Parallax backgrounds
+    #
+    parallaxBackgrounds = $(".parallax_background")
+
+    if parallaxBackgrounds.length > 0
+       scrollHandlers.push parallaxBackground = (scrollY, winHeight, winWidth)->
+        parallaxBackgrounds.each (i, elem)->
+          pos = "0% " + (scrollY * 0.5) + "px"
+
+          $(elem).css('background-position', pos)
+
+    # 
+    # Now we can actually do something useful.
+    # 
     renderFrame = ()->
       winHeight = $(window).height();
       winWidth = $(window).width();
@@ -414,6 +630,12 @@ do ($ = jQuery, window) ->
     $(window).resize ()->
       $("#loading").fadeIn( ()->
         renderFrame()
+
+        $("#loading").fadeOut();
       )
 
     renderFrame();
+
+    $("#loading").fadeOut();
+
+    $("#pow").addClass('show');

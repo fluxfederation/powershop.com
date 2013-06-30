@@ -1,4 +1,7 @@
 do ($ = jQuery, window) -> 
+	return
+
+	# old code
 	$(document).ready ->	
 		# standard DOM node that parallaxs on a separate layer
 		parallaxableElements = $ "[data-parallax-speed]"
@@ -244,5 +247,4 @@ do ($ = jQuery, window) ->
 			)
 		)
 		###
-		$("#loading").fadeOut()
 		

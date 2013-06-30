@@ -1,5 +1,6 @@
 (function() {
   (function($, window) {
+    return;
     return $(document).ready(function() {
       var body, drawSceneForScroll, parallax, parallaxableElements, scrollHandler, setupSceneForScroll, winScrollY;
       parallaxableElements = $("[data-parallax-speed]");
@@ -67,7 +68,7 @@
           return givenScrollForParallax += elemHeight;
         });
       };
-      drawSceneForScroll = function(scrollY, callback) {
+      return drawSceneForScroll = function(scrollY, callback) {
         var scrollDifference, winHeight;
         winHeight = $(window).height();
         if (scrollY < 0) {
@@ -154,7 +155,6 @@
       		)
       */
 
-      return $("#loading").fadeOut();
     });
   })(jQuery, window);
 
@@ -212,7 +212,7 @@
       return this;
     };
     return $(document).ready(function() {
-      var animationForDesign, animationForProduct, animationForRoles, content, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, left, loadImages, loadedOfficePics, maps, median, nav, officePhotoScroller, officePhotos, onHomePage, page, paths, product, renderFrame, right, roles, scrollHandlers, sections;
+      var animationForDesign, animationForProduct, animationForRoles, content, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, hideCurrentTestimonial, left, loadImages, loadedOfficePics, maps, median, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, prev, product, renderFrame, right, roles, say, scrollHandlers, sections;
       sections = $(".section");
       content = $("#content");
       nav = $("#nav");
@@ -489,6 +489,162 @@
           });
         });
       }
+      say = $("#customers_say");
+      if (say.length > 0) {
+        $("li:first", say).addClass('showing').siblings().hide();
+        hideCurrentTestimonial = function(back) {
+          var current, grid, height, img, posLeft, txt, txtWidth;
+          current = $(".showing", say);
+          grid = $(".grid-55", current);
+          height = current.outerHeight(true);
+          say.css('height', height);
+          grid.css({
+            'height': height
+          });
+          img = current.find('img');
+          txt = current.find('.padd-off');
+          img.animate({
+            marginTop: '-300px',
+            opacity: 0
+          }, 600, 'easeInOutBack');
+          posLeft = txt.offset().left - 60;
+          txtWidth = txt.width();
+          txt.css({
+            width: txtWidth,
+            position: 'absolute',
+            left: posLeft
+          });
+          return txt.animate({
+            opacity: 0,
+            left: $(window).width()
+          }, 600, 'easeOutQuint', function() {
+            var next, nextGrid, nextImg, nextTxt;
+            current.hide().removeClass('showing');
+            img.css('marginTop', 0);
+            txt.css({
+              'width': 'auto',
+              'position': 'static'
+            });
+            grid.css({
+              'height': 'auto'
+            });
+            if (back) {
+              next = current.prev('li');
+              if (next.length < 1) {
+                next = $("li", say).last();
+              }
+            } else {
+              next = current.next('li');
+              if (next.length < 1) {
+                next = $("li", say).first();
+              }
+            }
+            next.addClass('showing');
+            say.animate({
+              height: next.outerHeight(true)
+            });
+            nextImg = next.find('img');
+            nextTxt = next.find('.padd-off');
+            nextGrid = next.find('.grid-55');
+            nextGrid.css({
+              height: height
+            });
+            nextTxt.css({
+              opacity: 0,
+              left: $(window).width(),
+              position: 'absolute',
+              width: txtWidth
+            });
+            nextImg.css({
+              'marginTop': '-300px',
+              'opacity': 0
+            });
+            next.show();
+            return nextTxt.animate({
+              'opacity': 1,
+              'left': posLeft
+            }, 'easeOutQuint', function() {
+              return nextImg.animate({
+                'marginTop': 0,
+                'opacity': 1
+              }, 'easeInOutBack', function() {
+                say.css('height', '');
+                return nextTxt.css('position', 'static');
+              });
+            });
+          });
+        };
+        prev = $("<a></a>").addClass('prev_test');
+        prev.click(function(e) {
+          e.preventDefault();
+          return hideCurrentTestimonial(true);
+        });
+        next = $("<a></a>").addClass('next_test');
+        next.click(function(e) {
+          e.preventDefault();
+          return hideCurrentTestimonial();
+        });
+        say.append(prev);
+        say.append(next);
+      }
+      people = $("#our_people");
+      if (people.length > 0) {
+        $(".close", people).click(function(e) {
+          e.preventDefault();
+          $(".popup_nav", people).fadeOut();
+          return $(".people_popup").animate({
+            top: '-1200px'
+          }, function() {
+            return $(".people_popup").find('.reveal_content').removeClass('.reveal_content').hide();
+          });
+        });
+        $(".face", people).click(function(e) {
+          var details;
+          e.preventDefault();
+          details = $($(this).find('a').attr('href')).show();
+          return $(".people_popup").animate({
+            top: 0
+          }, function() {
+            details.addClass('reveal_content');
+            return $(".popup_nav", people).fadeIn();
+          });
+        });
+        $(".popup_nav a").click(function(e) {
+          var current, takeNext;
+          e.preventDefault();
+          if (!$(this).hasClass('prev')) {
+            takeNext = true;
+          }
+          current = $(".reveal_content");
+          if (!takeNext) {
+            next = current.prev('.person_detail');
+            if (next.length < 1) {
+              next = $(".person_detail").last();
+            }
+          } else {
+            next = current.next('.person_detail');
+            if (next.length < 1) {
+              next = $(".person_detail").first();
+            }
+          }
+          current.removeClass('reveal_content');
+          return setTimeout(function() {
+            next.show();
+            next.addClass('reveal_content');
+            return current.hide();
+          }, 300);
+        });
+      }
+      parallaxBackgrounds = $(".parallax_background");
+      if (parallaxBackgrounds.length > 0) {
+        scrollHandlers.push(parallaxBackground = function(scrollY, winHeight, winWidth) {
+          return parallaxBackgrounds.each(function(i, elem) {
+            var pos;
+            pos = "0% " + (scrollY * 0.5) + "px";
+            return $(elem).css('background-position', pos);
+          });
+        });
+      }
       renderFrame = function() {
         var scrollY, winHeight, winWidth;
         winHeight = $(window).height();
@@ -503,10 +659,13 @@
       });
       $(window).resize(function() {
         return $("#loading").fadeIn(function() {
-          return renderFrame();
+          renderFrame();
+          return $("#loading").fadeOut();
         });
       });
-      return renderFrame();
+      renderFrame();
+      $("#loading").fadeOut();
+      return $("#pow").addClass('show');
     });
   })(jQuery, window);
 

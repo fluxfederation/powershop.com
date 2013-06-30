@@ -8,11 +8,7 @@
 
 - About
 	* Animate pow
-	* Animate products
-	* Animate design thinking
 	* Fade in design thinking content
-	* Animate special icons
-	* Testimonial scrolling and animation
 	* Stats count up numbers
 	* Our people hover and navigation
 	* Investigate height issue with people
@@ -29,6 +25,10 @@
 - Menu
 	* Mobile Menu
 	* Fix close icon
+
+
+- Overall
+	* Fade out loading once all the assets have been loaded
 
 
 - Before go live

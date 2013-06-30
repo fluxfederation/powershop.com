@@ -1,9 +1,7 @@
 module.exports = function(grunt) {
   grunt.initConfig({
     jekyll: {
-      server : {
-
-      }
+      server : {}
     },
  
     less: {
@@ -46,7 +44,11 @@ module.exports = function(grunt) {
     watch: {
       coffee: {
         files: ['_assets/src/coffee/*.coffee'],
-        tasks: ['coffee', 'uglify']
+        tasks: ['coffee', 'uglify:dist']
+      },
+      vendor: {
+        files: ['_assets/src/vendor/*.js'],
+        tasks: ['uglify:vendor']
       },
       less: {
         files: ['_assets/src/less/*.less'],
@@ -65,6 +67,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-jekyll');
 
-  grunt.registerTask('default', ['coffee', 'less', 'uglify', 'jekyll:server']);
+  grunt.registerTask('default', ['watch']);
 
 };
