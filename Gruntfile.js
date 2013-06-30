@@ -17,6 +17,13 @@ module.exports = function(grunt) {
       }
     },
     uglify: {
+      vendor: {
+        files: {
+          '_assets/dist/vendor.js': [
+            '_assets/src/vendor/*.js'
+          ]
+        }
+      },
       dist: {
         files: {
           '_assets/dist/prod.js': [

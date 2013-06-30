@@ -245,4 +245,4 @@ do ($ = jQuery, window) ->
 		)
 		###
 		$("#loading").fadeOut()
-		$("#nav .show_nav").click();
+		

@@ -89,6 +89,7 @@ body {
 .grid-10 { width: 90.90909%; float: left; display: inline; }
 .grid-11 { width: 100%; display: block; }
 
+.push-05 { margin-left: 4.54545%; }
 .push-1 { margin-left: 9.0909%; }
 .push-2 { margin-left: 18.1818%; }
 .push-3 { margin-left: 27.2727%; }
@@ -974,6 +975,10 @@ a {
 }
 
 #product {
+	background: @purplePink;
+	padding-bottom: 40px;
+	overflow: hidden;
+
 	h2 {
 		text-align: center;
 		color: #F80C6A;
@@ -982,6 +987,10 @@ a {
 
 	.wrapper {
 		padding: 80px 0 0;
+	}
+
+	.mask {
+		background: #fff;
 	}
 
 	h3 {
@@ -1031,6 +1040,9 @@ a {
 			position: absolute;
 			bottom: -5px;
 			left: 50%;
+			-webkit-transition: margin 0.2s ease-out;
+			-moz-transition: margin 0.2s ease-out;
+			transition: margin 0.2s ease-out;
 		}
 
 		.product_1 {
@@ -1053,7 +1065,8 @@ a {
 
 #design_thinking {
 	background: @purplePink url(/_assets/img/design_thinking_bg.png) center top no-repeat;
-
+	overflow: hidden;
+	
 	.wrapper {
 		padding: 375px 0 120px;
 	}
@@ -1089,6 +1102,7 @@ a {
 		top: 470px;
 		margin-left: -400px;
 		height: 20px;
+		width: 20px;
 		background-position: -61px 0;
 	}
 
@@ -1172,15 +1186,15 @@ a {
 }
 
 #specials {
-	background: url(/_assets/img/specials.png) repeat;
-	padding-bottom: 156px;
+	background: #fff;
+	padding-bottom: 35px;
 
 	&:after {
 		.down_arrow(#fff);
 	}
 
 	.wrapper {
-		padding: 40px 0 45px;
+		padding: 40px 0 35px;
 	}
 
 	h2 {
@@ -1192,10 +1206,25 @@ a {
 		max-width: 720px;
 	}
 
-	.parallax_content_layer {
-		background: #fff;
+	.special_grid {
+		width: 100%;
+		background: url(/_assets/img/specials.png) repeat-x;
+		height: 61px;
+		margin-bottom: 13px;
+		-webkit-transform: translate3d(0, 0, 0);
+		-webkit-animation: marqueeLeft 100s linear infinite;
+		-moz-animation: marqueeLeft 100s linear infinite;
+		animation: marqueeLeft 100s linear infinite;
 	}
+   	
+   	.alt {
+   		-webkit-animation: marqueeRight 100s linear infinite;
+		-moz-animation: marqueeRight 100s linear infinite;
+		animation: marqueeRight 100s linear infinite;
+   	}
 }
+
+
 
 #our_history {
 	background: @burg;
@@ -1323,6 +1352,7 @@ a {
 
 	h3 {
 		text-align: right;
+		color: @cream;
 		padding-right: 10px;
 	}
 }
@@ -1521,42 +1551,52 @@ a {
 #shit_hot {
 	background: @purplePink;
 
+	&:after {
+		.down_arrow(@purplePink);
+	}
+
 	.wrapper {
-		padding: 175px 0 50px;
+		padding: 120px 0 60px;
 		overflow: hidden;
 	}
 
 	h1 {
-		width: 90%;
-		margin-bottom: 50px;
+		max-width: 900px;
+		margin-bottom: 60px;
 	}
 
 	p {
-		width: 350px;
-		padding-right: 50px;
-		float: left;
+		font-size: 18px;
+	}
+
+	.larger {
+		font-size: 25px;
 	}
 }
 
-#culture_banner .banner {
-	height: 897px;
-	width: 100%;
-	background: url(/_assets/img/pow_banner.jpg) no-repeat;
-	background-size: 100% 100%;
-	position: relative;
-	min-width: 1224px;
+#culture_banner {
+	overflow: hidden;
+	
+	.wrapper {
+		height: 897px;
+		display: block;
+		min-width: 1224px;
+	}	
 }
 
 #culture {
 	background-color: @blueGray;
 
-
+	&:after {
+		.down_arrow(@blueGray);
+	}
+	
 	h2 {
 		margin: 0;
 	}
 
 	.wrapper {
-		padding: 120px 0 100px;
+		padding: 90px 0 100px;
 	}
 
 	p {
@@ -1583,9 +1623,49 @@ a {
 }
 
 .p11,
+.p22,
+.p21,
+.p12 {
+	background: url(/_assets/img/loading_face_small.png) center center no-repeat;
+	position: relative;
+
+	&:after {
+		content: " ";
+		display: block;
+		position: absolute;
+		-webkit-animation: rotating 2s linear infinite;
+		top: 50%;
+		left: 50%;
+		width: 31px;
+		height: 30px;
+		margin: -15px 0 0 -15px;
+		opacity: 0.5;
+		background: url(/_assets/img/loading_element_small.png) no-repeat;
+	}
+}
+
+.stacked {
+	background: none;
+
+	&:after {
+		display: none;
+	}
+}
+
+.loaded {
+	&:after {
+		display: none;
+	}
+
+	&:hover {
+		opacity: 1;
+	}
+}
+
+.p11,
 .p12,
 .p22 {
-	background: #14191c url(/_assets/img/photo_border.gif) repeat-y top right;
+	background-color: #14191c;
 	position: relative;
 	opacity: 0.3;
 	overflow: hidden;
@@ -1647,13 +1727,21 @@ a {
 		margin-bottom: 80px;
 		width: 50%;
 	}
+
+	p a {
+		border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+	}
 }
 
 .faces {
 	padding-bottom: 60px;
+	position: relative;
 
 	li {
-		float: left;
+		position: absolute;
+		top: 0;
+
+		-webkit-transition: left 0.5s ease-out;
 	}
 
 	div {
@@ -1693,6 +1781,7 @@ a {
 		}
 	}
 }
+
 .roles {
 
 	li {
@@ -1712,6 +1801,10 @@ a {
 			left: 0;
 		}
 	}
+
+	.first:before {
+		display: none;
+	}
 }
 
 /* 
@@ -1724,15 +1817,6 @@ a {
 	left: -999999px;
 }
 
-
-.column {
-	.column(4);
-
-	p {
-		padding-right: 50px;
-	}
-}
-
 p.larger {
 	font-size: 25px;
 	line-height: 35px;
@@ -1740,4 +1824,47 @@ p.larger {
 
 .nl {
 	display: block;
+}
+
+/*
+ * ----------------------------------------------------------
+ * Parallax
+ * ---------------------------------------------------------- 
+ */
+ .parallax-block {
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  z-index: -1;
+  max-width: none !important;
+  max-height: none !important;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  -o-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000px;
+  -moz-perspective: 1000px;
+  -ms-perspective: 1000px;
+  -o-perspective: 1000px;
+  perspective: 1000px;
+}
+
+.parallax-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: none !important;
+  max-height: none !important;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  -o-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000px;
+  -moz-perspective: 1000px;
+  -ms-perspective: 1000px;
+  -o-perspective: 1000px;
+  perspective: 1000px;
 }

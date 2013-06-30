@@ -1,17 +1,9 @@
 - Home
-	* Responsive view
 	* Pagination buttons on contact page section need do not be white
 
 - Culture
-	* Check widths and margins on intro
-	* Parallax banner positioning
-	* Check widths on culture1
-	* Loading icons for images
-	* Make sure image visible loading is there and working
 	* Add arrows
-	* Animate current roles into the screen
 	* Apply now to mailto
-	* Role link use border rather than underline
 	* Browser testing
 
 - About
@@ -28,7 +20,7 @@
 - Contact Page
 	* Not sure if it needs something
 	* Fix header style
-	
+
 - Timeline
 	* Build
 	* Responsive view

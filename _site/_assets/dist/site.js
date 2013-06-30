@@ -154,26 +154,74 @@
       		)
       */
 
-      $("#loading").fadeOut();
-      return $("#nav .show_nav").click();
+      return $("#loading").fadeOut();
     });
   })(jQuery, window);
 
   (function($, window) {
+    $.vector = {
+      rotate: function(p, degrees) {
+        var c, radians, s;
+        radians = degrees * Math.PI / 180;
+        c = Math.cos(radians);
+        s = Math.sin(radians);
+        return [c * p[0] - s * p[1], s * p[0] + c * p[1]];
+      },
+      scale: function(p, n) {
+        return [n * p[0], n * p[1]];
+      },
+      add: function(a, b) {
+        return [a[0] + b[0], a[1] + b[1]];
+      },
+      minus: function(a, b) {
+        return [a[0] - b[0], a[1] - b[1]];
+      }
+    };
+    $.path.bezier = function(params, rotate) {
+      var v12, v14, v41, v43;
+      params.start = $.extend({
+        angle: 0,
+        length: 0.3333
+      }, params.start);
+      params.end = $.extend({
+        angle: 0,
+        length: 0.3333
+      }, params.end);
+      this.p1 = [params.start.x, params.start.y];
+      this.p4 = [params.end.x, params.end.y];
+      v14 = $.vector.minus(this.p4, this.p1);
+      v12 = $.vector.scale(v14, params.start.length);
+      v41 = $.vector.scale(v14, -1);
+      v43 = $.vector.scale(v41, params.end.length);
+      v12 = $.vector.rotate(v12, params.start.angle);
+      this.p2 = $.vector.add(this.p1, v12);
+      v43 = $.vector.rotate(v43, params.end.angle);
+      this.p3 = $.vector.add(this.p4, v43);
+      this.css = function(t) {
+        var css, f1, f2, f3, f4;
+        f1 = t * t * t;
+        f2 = 3 * t * t * (1 - t);
+        f3 = 3 * t * (1 - t) * (1 - t);
+        f4 = (1 - t) * (1 - t) * (1 - t);
+        css = {
+          x: this.p1[0] * f1 + this.p2[0] * f2 + this.p3[0] * f3 + this.p4[0] * f4 + 0.5,
+          y: this.p1[1] * f1 + this.p2[1] * f2 + this.p3[1] * f3 + this.p4[1] * f4 + 0.5
+        };
+        return css;
+      };
+      return this;
+    };
     return $(document).ready(function() {
-      var content, fadeIn, getHeaderBackground, header, isLocalScrolling, loadImages, loadedOfficePics, maps, nav, officePhotoScroller, officePhotos, onHomePage, page, sections;
+      var animationForDesign, animationForProduct, animationForRoles, content, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, left, loadImages, loadedOfficePics, maps, median, nav, officePhotoScroller, officePhotos, onHomePage, page, paths, product, renderFrame, right, roles, scrollHandlers, sections;
       sections = $(".section");
       content = $("#content");
       nav = $("#nav");
       header = $("#header");
       page = $("html");
-      officePhotos = $("#office_photos");
-      isLocalScrolling = false;
+      officePhotos = $("#office_photosw");
       onHomePage = $(".home").length > 0;
-      fadeIn = $(".fade-in");
-      fadeIn.css({
-        opacity: 0
-      });
+      scrollHandlers = [];
+      fadeIn = $(".fadeIn");
       getHeaderBackground = function() {
         var op, scroll;
         scroll = $(window).scrollTop();
@@ -185,16 +233,17 @@
         op = (scroll / 140) / 5;
         return 'rgba(0, 0, 0, ' + op + ')';
       };
-      $(window).scroll(function() {
-        var current, latest, scroll;
-        scroll = $(window).scrollTop();
+      scrollHandlers.push(fadeInHeaderBar = function(scrollY, winHeight, winWidth) {
+        var current, latest;
         current = header.css('background');
         latest = getHeaderBackground();
         if (current !== latest) {
-          header.css({
+          return header.css({
             background: latest
           });
         }
+      });
+      scrollHandlers.push(fadeInContent = function(scrollY, winHeight, winWidth) {
         return fadeIn.each(function(i, elem) {
           if ($(elem).data('fade-in-at') >= scroll) {
             if (!$(elem).data('showing')) {
@@ -224,14 +273,23 @@
         $(this).fadeOut();
         return $(".show_nav").fadeIn();
       });
+      officePhotoScroller = $("ul", officePhotos);
       if (officePhotos.length > 0) {
         loadImages = function() {
           return $("[data-image]", officePhotos).each(function(i, elem) {
-            var img, path;
+            var currentScroll, dom, img, path;
             if ($(elem).data('img-loaded') === true) {
               return;
             }
-            if ($(elem).is(":right-of-screen") || $(elem).is(":left-of-screen")) {
+            currentScroll = parseInt(officePhotoScroller.css('marginLeft').replace(/px/, ''));
+            dom = $(elem).get(0);
+            if ($.rightofscreen(dom, {
+              threshold: (currentScroll * -0.5) + $(window).width()
+            })) {
+              return;
+            } else if ($.leftofscreen(dom, {
+              threshold: (currentScroll * -0.5) - $(window).width()
+            })) {
               return;
             }
             $(elem).data('img-loaded', true);
@@ -242,8 +300,8 @@
             return setTimeout(function() {
               return $(elem).append(img).imagesLoaded().always(function(instance) {
                 $(elem).animate({
-                  opacity: 1
-                });
+                  opacity: 0.8
+                }).addClass('loaded');
                 img.fadeIn();
                 return $(elem).parents("li").animate({
                   opacity: 1
@@ -253,7 +311,6 @@
           });
         };
         loadedOfficePics = false;
-        officePhotoScroller = $("ul", officePhotos);
         officePhotoScroller.swipe({
           swipe: function(event, direction, distance, duration, fingerCount) {
             var currentScroll, maximumPosition, minimumPosition, scrollDistance, winWidth;
@@ -266,34 +323,32 @@
               if ((currentScroll + scrollDistance) > maximumPosition) {
                 officePhotoScroller.animate({
                   'marginLeft': maximumPosition + "px"
-                });
+                }, loadImages);
               } else {
                 officePhotoScroller.animate({
                   'marginLeft': (currentScroll + scrollDistance) + "px"
-                });
+                }, loadImages);
               }
-              loadImages();
               return;
             }
             if (direction === "left") {
               if ((currentScroll - scrollDistance) < minimumPosition) {
-                officePhotoScroller.animate({
+                return officePhotoScroller.animate({
                   'marginLeft': minimumPosition + "px"
-                });
+                }, loadImages);
               } else {
-                officePhotoScroller.animate({
+                return officePhotoScroller.animate({
                   'marginLeft': (currentScroll - scrollDistance) + "px"
-                });
+                }, loadImages);
               }
-              return loadImages();
             }
           }
         });
-        $(window).scroll(function() {
+        scrollHandlers.push(function(scrollY, winHeight, winWidth) {
           if (loadedOfficePics) {
             return;
           }
-          if (($(window).scrollTop() + $(window).height()) > officePhotos.offset().top) {
+          if ((scrollY + winHeight) > officePhotos.offset().top) {
             loadedOfficePics = true;
             return loadImages();
           }
@@ -335,8 +390,123 @@
             });
           });
         });
-        return $();
       }
+      $('.parallax_section').parallax({
+        scroll_factor: 0.5
+      });
+      roles = $("#current_roles");
+      if (roles.length > 0) {
+        faces = $(".faces li", roles);
+        median = faces.length / 2;
+        scrollHandlers.push(animationForRoles = function(scrollY, winHeight, winWidth) {
+          var amountScrolledWithinBox, comesIntoFocus, diff, endScrollFocus, r, startScrollForFocus;
+          comesIntoFocus = $(".faces", roles).offset().top;
+          startScrollForFocus = comesIntoFocus - winHeight;
+          endScrollFocus = startScrollForFocus + (winHeight / 2);
+          if (scrollY > startScrollForFocus) {
+            diff = endScrollFocus - startScrollForFocus;
+            amountScrolledWithinBox = scrollY - startScrollForFocus;
+            if (amountScrolledWithinBox > diff) {
+              amountScrolledWithinBox = diff;
+            }
+            r = amountScrolledWithinBox / diff;
+            return faces.each(function(i, elem) {
+              var offset;
+              offset = i - median;
+              return $(elem).css('left', (i + (offset - (offset * r))) * 86);
+            });
+          } else {
+            return faces.each(function(i, elem) {
+              var offset;
+              offset = i - median;
+              return $(elem).css('left', (offset + (offset * Math.PI)) * 86);
+            });
+          }
+        });
+      }
+      product = $("#product");
+      if (product.length > 0) {
+        right = $(".product_3", product);
+        left = $(".product_1", product);
+        scrollHandlers.push(animationForProduct = function(scrollY, winHeight, winWidth) {
+          var bottomIsVisibleAt, currentBottom, r, targetScroll;
+          bottomIsVisibleAt = product.offset().top + product.outerHeight();
+          currentBottom = winHeight + scrollY;
+          targetScroll = bottomIsVisibleAt - winHeight;
+          r = scrollY / targetScroll;
+          if (r > 1) {
+            r = 1;
+          }
+          left.css('marginLeft', -500 - ((1 - r) * (winWidth + left.outerWidth())));
+          return right.css('marginLeft', 100 + ((1 - r) * (winWidth + right.outerWidth())));
+        });
+      }
+      designs = $("#design_thinking");
+      if (designs.length > 0) {
+        paths = [];
+        $(".icons li").each(function(i, elem) {
+          var params;
+          params = {
+            start: {
+              x: $(elem).data('fx'),
+              y: $(elem).data('fy')
+            },
+            end: {
+              x: $(elem).data('sx'),
+              y: $(elem).data('sy')
+            },
+            angle: $(elem).data('a')
+          };
+          return paths[i] = new $.path.bezier(params);
+        });
+        scrollHandlers.push(animationForDesign = function(scrollY, winHeight, winWidth) {
+          var ignoredScroll, p, targetScroll, targetTop;
+          targetTop = designs.offset().top;
+          if (targetTop > winHeight) {
+            ignoredScroll = Math.abs(targetTop - winHeight);
+            targetScroll = targetTop - ignoredScroll;
+            p = (scrollY - ignoredScroll) / targetScroll;
+            if (p > 1) {
+              p = 1;
+            }
+          } else {
+            p = 1;
+          }
+          return $(".icons li", designs).each(function(i, elem) {
+            var o, path, position;
+            path = paths[i];
+            position = path.css(p);
+            if (p < 0.6) {
+              o = 0;
+            } else {
+              o = (p - 0.6) * 5;
+            }
+            return $(elem).css({
+              top: position.y,
+              opacity: o,
+              marginLeft: position.x
+            });
+          });
+        });
+      }
+      renderFrame = function() {
+        var scrollY, winHeight, winWidth;
+        winHeight = $(window).height();
+        winWidth = $(window).width();
+        scrollY = $(window).scrollTop();
+        return $.each(scrollHandlers, function(i, callback) {
+          return callback(scrollY, winHeight, winWidth);
+        });
+      };
+      $(window).scroll(function() {
+        return renderFrame();
+      });
+      $(window).resize(function() {
+        return $("#loading").fadeIn(function() {
+          return renderFrame();
+        });
+      });
+      return renderFrame();
     });
   })(jQuery, window);
 
