@@ -53,7 +53,7 @@
       return this;
     };
     return $(document).ready(function() {
-      var animationForDesign, animationForProduct, animationForRoles, content, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, hideCurrentTestimonial, left, loadImages, loadedOfficePics, maps, median, nav, next, officePhotoScroller, officePhotos, onHomePage, onResize, page, parallaxBackground, parallaxBackgrounds, paths, people, prev, product, renderFrame, resizeTimer, right, roles, say, scrollHandlers, sections;
+      var animationForDesign, animationForProduct, animationForRoles, content, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, hideCurrentTestimonial, left, loadImages, loadedOfficePics, maps, median, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, prev, product, renderFrame, right, roles, say, scrollHandlers, sections;
       sections = $(".section");
       content = $("#content");
       nav = $("#nav");
@@ -499,17 +499,8 @@
       $(window).scroll(function() {
         return renderFrame();
       });
-      resizeTimer = 0;
-      onResize = function() {
-        renderFrame();
-        return $("#loading").fadeOut();
-      };
-      $(window).resize(function() {
-        $("#loading").fadeIn();
-        clearTimeout(resizeTimer);
-        return resizeTimer = setTimeout(onResize, 500);
-      });
-      onResize();
+      renderFrame();
+      $("#loading").fadeOut();
       return $("#pow").addClass('show');
     });
   })(jQuery, window);

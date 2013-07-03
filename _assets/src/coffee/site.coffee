@@ -649,23 +649,10 @@ do ($ = jQuery, window) ->
     $(window).scroll ()->
       renderFrame()
 
-
-    resizeTimer = 0
-
-    onResize = ()->
-        renderFrame()
-
-        $("#loading").fadeOut();
-
-    $(window).resize ()->
-      $("#loading").fadeIn()
-
-      clearTimeout(resizeTimer)
-
-      resizeTimer = setTimeout(onResize, 500)
-
     # render the initial frame
-    onResize();
+    renderFrame()
+
+    $("#loading").fadeOut();
 
     # 
     $("#pow").addClass('show');
