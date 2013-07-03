@@ -649,6 +649,7 @@ do ($ = jQuery, window) ->
     $(window).scroll ()->
       renderFrame()
 
+
     # render the initial frame
     renderFrame()
 
