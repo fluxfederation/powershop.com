@@ -430,13 +430,13 @@ do ($ = jQuery, window) ->
         img = current.find('img')
         txt = current.find('.padd-off')
 
+        posLeft = txt.position().left
+        txtWidth = txt.width()
+
         img.animate({ 
           marginTop: '-300px',
           opacity: 0
         }, 600, 'easeInOutBack')
-
-        posLeft = txt.offset().left - 60
-        txtWidth = txt.width()
 
         txt.css(
          width: txtWidth,
@@ -444,9 +444,12 @@ do ($ = jQuery, window) ->
          left: posLeft
         )
 
+        takeOffToLeft = $(window).width();
+        takeOffToLeft = -1 * $(window).width() unless back
+        
         txt.animate({ 
           opacity: 0
-          left: $(window).width()
+          left: takeOffToLeft
         }, 600, 'easeOutQuint', ()->
           # hide the testimonial
           current.hide().removeClass('showing');
@@ -489,9 +492,14 @@ do ($ = jQuery, window) ->
             height: height
           )
 
+          # determine where to start the next block, if moving back we start
+          # off to the left, otherwise moving next starts from the right
+          startLeft = -1 * $(window).width()
+          startLeft = $(window).width() unless back
+
           nextTxt.css(
             opacity: 0,
-            left: $(window).width(),
+            left: startLeft,
             position: 'absolute',
             width: txtWidth
           )
@@ -514,7 +522,9 @@ do ($ = jQuery, window) ->
                 # clear explict heights
                 say.css('height', '')
                 nextTxt.css('position', 'static')
-
+                nextGrid.css(
+                  height: ''
+                )
                 # animate the container to the height of
               )
           )
@@ -630,7 +640,58 @@ do ($ = jQuery, window) ->
 
           $(elem).css('background-position', pos)
 
+    #
+    # Count up statistics. Stats that count up when they start to be visible
+    #
+    count = $(".count_up")
 
+    if count.length > 0
+      animationLength = 1000;
+
+      count.each (i, elem)->
+        if not $(elem).is(":in-viewport")
+          text = "0"
+
+          if $(elem).data('count-up-percentage')
+            text += "%"
+
+          $(elem).data('count-up', parseInt($(elem).text().replace('%', '')))
+          $(elem).data('count-up-value', 0)
+          $(elem).text(text)
+        else
+          $(elem).data('counted-up', true)
+          
+      scrollHandlers.push countUpNumbers = (scrollY, winHeight, winWidth)->
+        count.each (i, elem)->
+          self = $(elem)
+
+          # now in viewport so count
+          if not self.data('counted-up') and self.is(":in-viewport")
+            self.data('counted-up', true);
+
+            value = self.data('count-up-value');
+            expectedValue = self.data('count-up');
+            percentage = self.data('count-up-percentage')
+
+            countValue = setInterval( ()->
+              if value >= expectedValue
+                clearInterval(countValue)
+
+                if percentage
+                  expectedValue += "%"
+
+                self.text(expectedValue)
+              else
+                value += 1;
+                
+                text = value;
+
+                if percentage
+                  text += "%"
+
+                self.text(text)
+            , 15
+            )
     # 
     # Now we can actually do something useful.
     # 

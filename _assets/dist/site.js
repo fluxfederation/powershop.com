@@ -53,7 +53,7 @@
       return this;
     };
     return $(document).ready(function() {
-      var animationForDesign, animationForProduct, animationForRoles, content, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, hideCurrentTestimonial, left, loadImages, loadedOfficePics, maps, median, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, prev, product, renderFrame, right, roles, say, scrollHandlers, sections;
+      var animationForDesign, animationForProduct, animationForRoles, animationLength, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, hideCurrentTestimonial, left, loadImages, loadedOfficePics, maps, median, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, prev, product, renderFrame, right, roles, say, scrollHandlers, sections;
       sections = $(".section");
       content = $("#content");
       nav = $("#nav");
@@ -332,7 +332,7 @@
       if (say.length > 0) {
         $("li:first", say).addClass('showing').siblings().hide();
         hideCurrentTestimonial = function(back) {
-          var current, grid, height, img, posLeft, txt, txtWidth;
+          var current, grid, height, img, posLeft, takeOffToLeft, txt, txtWidth;
           current = $(".showing", say);
           grid = $(".grid-55", current);
           height = current.outerHeight(true);
@@ -342,22 +342,26 @@
           });
           img = current.find('img');
           txt = current.find('.padd-off');
+          posLeft = txt.position().left;
+          txtWidth = txt.width();
           img.animate({
             marginTop: '-300px',
             opacity: 0
           }, 600, 'easeInOutBack');
-          posLeft = txt.offset().left - 60;
-          txtWidth = txt.width();
           txt.css({
             width: txtWidth,
             position: 'absolute',
             left: posLeft
           });
+          takeOffToLeft = $(window).width();
+          if (!back) {
+            takeOffToLeft = -1 * $(window).width();
+          }
           return txt.animate({
             opacity: 0,
-            left: $(window).width()
+            left: takeOffToLeft
           }, 600, 'easeOutQuint', function() {
-            var next, nextGrid, nextImg, nextTxt;
+            var next, nextGrid, nextImg, nextTxt, startLeft;
             current.hide().removeClass('showing');
             img.css('marginTop', 0);
             txt.css({
@@ -388,9 +392,13 @@
             nextGrid.css({
               height: height
             });
+            startLeft = -1 * $(window).width();
+            if (!back) {
+              startLeft = $(window).width();
+            }
             nextTxt.css({
               opacity: 0,
-              left: $(window).width(),
+              left: startLeft,
               position: 'absolute',
               width: txtWidth
             });
@@ -408,7 +416,10 @@
                 'opacity': 1
               }, 'easeInOutBack', function() {
                 say.css('height', '');
-                return nextTxt.css('position', 'static');
+                nextTxt.css('position', 'static');
+                return nextGrid.css({
+                  height: ''
+                });
               });
             });
           });
@@ -484,6 +495,53 @@
             var pos;
             pos = "0% " + (scrollY * 0.5) + "px";
             return $(elem).css('background-position', pos);
+          });
+        });
+      }
+      count = $(".count_up");
+      if (count.length > 0) {
+        animationLength = 1000;
+        count.each(function(i, elem) {
+          var text;
+          if (!$(elem).is(":in-viewport")) {
+            text = "0";
+            if ($(elem).data('count-up-percentage')) {
+              text += "%";
+            }
+            $(elem).data('count-up', parseInt($(elem).text().replace('%', '')));
+            $(elem).data('count-up-value', 0);
+            return $(elem).text(text);
+          } else {
+            return $(elem).data('counted-up', true);
+          }
+        });
+        scrollHandlers.push(countUpNumbers = function(scrollY, winHeight, winWidth) {
+          return count.each(function(i, elem) {
+            var countValue, expectedValue, percentage, self, value;
+            self = $(elem);
+            if (!self.data('counted-up') && self.is(":in-viewport")) {
+              self.data('counted-up', true);
+              value = self.data('count-up-value');
+              expectedValue = self.data('count-up');
+              percentage = self.data('count-up-percentage');
+              return countValue = setInterval(function() {
+                var text;
+                if (value >= expectedValue) {
+                  clearInterval(countValue);
+                  if (percentage) {
+                    expectedValue += "%";
+                  }
+                  return self.text(expectedValue);
+                } else {
+                  value += 1;
+                  text = value;
+                  if (percentage) {
+                    text += "%";
+                  }
+                  return self.text(text);
+                }
+              }, 15);
+            }
           });
         });
       }

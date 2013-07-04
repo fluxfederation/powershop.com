@@ -26,6 +26,44 @@
     to { -webkit-transform: rotate(360deg); }
 }
 
+@-moz-keyframes rotating {
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(360deg); }
+}
+
+@-o-keyframes rotating {
+    from { -o-transform: rotate(0deg); }
+    to { -o-transform: rotate(360deg); }
+}
+
+@keyframes rotating {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@-webkit-keyframes beat {
+    0% { -webkit-transform: scale(0.75); }
+    50% { -webkit-transform: scale(1.25); }
+    100% { -webkit-transform: scale(0.75); }
+}
+
+@-moz-keyframes beat {
+    0% { -moz-transform: scale(0.75); }
+    50% { -moz-transform: scale(1.25); }
+    100% { -moz-transform: scale(0.75); }
+}
+
+@-o-keyframes beat {
+    0% { -o-transform: scale(0.75); }
+    50% { -o-transform: scale(1.25); }
+    100% { -o-transform: scale(0.75); }
+}
+
+@keyframes beat {
+    0% { transform: scale(0.75); }
+    50% { transform: scale(1.25); }
+    100% { transform: scale(0.75); }
+}
 
 .animated.hinge{
 	-webkit-animation-duration:2s;-moz-animation-duration:2s;-ms-animation-duration:2s;-o-animation-duration:2s;animation-duration:2s;}
