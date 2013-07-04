@@ -53,7 +53,7 @@
       return this;
     };
     return $(document).ready(function() {
-      var animationForDesign, animationForProduct, animationForRoles, animationLength, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, hideCurrentTestimonial, left, loadImages, loadedOfficePics, maps, median, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, prev, product, renderFrame, right, roles, say, scrollHandlers, sections;
+      var animationForDesign, animationForProduct, animationForRoles, animationLength, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, hideCurrentTestimonial, left, loadImages, loadedOfficePics, maps, median, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, peopleNav, prev, product, renderFrame, right, roles, say, scrollHandlers, sections;
       sections = $(".section");
       content = $("#content");
       nav = $("#nav");
@@ -203,8 +203,10 @@
           var vard;
           vard = $(this).siblings('.vcard');
           if (vard.is(':visible')) {
+            $(this).addClass('open');
             return vard.slideUp();
           } else {
+            $(this).removeClass('open');
             return vard.slideDown();
           }
         });
@@ -271,7 +273,7 @@
           var bottomIsVisibleAt, currentBottom, r, targetScroll;
           bottomIsVisibleAt = product.offset().top + product.outerHeight();
           currentBottom = winHeight + scrollY;
-          targetScroll = bottomIsVisibleAt - winHeight;
+          targetScroll = (bottomIsVisibleAt + 100) - winHeight;
           r = scrollY / targetScroll;
           if (r > 1) {
             r = 1;
@@ -448,6 +450,7 @@
             return $(".people_popup").find('.reveal_content').removeClass('.reveal_content').hide();
           });
         });
+        peopleNav = $(".popup_nav a", people);
         $(".face", people).click(function(e) {
           var details;
           e.preventDefault();
@@ -455,8 +458,14 @@
           return $(".people_popup").animate({
             top: 0
           }, function() {
+            if (details.data('background')) {
+              details.css('background-image', 'url(' + details.data('background') + ")");
+            }
             details.addClass('reveal_content');
-            return $(".popup_nav", people).fadeIn();
+            peopleNav.css({
+              top: details.height() / 2
+            });
+            return peopleNav.fadeIn();
           });
         });
         $(".popup_nav a").click(function(e) {
@@ -480,6 +489,9 @@
           current.removeClass('reveal_content');
           return setTimeout(function() {
             next.show();
+            if (details.data('background')) {
+              details.css('background-image', 'url(' + details.data('background') + ")");
+            }
             next.addClass('reveal_content');
             return current.hide();
           }, 300);

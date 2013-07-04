@@ -544,14 +544,14 @@ a {
 		line-height: 20px;
 		letter-spacing: 1px;
 		border: 1px solid #F8C7D9;
-		color: @hotPink;
+		color: #fff;
 
 		&:hover,
 		&:focus {
 			color: @hotPink;
 			text-decoration: none;
 			outline: none;
-			opacity: 0.8;
+			background: #fff;
 		}
 	}
 }
@@ -858,7 +858,7 @@ a {
 
 			&:after {
 				content: " ";
-				display: none;
+				display: block;
 				height: 7px;
 				width: 12px;
 				top: 50%;
@@ -871,10 +871,10 @@ a {
 
 		&:hover {
 			cursor: pointer;
+		}
 
-			span:after {
-				display: block;
-			}
+		&.open span:after {
+			background-position: -104px -79px;
 		}
 	}
 
@@ -915,33 +915,27 @@ a {
 
 #map_wellington,
 #map_auckland { 
-	h3 {
-		background: #BC216B;
-	}
-
+	h3,
 	.vcard {
 		background: #BC216B;
+		background: rgba(188, 33, 107, 0.9);
 	}
 }
 
 #map_melbourne { 
-	h3 {
-		background: @hotPink;
-	}
-
+	h3,
 	.vcard {
 		background: @hotPink;
+		background: rgba(249, 13, 106, 0.9);
 	}
 }
 
 
 #map_masterton { 
-	h3 {
-		background: @burg;
-	}
-
+	h3,
 	.vcard {
 		background: @burg;
+		background: rgba(102, 34, 68, 0.9);
 	}
 }
 
@@ -1454,7 +1448,7 @@ a {
 
 #our_people {
 	background: @purplePink;
-	padding: 120px 0 0 50px;
+	padding: 120px 0 120px 0;
 
 	h2 {
 		text-align: center;
@@ -1633,9 +1627,9 @@ a {
 	background: #4C4648;
 	width: 100%;
 	position: absolute;
-	min-height: 400px;
-	top: -1200px;
+	top: -2000px;
 	z-index: 10;
+	padding-top: 59%;
 
 	h4, h5 {
 		color: #fff;
@@ -1660,6 +1654,7 @@ a {
 		.transition(opacity 0.4s ease-in-out);
 	}
 
+
 	.reveal_content {
 		h4, h5, p {
 			opacity: 1;
@@ -1668,11 +1663,19 @@ a {
 
 	.person_detail {
 		display: none;
+		background-size: 100% 100%;
+		position: absolute;
+		background-size: 100% 100%;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
 	}
 
 	.people_content {
-		padding: 4.54545% 0 4.54545% 9.0909%;
-		position: relative;
+		padding: 4.54545% 0 4.54545% 4.54545%;
+		position: absolute;
+		top: 0;
 	}
 
 	.close {

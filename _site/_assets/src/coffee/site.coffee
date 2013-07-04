@@ -259,8 +259,10 @@ do ($ = jQuery, window) ->
         vard = $(this).siblings('.vcard')
 
         if vard.is(':visible')
+          $(this).addClass('open')
           vard.slideUp()
         else
+          $(this).removeClass('open');
           vard.slideDown()
 
       google.maps.event.addDomListener(window, 'load', ()->
@@ -345,7 +347,7 @@ do ($ = jQuery, window) ->
         currentBottom = winHeight + scrollY
 
         # maxDiff
-        targetScroll = bottomIsVisibleAt - winHeight
+        targetScroll = (bottomIsVisibleAt + 100) - winHeight
 
         r = scrollY / targetScroll
 
@@ -446,7 +448,7 @@ do ($ = jQuery, window) ->
 
         takeOffToLeft = $(window).width();
         takeOffToLeft = -1 * $(window).width() unless back
-        
+
         txt.animate({ 
           opacity: 0
           left: takeOffToLeft
@@ -573,6 +575,8 @@ do ($ = jQuery, window) ->
       # 
       # Click a users face to open the popup
       #
+      peopleNav = $(".popup_nav a", people)
+
       $(".face", people).click (e)->
         e.preventDefault()
 
@@ -583,11 +587,21 @@ do ($ = jQuery, window) ->
         $(".people_popup").animate(
           top: 0,
           ()->
+            # load the background image 
+            if details.data('background')
+              details.css('background-image', 'url('+details.data('background') + ")")
+
             # bring in content
-            details.addClass('reveal_content');
+            details.addClass('reveal_content')
 
             # show navigation
-            $(".popup_nav", people).fadeIn()
+            peopleNav.css(
+              top: details.height() / 2
+            )
+
+            # update the thumbnails in the people nav
+            
+            peopleNav.fadeIn()
         )
 
       #
@@ -615,6 +629,11 @@ do ($ = jQuery, window) ->
 
         setTimeout( ()->
           next.show()
+
+          # load the background image 
+          if details.data('background')
+              details.css('background-image', 'url('+details.data('background') + ")")
+
           next.addClass('reveal_content')
           current.hide()
         , 300)
