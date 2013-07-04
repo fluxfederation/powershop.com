@@ -77,6 +77,12 @@ do ($ = jQuery, window) ->
     getHeaderBackground = ()->
       scroll = $(window).scrollTop()
 
+      if onHomePage
+        if scroll > 0 
+          $(".logo em").fadeOut()
+        else
+          $(".logo em").fadeIn()
+
       if scroll >= 140 
         return 'rgba(0, 0, 0, 0.2)'
       else if scroll < 1 
@@ -127,6 +133,7 @@ do ($ = jQuery, window) ->
       )
 
       $(this).fadeOut(()->
+        $("#nav").fadeIn()
         $(".close_nav").fadeIn()
       )
         
@@ -561,30 +568,33 @@ do ($ = jQuery, window) ->
       $(".close", people).click (e)->
         e.preventDefault();
 
+        # determine what group to hide
+        container = $(this).parents('.people_popup')
+
         # hide nav
-        $(".popup_nav", people).fadeOut()
+        $(".popup_nav", container).fadeOut()
 
         # hide any open ones
-        $(".people_popup").animate(
+        container.animate(
           top: '-1200px',
           ()->
-            $(".people_popup").find('.reveal_content').removeClass('.reveal_content').hide()
+            container
+              .find('.reveal_content').removeClass('.reveal_content').hide()
 
         )
 
-      # 
-      # Click a users face to open the popup
-      #
-      peopleNav = $(".popup_nav a", people)
-
       $(".face", people).click (e)->
         e.preventDefault()
+
+        # determine what group we want to trigger
+        container = $(this).parents(".people_group")
+        peopleNav = container.find('.popup_nav')
 
         # fade in the correct staff member from the top of the page
         details = $($(this).find('a').attr('href')).show()
 
         # animate it down
-        $(".people_popup").animate(
+        $(".people_popup", container).animate(
           top: 0,
           ()->
             # load the background image 
@@ -600,7 +610,7 @@ do ($ = jQuery, window) ->
             )
 
             # update the thumbnails in the people nav
-            
+
             peopleNav.fadeIn()
         )
 
@@ -609,9 +619,9 @@ do ($ = jQuery, window) ->
       #
       $(".popup_nav a").click (e)->
         e.preventDefault()
-
+        container = $(this).parents('people_group')
         takeNext = true unless $(this).hasClass('prev')
-        current = $(".reveal_content")
+        current = $(".reveal_content", container)
 
         if not takeNext
           next = current.prev('.person_detail')
@@ -665,7 +675,7 @@ do ($ = jQuery, window) ->
     count = $(".count_up")
 
     if count.length > 0
-      animationLength = 1000;
+      animationLength = 2000;
 
       count.each (i, elem)->
         if not $(elem).is(":in-viewport")
@@ -691,25 +701,30 @@ do ($ = jQuery, window) ->
             value = self.data('count-up-value');
             expectedValue = self.data('count-up');
             percentage = self.data('count-up-percentage')
+            delay = Math.random() * 400
+            speed = Math.random() * 80
 
-            countValue = setInterval( ()->
-              if value >= expectedValue
-                clearInterval(countValue)
+            setTimeout( ()->
+              countValue = setInterval( ()->
+                if value >= expectedValue
+                  clearInterval(countValue)
 
-                if percentage
-                  expectedValue += "%"
+                  if percentage
+                    expectedValue += "%"
 
-                self.text(expectedValue)
-              else
-                value += 1;
-                
-                text = value;
+                  self.text(expectedValue)
+                else
+                  value += 1;
+                  
+                  text = value;
 
-                if percentage
-                  text += "%"
+                  if percentage
+                    text += "%"
 
-                self.text(text)
-            , 15
+                  self.text(text)
+              , speed
+              )
+            , delay
             )
     # 
     # Now we can actually do something useful.

@@ -53,7 +53,7 @@
       return this;
     };
     return $(document).ready(function() {
-      var animationForDesign, animationForProduct, animationForRoles, animationLength, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, hideCurrentTestimonial, left, loadImages, loadedOfficePics, maps, median, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, peopleNav, prev, product, renderFrame, right, roles, say, scrollHandlers, sections;
+      var animationForDesign, animationForProduct, animationForRoles, animationLength, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, hideCurrentTestimonial, left, loadImages, loadedOfficePics, maps, median, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, prev, product, renderFrame, right, roles, say, scrollHandlers, sections;
       sections = $(".section");
       content = $("#content");
       nav = $("#nav");
@@ -66,6 +66,13 @@
       getHeaderBackground = function() {
         var op, scroll;
         scroll = $(window).scrollTop();
+        if (onHomePage) {
+          if (scroll > 0) {
+            $(".logo em").fadeOut();
+          } else {
+            $(".logo em").fadeIn();
+          }
+        }
         if (scroll >= 140) {
           return 'rgba(0, 0, 0, 0.2)';
         } else if (scroll < 1) {
@@ -102,6 +109,7 @@
           height: '100%'
         });
         return $(this).fadeOut(function() {
+          $("#nav").fadeIn();
           return $(".close_nav").fadeIn();
         });
       });
@@ -442,20 +450,23 @@
       people = $("#our_people");
       if (people.length > 0) {
         $(".close", people).click(function(e) {
+          var container;
           e.preventDefault();
-          $(".popup_nav", people).fadeOut();
-          return $(".people_popup").animate({
+          container = $(this).parents('.people_popup');
+          $(".popup_nav", container).fadeOut();
+          return container.animate({
             top: '-1200px'
           }, function() {
-            return $(".people_popup").find('.reveal_content').removeClass('.reveal_content').hide();
+            return container.find('.reveal_content').removeClass('.reveal_content').hide();
           });
         });
-        peopleNav = $(".popup_nav a", people);
         $(".face", people).click(function(e) {
-          var details;
+          var container, details, peopleNav;
           e.preventDefault();
+          container = $(this).parents(".people_group");
+          peopleNav = container.find('.popup_nav');
           details = $($(this).find('a').attr('href')).show();
-          return $(".people_popup").animate({
+          return $(".people_popup", container).animate({
             top: 0
           }, function() {
             if (details.data('background')) {
@@ -469,12 +480,13 @@
           });
         });
         $(".popup_nav a").click(function(e) {
-          var current, takeNext;
+          var container, current, takeNext;
           e.preventDefault();
+          container = $(this).parents('people_group');
           if (!$(this).hasClass('prev')) {
             takeNext = true;
           }
-          current = $(".reveal_content");
+          current = $(".reveal_content", container);
           if (!takeNext) {
             next = current.prev('.person_detail');
             if (next.length < 1) {
@@ -512,7 +524,7 @@
       }
       count = $(".count_up");
       if (count.length > 0) {
-        animationLength = 1000;
+        animationLength = 2000;
         count.each(function(i, elem) {
           var text;
           if (!$(elem).is(":in-viewport")) {
@@ -529,30 +541,35 @@
         });
         scrollHandlers.push(countUpNumbers = function(scrollY, winHeight, winWidth) {
           return count.each(function(i, elem) {
-            var countValue, expectedValue, percentage, self, value;
+            var delay, expectedValue, percentage, self, speed, value;
             self = $(elem);
             if (!self.data('counted-up') && self.is(":in-viewport")) {
               self.data('counted-up', true);
               value = self.data('count-up-value');
               expectedValue = self.data('count-up');
               percentage = self.data('count-up-percentage');
-              return countValue = setInterval(function() {
-                var text;
-                if (value >= expectedValue) {
-                  clearInterval(countValue);
-                  if (percentage) {
-                    expectedValue += "%";
+              delay = Math.random() * 400;
+              speed = Math.random() * 80;
+              return setTimeout(function() {
+                var countValue;
+                return countValue = setInterval(function() {
+                  var text;
+                  if (value >= expectedValue) {
+                    clearInterval(countValue);
+                    if (percentage) {
+                      expectedValue += "%";
+                    }
+                    return self.text(expectedValue);
+                  } else {
+                    value += 1;
+                    text = value;
+                    if (percentage) {
+                      text += "%";
+                    }
+                    return self.text(text);
                   }
-                  return self.text(expectedValue);
-                } else {
-                  value += 1;
-                  text = value;
-                  if (percentage) {
-                    text += "%";
-                  }
-                  return self.text(text);
-                }
-              }, 15);
+                }, speed);
+              }, delay);
             }
           });
         });
