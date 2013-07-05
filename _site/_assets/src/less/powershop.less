@@ -699,9 +699,11 @@ a {
 
 #make_things {
 	background: @purplePink url(/_assets/img/textures/pink.png) 0 0 repeat;
+	overflow: hidden;
 
 	.wrapper {
 		padding: 175px 0 120px 0;
+		position: relative;
 	}
 
 	h2 {
@@ -715,12 +717,42 @@ a {
 
 		.hr(#fff);
 	}
+}
 
-	&:after {
-		.down_arrow(@purplePink);
-		border-image-source: url(/_assets/img/textures/pink.png);
-		border-image-repeat: repeat;
-	}
+#ill1 {
+	position: absolute;
+	top: 50px;
+	left: 530px;
+
+	.transform-origin(50%, -30%);
+	.rotate(0deg);
+
+	-webkit-animation: fly 2s ease-in-out infinite;
+}
+
+.ill_holder {
+	position: relative;
+}
+
+#ill1_body {
+	width: 583px;
+	height: 463px;
+	display: block;
+	z-index: 81;
+	position: relative;
+	background: url(/_assets/img/illustrations/1_body.png) no-repeat;
+}
+
+#ill1_fire {
+	width: 232px;
+	height: 122px;
+	z-index: 80;
+	position: absolute;
+	top: 170px;
+	left: 440px;
+	background: url(/_assets/img/illustrations/1_fire.png) no-repeat;
+
+	-webkit-animation: shakeFire 1s linear infinite;
 }
 
 #give {

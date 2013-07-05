@@ -754,6 +754,51 @@ do ($ = jQuery, window) ->
               )
             , delay
             )
+
+    #
+    # Home page animate parallaxed illustrations.
+    # 
+    if onHomePage
+      ill1 = $("#ill1")
+      ill1_section = $("#make_things")
+      ill1_fire = $("#ill1_fire")
+
+      scrollHandlers.push animateHomePage = (scrollY, winHeight, winWidth)->
+        #
+        # Illustration 1. Make things. This guy comes up from the bottom left as
+        # the user scrolls on the page to sit at the final position of 20,520. The
+        # driver of this vehicle is a little drunk so as he comes across, he moves
+        # up and down. 
+        #
+        restingPlaceX = 530 
+        restingPlaceY = 50
+        amountOfScrollToFullAnimation = ill1_section.offset().top
+        percentageScroll = scrollY/amountOfScrollToFullAnimation
+
+        if percentageScroll >= 1
+          placeY = restingPlaceY
+          placeX = restingPlaceX
+          ill1.addClass('swing')
+
+        else
+          placeX = winWidth - ((winWidth - restingPlaceX) * percentageScroll)
+          placeY = restingPlaceY + 200 - (200 * percentageScroll);
+          ill1.removeClass('swing')
+
+        ill1.css(
+          'top': placeY,
+          'left': placeX
+        )
+
+        #
+        # Illustration 2.
+        #
+
+        #
+        # Illustration 3.
+        #
+
+
     # 
     # Now we can actually do something useful.
     # 
@@ -763,6 +808,9 @@ do ($ = jQuery, window) ->
       scrollY = $(window).scrollTop();
 
       $.each scrollHandlers, (i, callback)->
+        if scrollY < 0
+          scrollY = 0
+
         callback(scrollY, winHeight, winWidth)
     
 
@@ -776,20 +824,26 @@ do ($ = jQuery, window) ->
     # render the initial frame
     renderFrame()
 
-    # trigger the removal of the loading page
-    $("#loading").addClass('done wink');
+    useWink = false
 
-    setTimeout(()->
-      $("#loading").removeClass('wink');
+    # trigger the removal of the loading page
+    if useWink
+      $("#loading").addClass('done wink');
 
       setTimeout(()->
-        $(".loading_icon").fadeOut(()->
-          $("#loading").fadeOut()
-        )
-      , 1000
-      )
+        $("#loading").removeClass('wink');
 
-    , 2000
-    )
+        setTimeout(()->
+          $(".loading_icon").fadeOut(()->
+            $("#loading").fadeOut()
+          )
+        , 1000
+        )
+
+      , 2000
+      )
+    else
+      $("#loading").fadeOut()
+
     # 
     $("#pow").addClass('show');

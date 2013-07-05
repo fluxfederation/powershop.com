@@ -53,7 +53,7 @@
       return this;
     };
     return $(document).ready(function() {
-      var animationForDesign, animationForProduct, animationForRoles, animationLength, body, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, headerGone, hideCurrentTestimonial, left, loadImages, loadedOfficePics, maps, median, menuOpen, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, prev, product, renderFrame, right, roles, say, scrollHandlers, sections;
+      var animateHomePage, animationForDesign, animationForProduct, animationForRoles, animationLength, body, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, headerGone, hideCurrentTestimonial, ill1, ill1_fire, ill1_section, left, loadImages, loadedOfficePics, maps, median, menuOpen, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, prev, product, renderFrame, right, roles, say, scrollHandlers, sections, useWink;
       sections = $(".section");
       content = $("#content");
       nav = $("#nav");
@@ -601,12 +601,40 @@
           });
         });
       }
+      if (onHomePage) {
+        ill1 = $("#ill1");
+        ill1_section = $("#make_things");
+        ill1_fire = $("#ill1_fire");
+        scrollHandlers.push(animateHomePage = function(scrollY, winHeight, winWidth) {
+          var amountOfScrollToFullAnimation, percentageScroll, placeX, placeY, restingPlaceX, restingPlaceY;
+          restingPlaceX = 530;
+          restingPlaceY = 50;
+          amountOfScrollToFullAnimation = ill1_section.offset().top;
+          percentageScroll = scrollY / amountOfScrollToFullAnimation;
+          if (percentageScroll >= 1) {
+            placeY = restingPlaceY;
+            placeX = restingPlaceX;
+            ill1.addClass('swing');
+          } else {
+            placeX = winWidth - ((winWidth - restingPlaceX) * percentageScroll);
+            placeY = restingPlaceY + 200 - (200 * percentageScroll);
+            ill1.removeClass('swing');
+          }
+          return ill1.css({
+            'top': placeY,
+            'left': placeX
+          });
+        });
+      }
       renderFrame = function() {
         var scrollY, winHeight, winWidth;
         winHeight = $(window).height();
         winWidth = $(window).width();
         scrollY = $(window).scrollTop();
         return $.each(scrollHandlers, function(i, callback) {
+          if (scrollY < 0) {
+            scrollY = 0;
+          }
           return callback(scrollY, winHeight, winWidth);
         });
       };
@@ -614,15 +642,20 @@
         return renderFrame();
       });
       renderFrame();
-      $("#loading").addClass('done wink');
-      setTimeout(function() {
-        $("#loading").removeClass('wink');
-        return setTimeout(function() {
-          return $(".loading_icon").fadeOut(function() {
-            return $("#loading").fadeOut();
-          });
-        }, 1000);
-      }, 2000);
+      useWink = false;
+      if (useWink) {
+        $("#loading").addClass('done wink');
+        setTimeout(function() {
+          $("#loading").removeClass('wink');
+          return setTimeout(function() {
+            return $(".loading_icon").fadeOut(function() {
+              return $("#loading").fadeOut();
+            });
+          }, 1000);
+        }, 2000);
+      } else {
+        $("#loading").fadeOut();
+      }
       return $("#pow").addClass('show');
     });
   })(jQuery, window);
