@@ -68,6 +68,9 @@ do ($ = jQuery, window) ->
     onHomePage = $(".home").length > 0
     scrollHandlers = []
     fadeIn = $ ".fadeIn"
+    menuOpen = false
+    headerGone = false
+    body = $ "body"
 
     # 
     # Helper function for getting the background color of the header for the
@@ -75,13 +78,19 @@ do ($ = jQuery, window) ->
     # the time we hit the first text (~180px) we need to have it up.
     #
     getHeaderBackground = ()->
+      if menuOpen
+        return 'rgba(0, 0, 0, 0.8)'
+
       scroll = $(window).scrollTop()
 
       if onHomePage
-        if scroll > 0 
-          $(".logo em").fadeOut()
-        else
-          $(".logo em").fadeIn()
+        if scroll > 4
+          if  not headerGone
+            headerGone = true 
+            $(".logo strong").animate({top: '-80px'}, 'easeInOutBack')
+        else if headerGone
+          headerGone = false
+          $(".logo strong").animate({top: '10px'}, 'easeInOutBack')
 
       if scroll >= 140 
         return 'rgba(0, 0, 0, 0.2)'
@@ -126,10 +135,20 @@ do ($ = jQuery, window) ->
     #
     $(".show_nav").click (e)->
       e.preventDefault()
+      menuOpen = true;
+
+      page.css(
+        'overflow-y': 'hidden'
+      )
 
       header.css(
-        background: 'rgba(0, 0, 0, 0.8)',
-        height: '100%'
+        'background': getHeaderBackground()
+      )
+
+      header.animate({
+        height: $(window).height()
+      }, ()->
+        header.css('height', '100%')
       )
 
       $(this).fadeOut(()->
@@ -145,13 +164,20 @@ do ($ = jQuery, window) ->
     $(".close_nav").click (e)->
       e.preventDefault()
 
-      header.css(
-        background: getHeaderBackground()
-        height: '50px'
+      menuOpen = false;
+
+
+      page.css(
+        'overflow-y': 'scroll'
       )
 
       $(this).fadeOut()
+      header.animate(
+        background: getHeaderBackground()
+        height: '50px'
+      )
       $(".show_nav").fadeIn()
+
 
 
     
@@ -576,7 +602,7 @@ do ($ = jQuery, window) ->
 
         # hide any open ones
         container.animate(
-          top: '-1200px',
+          top: '-1500px',
           ()->
             container
               .find('.reveal_content').removeClass('.reveal_content').hide()
@@ -585,6 +611,9 @@ do ($ = jQuery, window) ->
 
       $(".face", people).click (e)->
         e.preventDefault()
+
+        # close any of the existing ones
+        $(".people_content .close:visible").trigger('click');
 
         # determine what group we want to trigger
         container = $(this).parents(".people_group")
@@ -605,12 +634,11 @@ do ($ = jQuery, window) ->
             details.addClass('reveal_content')
 
             # show navigation
-            peopleNav.css(
+            peopleNav.find('a').css(
               top: details.height() / 2
             )
 
             # update the thumbnails in the people nav
-
             peopleNav.fadeIn()
         )
 
@@ -641,8 +669,8 @@ do ($ = jQuery, window) ->
           next.show()
 
           # load the background image 
-          if details.data('background')
-              details.css('background-image', 'url('+details.data('background') + ")")
+          if next.data('background')
+              next.css('background-image', 'url('+next.data('background') + ")")
 
           next.addClass('reveal_content')
           current.hide()
@@ -748,7 +776,20 @@ do ($ = jQuery, window) ->
     # render the initial frame
     renderFrame()
 
-    $("#loading").fadeOut();
+    # trigger the removal of the loading page
+    $("#loading").addClass('done wink');
 
+    setTimeout(()->
+      $("#loading").removeClass('wink');
+
+      setTimeout(()->
+        $(".loading_icon").fadeOut(()->
+          $("#loading").fadeOut()
+        )
+      , 1000
+      )
+
+    , 2000
+    )
     # 
     $("#pow").addClass('show');

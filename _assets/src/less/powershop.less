@@ -197,10 +197,11 @@ a {
 
 .logo {
 	float: left;
-	margin: 10px 0;
+	padding: 10px 0;
 	width: 31px;
 	height: 30px;
 	overflow: hidden;
+	position: relative;
 
 	span {
 		display: block;
@@ -219,6 +220,9 @@ a {
 		overflow: hidden;
 		background: url(/_assets/img/sprite.png) -31px -30px no-repeat;
 		outline: none;
+		position: absolute;
+		left: 31px;
+		top: 10px;
 	}
 }
 
@@ -496,7 +500,7 @@ a {
  * --------------------------------------------------------
  */
 #loading {
-	background: @blueGray url(/_assets/img/loading_face.png) center center no-repeat;
+	background: @blueGray url(/_assets/img/textures/blue_gray.png) repeat;
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -506,17 +510,58 @@ a {
 	height: 100%;
 	z-index: 500;
 
+	.loading_icon {
+		display: block;
+		position: fixed;
+		height: 248px;
+		width: 251px;
+		top: 50%;
+		left: 50%;
+		margin: -124px 0 0 -125px;
+		z-index: 502;
+		background: url(/_assets/img/loading_face.png) center center no-repeat;
+	}
+
 	&:after {
 		content: " ";
 		display: block;
 		position: fixed;
 		-webkit-animation: rotating 2s linear infinite;
+		-moz-animation: rotating 2s linear infinite;
+		animation: rotating 2s linear infinite;
 		top: 50%;
 		left: 50%;
-		width: 310px;
+		width: 306px;
 		height: 306px;
-		margin: -155px 0 0 -153px;
+		z-index: 501;
+		margin: -153px 0 0 -153px;
+		.transition(opacity 0.5s ease-in-out);
 		background: url(/_assets/img/loading_element.png) no-repeat;
+	}
+
+
+	&.done:after {
+		opacity: 0;
+	}
+
+	.loading_eye {
+		background: #2d3439 url(/_assets/img/loading_face_wink_eye.png) bottom right no-repeat;
+		position: fixed;
+		display: block;
+		height: 90px;
+		width: 90px;
+		z-index: 503;
+		top: 50%;
+		left: 50%;
+		margin: -85px 0 0 -3px;
+
+		.transform-origin(70%, 70%);
+		.transition(all 1s ease-in 0.8s);
+		.rotate(0);
+	}
+
+	&.wink .loading_eye {
+		.rotate(-15deg);
 	}
 }
 
@@ -653,7 +698,7 @@ a {
 }
 
 #make_things {
-	background: @purplePink;
+	background: @purplePink url(/_assets/img/textures/pink.png) 0 0 repeat;
 
 	.wrapper {
 		padding: 175px 0 120px 0;
@@ -673,6 +718,8 @@ a {
 
 	&:after {
 		.down_arrow(@purplePink);
+		border-image-source: url(/_assets/img/textures/pink.png);
+		border-image-repeat: repeat;
 	}
 }
 
@@ -1546,10 +1593,14 @@ a {
 }
 
 #quote {
-	background: @blueGray;
+	background: @blueGray url(/_assets/img/textures/blue_gray.png) repeat;
 
 	.wrapper {
-		padding: 40px 0;
+		padding: 60px 0;
+	}
+
+	h2 {
+		color: @cream;
 	}
 
 	strong {
@@ -1567,8 +1618,16 @@ a {
 		line-height: 35px;
 		max-width: 500px;
 		text-align: left;
-		min-height: 130px;
 		margin: 0;
+	}
+
+	em {
+		font-style: block;
+	}
+
+	small {
+		font-size: 14px;
+		opacity: 0.5;
 	}
 }
 

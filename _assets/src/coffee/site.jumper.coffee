@@ -3,6 +3,18 @@ do ($ = jQuery, window) ->
     isLocalScrolling = false
     sections = $ ".anchor"
     
+
+    #
+    # Jumper on the right handles anchors.
+    #
+    highlightJump = (anchor)->
+      $("#jumper li").removeClass('active')
+      id = $(anchor).attr('id')
+      id = "[href=#"+ id
+      id = id + "]"
+
+      $("#jumper li").find(id).parents("li").addClass('active')
+      
     $.localScroll.hash(
       queue: true,
       duration: 700,
@@ -28,16 +40,6 @@ do ($ = jQuery, window) ->
         isLocalScrolling = false
     );
 
-    #
-    # Jumper on the right handles anchors.
-    #
-    highlightJump = (anchor)->
-      $("#jumper li").removeClass('active')
-      id = $(anchor).attr('id')
-      id = "[href=#"+ id
-      id = id + "]"
-
-      $("#jumper li").find(id).parents("li").addClass('active')
 
     $("#jumper a").click (e)->
       e.preventDefault()

@@ -53,7 +53,7 @@
       return this;
     };
     return $(document).ready(function() {
-      var animationForDesign, animationForProduct, animationForRoles, animationLength, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, hideCurrentTestimonial, left, loadImages, loadedOfficePics, maps, median, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, prev, product, renderFrame, right, roles, say, scrollHandlers, sections;
+      var animationForDesign, animationForProduct, animationForRoles, animationLength, body, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, headerGone, hideCurrentTestimonial, left, loadImages, loadedOfficePics, maps, median, menuOpen, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, prev, product, renderFrame, right, roles, say, scrollHandlers, sections;
       sections = $(".section");
       content = $("#content");
       nav = $("#nav");
@@ -63,14 +63,28 @@
       onHomePage = $(".home").length > 0;
       scrollHandlers = [];
       fadeIn = $(".fadeIn");
+      menuOpen = false;
+      headerGone = false;
+      body = $("body");
       getHeaderBackground = function() {
         var op, scroll;
+        if (menuOpen) {
+          return 'rgba(0, 0, 0, 0.8)';
+        }
         scroll = $(window).scrollTop();
         if (onHomePage) {
-          if (scroll > 0) {
-            $(".logo em").fadeOut();
-          } else {
-            $(".logo em").fadeIn();
+          if (scroll > 4) {
+            if (!headerGone) {
+              headerGone = true;
+              $(".logo strong").animate({
+                top: '-80px'
+              }, 'easeInOutBack');
+            }
+          } else if (headerGone) {
+            headerGone = false;
+            $(".logo strong").animate({
+              top: '10px'
+            }, 'easeInOutBack');
           }
         }
         if (scroll >= 140) {
@@ -104,9 +118,17 @@
       });
       $(".show_nav").click(function(e) {
         e.preventDefault();
+        menuOpen = true;
+        page.css({
+          'overflow-y': 'hidden'
+        });
         header.css({
-          background: 'rgba(0, 0, 0, 0.8)',
-          height: '100%'
+          'background': getHeaderBackground()
+        });
+        header.animate({
+          height: $(window).height()
+        }, function() {
+          return header.css('height', '100%');
         });
         return $(this).fadeOut(function() {
           $("#nav").fadeIn();
@@ -115,11 +137,15 @@
       });
       $(".close_nav").click(function(e) {
         e.preventDefault();
-        header.css({
+        menuOpen = false;
+        page.css({
+          'overflow-y': 'scroll'
+        });
+        $(this).fadeOut();
+        header.animate({
           background: getHeaderBackground(),
           height: '50px'
         });
-        $(this).fadeOut();
         return $(".show_nav").fadeIn();
       });
       officePhotos = $("#office_photos");
@@ -455,7 +481,7 @@
           container = $(this).parents('.people_popup');
           $(".popup_nav", container).fadeOut();
           return container.animate({
-            top: '-1200px'
+            top: '-1500px'
           }, function() {
             return container.find('.reveal_content').removeClass('.reveal_content').hide();
           });
@@ -463,6 +489,7 @@
         $(".face", people).click(function(e) {
           var container, details, peopleNav;
           e.preventDefault();
+          $(".people_content .close:visible").trigger('click');
           container = $(this).parents(".people_group");
           peopleNav = container.find('.popup_nav');
           details = $($(this).find('a').attr('href')).show();
@@ -473,7 +500,7 @@
               details.css('background-image', 'url(' + details.data('background') + ")");
             }
             details.addClass('reveal_content');
-            peopleNav.css({
+            peopleNav.find('a').css({
               top: details.height() / 2
             });
             return peopleNav.fadeIn();
@@ -501,8 +528,8 @@
           current.removeClass('reveal_content');
           return setTimeout(function() {
             next.show();
-            if (details.data('background')) {
-              details.css('background-image', 'url(' + details.data('background') + ")");
+            if (next.data('background')) {
+              next.css('background-image', 'url(' + next.data('background') + ")");
             }
             next.addClass('reveal_content');
             return current.hide();
@@ -587,7 +614,15 @@
         return renderFrame();
       });
       renderFrame();
-      $("#loading").fadeOut();
+      $("#loading").addClass('done wink');
+      setTimeout(function() {
+        $("#loading").removeClass('wink');
+        return setTimeout(function() {
+          return $(".loading_icon").fadeOut(function() {
+            return $("#loading").fadeOut();
+          });
+        }, 1000);
+      }, 2000);
       return $("#pow").addClass('show');
     });
   })(jQuery, window);
@@ -597,6 +632,14 @@
       var highlightJump, isLocalScrolling, sections;
       isLocalScrolling = false;
       sections = $(".anchor");
+      highlightJump = function(anchor) {
+        var id;
+        $("#jumper li").removeClass('active');
+        id = $(anchor).attr('id');
+        id = "[href=#" + id;
+        id = id + "]";
+        return $("#jumper li").find(id).parents("li").addClass('active');
+      };
       $.localScroll.hash({
         queue: true,
         duration: 700,
@@ -620,14 +663,6 @@
           return isLocalScrolling = false;
         }
       });
-      highlightJump = function(anchor) {
-        var id;
-        $("#jumper li").removeClass('active');
-        id = $(anchor).attr('id');
-        id = "[href=#" + id;
-        id = id + "]";
-        return $("#jumper li").find(id).parents("li").addClass('active');
-      };
       $("#jumper a").click(function(e) {
         var hash, scroll, target;
         e.preventDefault();
