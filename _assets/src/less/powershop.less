@@ -445,19 +445,21 @@ a {
 			height: 8px;
 			width: 8px;
 			background: #fff;
+			background: rgba(221, 221, 221, 0.4);
 			border-radius: 8px;
 			text-indent: -9000px;
-			opacity: 0.4;
+
+			.drop-shadow(0, 0, 5px, 0, 0.3);
 
 			&:hover,
 			&:focus {
-				opacity: 0.8;
+				background: rgba(221, 221, 221, 0.8);
 			}
 		}
 
 		&.active {
 			a {
-				opacity: 1;
+				background: rgba(255, 255, 255, 1);
 			}
 
 			&:after {
