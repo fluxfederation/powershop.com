@@ -566,12 +566,8 @@ a {
 }
 
 #welcome {
-	background: @hotPink;
+	background: @hotPink url(/_assets/img/textures/hot_pink.png) repeat;
 	position: relative;
-
-	&.down:after {
-		.down_arrow(@hotPink);
-	}
 
 	.wrapper {
 		overflow: hidden;
@@ -756,16 +752,18 @@ a {
 }
 
 #give {
-	background: @burg;
+	background: @burg url(/_assets/img/textures/burg.png) repeat;
 
 	.wrapper {
 		padding: 175px 0 120px 0;
+		position: relative;
+		overflow: hidden;
 	}
 
 	h2 {
 		text-align: right;
 		width: 36.3636%;
-		margin-bottom: 120px;
+		margin-bottom: 180px;
 		float: right;
 	}
 
@@ -783,10 +781,11 @@ a {
 }
 
 #weird {
-	background: @hotPink;
+	background: @hotPink url(/_assets/img/textures/hot_pink.png) repeat;
 
 	.wrapper {
 		padding: 175px 0 120px 0;
+		position: relative;
 	}
 
 	h2 {
@@ -805,6 +804,99 @@ a {
 	&.past_parallax_frame:after {
 		display: none;
 	}
+}
+
+#ill2 {
+	.element {
+		position: absolute;
+		background-image: url(/_assets/img/illustrations/ice_cream.png);
+		background-repeat: no-repeat;
+	}
+}
+
+
+.cone {
+	width: 324px;
+	height: 346px;
+	top: 400px;
+	left: 150px;
+	z-index: 5;
+	background-position: -160px -280px;
+}
+
+.sauce {
+	width: 365px;
+	height: 278px;
+	top: 85px;
+	left: 130px;
+	background-position: -128px 0px;
+	opacity: 0.9;
+	z-index: 30;
+}
+
+.shadow {
+	width: 142px;
+	height: 123px;
+	background-position: 0 -805px;
+}
+
+.scoop_1,
+.scoop_2,
+.scoop_3,
+.scoop_4 {
+	width: 145px;
+	height: 125px;
+	background-position: 0 -280px;
+}
+
+.scoop_1 { top: 283px; left: 125px; z-index: 6; }
+.scoop_1_shadow { top: 289px; left: 132px; z-index: 1; }
+.scoop_2 { background-position: 0 -406px; top: 286px; left: 240px; width: 150px; height: 121px; z-index: 8; }
+.scoop_2_shadow { top: 300px; left: 300px; z-index: 1; }
+.scoop_3 { background-position: 0 -528px; top: 288px; left: 354px; width: 150px; height: 121px; z-index: 9; }
+.scoop_3_shadow { top: 288px; left: 361px; z-index: 1; }
+.scoop_4 { width: 158px; height: 155px; background-position: 0 -650px; z-index: 7; left: 175px; top: 178px; }
+.scoop_4_shadow { left: 180px; top: 178px; 	}
+.scoop_5 { height: 138px; width: 159px; background-position: -170px -650px; z-index: 5; left: 300px; top: 178px; }
+.scoop_5_shadow { left: 303px; top: 178px; }
+.scoop_6 { background-position: -352px -650px; top: 85px; left: 245px; z-index: 20; height: 124px; width: 142px; }
+.scoop_6_shadow { left: 250px; top: 85px; z-index: 3; }
+
+.cherry { 
+	height: 89px; 
+	width: 91px; 
+	background-position: 0 -88px; 
+	top: 30px; left: 290px; z-index: 40; 
+
+	.rotate(0);
+	.transform-origin(100%, 0%);
+}
+
+.cherry_shadow { 
+	height: 88px; 
+	width: 90px; 
+	background-position: 0 0; 
+	top: 30px; left: 294px; 
+	z-index: 19;
+
+	.transform-origin(100%, 0%);
+	.rotate(0);
+}
+
+#sprinkles {
+	position: absolute;
+	z-index: 80;
+	top: 0;
+	left: 130px;
+}
+
+.sprinkle {
+	position: absolute;
+	top: -200px;
+	width: 20px;
+	height: 10px;
+
+	.rounded(10px);
 }
 
 #contact {

@@ -763,6 +763,167 @@ do ($ = jQuery, window) ->
       ill1_section = $("#make_things")
       ill1_fire = $("#ill1_fire")
 
+      ill2 = $("#ill2")
+      ill2_section = $("#give")
+      ill2_cone = $(".cone", ill2)
+      ill2_scoopes = $(".scoop", ill2)
+
+      showingIcecream = false
+      animationInProgress = false
+
+      #
+      # Setup animation #2. We could have done the sprinkles as an image or but
+      # figured we'd generate it javascript for a change.
+      #
+      sprinkles = $("<div></div>").attr('id', 'sprinkles')
+      rcolor = new RColor();
+
+      generateSprinkle = ()->
+        # set a random position along the icecream for the sprinkle
+        sauceWidth = 300;
+        left = parseInt(Math.random() * sauceWidth);
+
+        # rotate sprinkles
+        rotate = parseInt(Math.random() * 720)
+
+        # determine the y pos of the element. We have a min height for the
+        # sprinkle, but we can go from there. The min height is the distance 
+        # from the center of this element by 2 (sleep triangle)
+        my = Math.abs((sauceWidth / 2) - left) * 2.6
+
+        # the range of values (from the minimum to the height of the sauce)
+        ry = 230 - my
+
+        # actual value is somewhere around there.
+        ay = my + parseInt(Math.random() * ry)
+
+        # draw the sprinkle
+        sprinkle = $("<div></div>").addClass('sprinkle').css(
+          'background': rcolor.get(true, 0.3, 0.99),
+          'left': left,
+          'top': ay
+        )
+
+        rotate = 'rotate('+ rotate
+        rotate += 'deg)'
+
+        sprinkle.css('transform', rotate);
+        sprinkles.append(sprinkle);
+
+
+      generateSprinkle() for i in [0..20]
+
+      ill2.prepend(sprinkles);
+
+      #
+      # Code for showing an icecream on the page.
+      #
+      showIcecreamAnimation = ()->
+        # show each of icecream scoops
+        ill2_scoopes.each((i, elem)->
+          setTimeout( ()->
+            $(elem).animate(
+              'opacity': 1
+            )
+          , i * 100
+          )
+        )
+
+        setTimeout( ()->
+          # add sauce to the icecream
+          $(".sauce", ill2).transition(
+            'y': '0',
+            'scale': 1,
+            'duration': 900
+          )
+
+          setTimeout( ()->
+            # add sprinkles 
+            $(".sprinkle", ill2).transition(
+              'y': '0'
+            )
+
+            # add the cherry
+            $(".cherry, .cherry_shadow", ill2).transition(
+              'rotate': '0deg',
+              'y': '0',
+              'duration': 1000
+            )
+
+          , 1100)
+        , 1800)
+
+      # 
+      # Code for hiding icecream on the page.
+      #
+      # Optionally takes a 'quick' parameter to indicate we shouldn't bother
+      # animating it in any particular way
+      #
+      hideIcecreamAnimation = (quick)->
+        if quick
+          # sprinkles
+          $(".sprinkle", ill2).css(
+            'y': '-300px'
+          )
+
+          # remove the cherry
+          $(".cherry, .cherry_shadow", ill2).css(
+            'rotate': '30deg',
+            'y': '-200px'
+          )
+
+          # take the sauce off
+          $(".sauce", ill2).css(
+              'y': '-400px',
+              'scale': 0.5
+            )
+
+          # remove the scoops of icecream
+          ill2_scoopes.css('opacity', 0)
+
+        else
+          # take sprinkles off
+          $(".sprinkle", ill2).transition(
+            'y': '-300px'
+          )
+
+          # remove the cherry
+          $(".cherry, .cherry_shadow", ill2).transition(
+            'rotate': '30deg',
+            'y': '-200px'
+          )
+
+          setTimeout(()->
+            # take sauce off from the top
+            $(".sauce", ill2).transition(
+              'y': '-400px',
+              'scale': 0.5,
+              'duration': 900
+            )
+
+            setTimeout( ()->
+              # trigger other animations
+              ill2_scoopes.each((i, elem)->
+                setTimeout( ()->
+                  $(elem).animate(
+                    'opacity': 0
+                  )
+
+                , (ill2_scoopes - i) * 50)
+              )
+            , 1100
+            )
+          , 400)
+
+      #
+      # Trigger the hide operation on load. We call animate when the page is 
+      # loaded.
+      #
+      hideIcecreamAnimation(true)
+
+      # 
+      # On scroll handle all the animation logic
+      #
       scrollHandlers.push animateHomePage = (scrollY, winHeight, winWidth)->
         #
         # Illustration 1. Make things. This guy comes up from the bottom left as
@@ -791,8 +952,35 @@ do ($ = jQuery, window) ->
         )
 
         #
-        # Illustration 2.
+        # Illustration 2. Give a shit. The ice cream cone comes up from the 
+        # bottom of the users screen while the ice cream parts pop up as if 
+        # magic
         #
+        amountOfScrollForIcecreamToTrigger = ill2_section.offset().top;
+
+        if scrollY >= (amountOfScrollForIcecreamToTrigger - 100)
+          #
+          # Show Icecream
+          #
+          # User has scrolled far enough for the animation to take place so fade
+          # in the icecreams
+          #
+          ill2_cone.css('top', 400)
+
+          if not showingIcecream
+            # animate in the icecream parts
+            showingIcecream = true
+            
+            showIcecreamAnimation()
+        else
+          #
+          # Hide Icecream
+          #
+          # hideIcecreamAnimation();
+          #
+          if not showingIcecream
+            ill2_cone.css('top' , 400 + ((amountOfScrollForIcecreamToTrigger - 100) - scrollY))
+
 
         #
         # Illustration 3.
@@ -802,7 +990,7 @@ do ($ = jQuery, window) ->
     # 
     # Now we can actually do something useful.
     # 
-    renderFrame = ()->
+    renderFrame = (onLoad)->
       winHeight = $(window).height();
       winWidth = $(window).width();
       scrollY = $(window).scrollTop();
@@ -818,11 +1006,11 @@ do ($ = jQuery, window) ->
     # On scroll, rerender the frame
     #
     $(window).scroll ()->
-      renderFrame()
+      renderFrame(false)
 
 
     # render the initial frame
-    renderFrame()
+    renderFrame(true)
 
     useWink = false
 

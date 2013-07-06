@@ -80,14 +80,17 @@
 	-webkit-animation: @name @duration @delay @ease;
 	-moz-animation:    @name @duration @delay @ease;
 	-ms-animation:     @name @duration @delay @ease;
+	animation:     @name @duration @delay @ease;
 }
 
 .transition (@transition) {
 	-webkit-transition: @transition;  
 	-moz-transition:    @transition;
 	-ms-transition:     @transition; 
-	-o-transition:      @transition;  
+	-o-transition:      @transition;
+	transition:      @transition; 
 }
+
 .transform(@string){
 	-webkit-transform: @string;
 	-moz-transform: 	 @string;
@@ -123,6 +126,7 @@
 	-moz-transform: 	 translate3d(@x, @y, @z);
 	-ms-transform: 		 translate3d(@x, @y, @z);
 	-o-transform: 		 translate3d(@x, @y, @z);
+	transform: 		 translate3d(@x, @y, @z);
 }
 .perspective (@value: 1000) {
 	-webkit-perspective: 	@value;
@@ -135,4 +139,12 @@
 	-moz-transform-origin:    @x @y;
 	-ms-transform-origin:     @x @y;
 	-o-transform-origin:      @x @y;
+	transform-origin:      @x @y;
+}
+
+.transition-delay (@value) {
+	-webkit-transition-delay: @value;
+	-moz-transition-delay: @value;
+	-ms-transition-delay: @value;
+	transition-delay: @value;
 }

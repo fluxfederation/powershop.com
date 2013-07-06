@@ -53,7 +53,7 @@
       return this;
     };
     return $(document).ready(function() {
-      var animateHomePage, animationForDesign, animationForProduct, animationForRoles, animationLength, body, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, headerGone, hideCurrentTestimonial, ill1, ill1_fire, ill1_section, left, loadImages, loadedOfficePics, maps, median, menuOpen, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, prev, product, renderFrame, right, roles, say, scrollHandlers, sections, useWink;
+      var animateHomePage, animationForDesign, animationForProduct, animationForRoles, animationInProgress, animationLength, body, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, generateSprinkle, getHeaderBackground, header, headerGone, hideCurrentTestimonial, hideIcecreamAnimation, i, ill1, ill1_fire, ill1_section, ill2, ill2_cone, ill2_scoopes, ill2_section, left, loadImages, loadedOfficePics, maps, median, menuOpen, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, prev, product, rcolor, renderFrame, right, roles, say, scrollHandlers, sections, showIcecreamAnimation, showingIcecream, sprinkles, useWink, _i;
       sections = $(".section");
       content = $("#content");
       nav = $("#nav");
@@ -605,8 +605,105 @@
         ill1 = $("#ill1");
         ill1_section = $("#make_things");
         ill1_fire = $("#ill1_fire");
+        ill2 = $("#ill2");
+        ill2_section = $("#give");
+        ill2_cone = $(".cone", ill2);
+        ill2_scoopes = $(".scoop", ill2);
+        showingIcecream = false;
+        animationInProgress = false;
+        sprinkles = $("<div></div>").attr('id', 'sprinkles');
+        rcolor = new RColor();
+        generateSprinkle = function() {
+          var ay, my, rotate, ry, sauceWidth, sprinkle;
+          sauceWidth = 300;
+          left = parseInt(Math.random() * sauceWidth);
+          rotate = parseInt(Math.random() * 720);
+          my = Math.abs((sauceWidth / 2) - left) * 2.6;
+          ry = 230 - my;
+          ay = my + parseInt(Math.random() * ry);
+          sprinkle = $("<div></div>").addClass('sprinkle').css({
+            'background': rcolor.get(true, 0.3, 0.99),
+            'left': left,
+            'top': ay
+          });
+          rotate = 'rotate(' + rotate;
+          rotate += 'deg)';
+          sprinkle.css('transform', rotate);
+          return sprinkles.append(sprinkle);
+        };
+        for (i = _i = 0; _i <= 20; i = ++_i) {
+          generateSprinkle();
+        }
+        ill2.prepend(sprinkles);
+        showIcecreamAnimation = function() {
+          ill2_scoopes.each(function(i, elem) {
+            return setTimeout(function() {
+              return $(elem).animate({
+                'opacity': 1
+              });
+            }, i * 100);
+          });
+          return setTimeout(function() {
+            $(".sauce", ill2).transition({
+              'y': '0',
+              'scale': 1,
+              'duration': 900
+            });
+            return setTimeout(function() {
+              $(".sprinkle", ill2).transition({
+                'y': '0'
+              });
+              return $(".cherry, .cherry_shadow", ill2).transition({
+                'rotate': '0deg',
+                'y': '0',
+                'duration': 1000
+              });
+            }, 1100);
+          }, 1800);
+        };
+        hideIcecreamAnimation = function(quick) {
+          if (quick) {
+            $(".sprinkle", ill2).css({
+              'y': '-300px'
+            });
+            $(".cherry, .cherry_shadow", ill2).css({
+              'rotate': '30deg',
+              'y': '-200px'
+            });
+            $(".sauce", ill2).css({
+              'y': '-400px',
+              'scale': 0.5
+            });
+            return ill2_scoopes.css('opacity', 0);
+          } else {
+            $(".sprinkle", ill2).transition({
+              'y': '-300px'
+            });
+            $(".cherry, .cherry_shadow", ill2).transition({
+              'rotate': '30deg',
+              'y': '-200px'
+            });
+            return setTimeout(function() {
+              $(".sauce", ill2).transition({
+                'y': '-400px',
+                'scale': 0.5,
+                'duration': 900
+              });
+              return setTimeout(function() {
+                return ill2_scoopes.each(function(i, elem) {
+                  return setTimeout(function() {
+                    return $(elem).animate({
+                      'opacity': 0
+                    });
+                  }, (ill2_scoopes - i) * 50);
+                });
+              }, 1100);
+            }, 400);
+          }
+        };
+        hideIcecreamAnimation(true);
         scrollHandlers.push(animateHomePage = function(scrollY, winHeight, winWidth) {
-          var amountOfScrollToFullAnimation, percentageScroll, placeX, placeY, restingPlaceX, restingPlaceY;
+          var amountOfScrollForIcecreamToTrigger, amountOfScrollToFullAnimation, percentageScroll, placeX, placeY, restingPlaceX, restingPlaceY;
           restingPlaceX = 530;
           restingPlaceY = 50;
           amountOfScrollToFullAnimation = ill1_section.offset().top;
@@ -620,13 +717,25 @@
             placeY = restingPlaceY + 200 - (200 * percentageScroll);
             ill1.removeClass('swing');
           }
-          return ill1.css({
+          ill1.css({
             'top': placeY,
             'left': placeX
           });
+          amountOfScrollForIcecreamToTrigger = ill2_section.offset().top;
+          if (scrollY >= (amountOfScrollForIcecreamToTrigger - 100)) {
+            ill2_cone.css('top', 400);
+            if (!showingIcecream) {
+              showingIcecream = true;
+              return showIcecreamAnimation();
+            }
+          } else {
+            if (!showingIcecream) {
+              return ill2_cone.css('top', 400 + ((amountOfScrollForIcecreamToTrigger - 100) - scrollY));
+            }
+          }
         });
       }
-      renderFrame = function() {
+      renderFrame = function(onLoad) {
         var scrollY, winHeight, winWidth;
         winHeight = $(window).height();
         winWidth = $(window).width();
@@ -639,9 +748,9 @@
         });
       };
       $(window).scroll(function() {
-        return renderFrame();
+        return renderFrame(false);
       });
-      renderFrame();
+      renderFrame(true);
       useWink = false;
       if (useWink) {
         $("#loading").addClass('done wink');
