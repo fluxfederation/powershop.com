@@ -772,50 +772,6 @@ do ($ = jQuery, window) ->
       animationInProgress = false
 
       #
-      # Setup animation #2. We could have done the sprinkles as an image or but
-      # figured we'd generate it javascript for a change.
-      #
-      sprinkles = $("<div></div>").attr('id', 'sprinkles')
-      rcolor = new RColor();
-
-      generateSprinkle = ()->
-        # set a random position along the icecream for the sprinkle
-        sauceWidth = 300;
-        left = parseInt(Math.random() * sauceWidth);
-
-        # rotate sprinkles
-        rotate = parseInt(Math.random() * 720)
-
-        # determine the y pos of the element. We have a min height for the
-        # sprinkle, but we can go from there. The min height is the distance 
-        # from the center of this element by 2 (sleep triangle)
-        my = Math.abs((sauceWidth / 2) - left) * 2.6
-
-        # the range of values (from the minimum to the height of the sauce)
-        ry = 230 - my
-
-        # actual value is somewhere around there.
-        ay = my + parseInt(Math.random() * ry)
-
-        # draw the sprinkle
-        sprinkle = $("<div></div>").addClass('sprinkle').css(
-          'background': rcolor.get(true, 0.3, 0.99),
-          'left': left,
-          'top': ay
-        )
-
-        rotate = 'rotate('+ rotate
-        rotate += 'deg)'
-
-        sprinkle.css('transform', rotate);
-        sprinkles.append(sprinkle);
-
-
-      generateSprinkle() for i in [0..20]
-
-      ill2.prepend(sprinkles);
-
-      #
       # Code for showing an icecream on the page.
       #
       showIcecreamAnimation = ()->
@@ -839,8 +795,9 @@ do ($ = jQuery, window) ->
 
           setTimeout( ()->
             # add sprinkles 
-            $(".sprinkle", ill2).transition(
-              'y': '0'
+            $(".sprinkles", ill2).transition(
+              'y': '0',
+              'scale': 1
             )
 
             # add the cherry
@@ -862,8 +819,9 @@ do ($ = jQuery, window) ->
       hideIcecreamAnimation = (quick)->
         if quick
           # sprinkles
-          $(".sprinkle", ill2).css(
-            'y': '-300px'
+          $(".sprinkles", ill2).css(
+            'y': '-400px',
+            'scale': 0.8
           )
 
           # remove the cherry
@@ -883,8 +841,9 @@ do ($ = jQuery, window) ->
 
         else
           # take sprinkles off
-          $(".sprinkle", ill2).transition(
-            'y': '-300px'
+          $(".sprinkles", ill2).transition(
+            'y': '-400px',
+            'scale': 0.8
           )
 
           # remove the cherry

@@ -53,7 +53,7 @@
       return this;
     };
     return $(document).ready(function() {
-      var animateHomePage, animationForDesign, animationForProduct, animationForRoles, animationInProgress, animationLength, body, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, generateSprinkle, getHeaderBackground, header, headerGone, hideCurrentTestimonial, hideIcecreamAnimation, i, ill1, ill1_fire, ill1_section, ill2, ill2_cone, ill2_scoopes, ill2_section, left, loadImages, loadedOfficePics, maps, median, menuOpen, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, prev, product, rcolor, renderFrame, right, roles, say, scrollHandlers, sections, showIcecreamAnimation, showingIcecream, sprinkles, useWink, _i;
+      var animateHomePage, animationForDesign, animationForProduct, animationForRoles, animationInProgress, animationLength, body, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, headerGone, hideCurrentTestimonial, hideIcecreamAnimation, ill1, ill1_fire, ill1_section, ill2, ill2_cone, ill2_scoopes, ill2_section, left, loadImages, loadedOfficePics, maps, median, menuOpen, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, prev, product, renderFrame, right, roles, say, scrollHandlers, sections, showIcecreamAnimation, showingIcecream, useWink;
       sections = $(".section");
       content = $("#content");
       nav = $("#nav");
@@ -611,30 +611,6 @@
         ill2_scoopes = $(".scoop", ill2);
         showingIcecream = false;
         animationInProgress = false;
-        sprinkles = $("<div></div>").attr('id', 'sprinkles');
-        rcolor = new RColor();
-        generateSprinkle = function() {
-          var ay, my, rotate, ry, sauceWidth, sprinkle;
-          sauceWidth = 300;
-          left = parseInt(Math.random() * sauceWidth);
-          rotate = parseInt(Math.random() * 720);
-          my = Math.abs((sauceWidth / 2) - left) * 2.6;
-          ry = 230 - my;
-          ay = my + parseInt(Math.random() * ry);
-          sprinkle = $("<div></div>").addClass('sprinkle').css({
-            'background': rcolor.get(true, 0.3, 0.99),
-            'left': left,
-            'top': ay
-          });
-          rotate = 'rotate(' + rotate;
-          rotate += 'deg)';
-          sprinkle.css('transform', rotate);
-          return sprinkles.append(sprinkle);
-        };
-        for (i = _i = 0; _i <= 20; i = ++_i) {
-          generateSprinkle();
-        }
-        ill2.prepend(sprinkles);
         showIcecreamAnimation = function() {
           ill2_scoopes.each(function(i, elem) {
             return setTimeout(function() {
@@ -650,8 +626,9 @@
               'duration': 900
             });
             return setTimeout(function() {
-              $(".sprinkle", ill2).transition({
-                'y': '0'
+              $(".sprinkles", ill2).transition({
+                'y': '0',
+                'scale': 1
               });
               return $(".cherry, .cherry_shadow", ill2).transition({
                 'rotate': '0deg',
@@ -663,8 +640,9 @@
         };
         hideIcecreamAnimation = function(quick) {
           if (quick) {
-            $(".sprinkle", ill2).css({
-              'y': '-300px'
+            $(".sprinkles", ill2).css({
+              'y': '-400px',
+              'scale': 0.8
             });
             $(".cherry, .cherry_shadow", ill2).css({
               'rotate': '30deg',
@@ -676,8 +654,9 @@
             });
             return ill2_scoopes.css('opacity', 0);
           } else {
-            $(".sprinkle", ill2).transition({
-              'y': '-300px'
+            $(".sprinkles", ill2).transition({
+              'y': '-400px',
+              'scale': 0.8
             });
             $(".cherry, .cherry_shadow", ill2).transition({
               'rotate': '30deg',
