@@ -53,7 +53,7 @@
       return this;
     };
     return $(document).ready(function() {
-      var animateHomePage, animationForDesign, animationForProduct, animationForRoles, animationInProgress, animationLength, body, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, headerGone, hideCurrentTestimonial, hideIcecreamAnimation, ill1, ill1_fire, ill1_section, ill2, ill2_cone, ill2_scoopes, ill2_section, left, loadImages, loadedOfficePics, maps, median, menuOpen, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, prev, product, renderFrame, right, roles, say, scrollHandlers, sections, showIcecreamAnimation, showingIcecream, useWink;
+      var animateHomePage, animationForDesign, animationForProduct, animationForRoles, animationInProgress, animationLength, body, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, headerGone, hideCurrentTestimonial, hideIcecreamAnimation, ill1, ill1_fire, ill1_section, ill2, ill2_cone, ill2_scoopes, ill2_section, ill3, ill3_hat, ill3_hatshadow, ill3_section, left, loadImages, loadedOfficePics, maps, median, menuOpen, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, prev, product, renderFrame, right, roles, say, scrollHandlers, sections, showIcecreamAnimation, showingIcecream, useWink;
       sections = $(".section");
       content = $("#content");
       nav = $("#nav");
@@ -609,6 +609,10 @@
         ill2_section = $("#give");
         ill2_cone = $(".cone", ill2);
         ill2_scoopes = $(".scoop", ill2);
+        ill3 = $("#ill3");
+        ill3_section = $("#weird");
+        ill3_hat = $(".bike_hat");
+        ill3_hatshadow = $(".bike_hat_shadow");
         showingIcecream = false;
         animationInProgress = false;
         showIcecreamAnimation = function() {
@@ -682,7 +686,7 @@
         };
         hideIcecreamAnimation(true);
         scrollHandlers.push(animateHomePage = function(scrollY, winHeight, winWidth) {
-          var amountOfScrollForIcecreamToTrigger, amountOfScrollToFullAnimation, percentageScroll, placeX, placeY, restingPlaceX, restingPlaceY;
+          var amountOfScrollForIcecreamToTrigger, amountOfScrollToFullAnimation, percentage, percentageScroll, placeX, placeY, restingPlaceX, restingPlaceY, rotate, startMoving, stopMoving, top;
           restingPlaceX = 530;
           restingPlaceY = 50;
           amountOfScrollToFullAnimation = ill1_section.offset().top;
@@ -705,12 +709,73 @@
             ill2_cone.css('top', 400);
             if (!showingIcecream) {
               showingIcecream = true;
-              return showIcecreamAnimation();
+              showIcecreamAnimation();
             }
           } else {
             if (!showingIcecream) {
-              return ill2_cone.css('top', 400 + ((amountOfScrollForIcecreamToTrigger - 100) - scrollY));
+              ill2_cone.css('top', 400 + ((amountOfScrollForIcecreamToTrigger - 100) - scrollY));
             }
+          }
+          startMoving = ill3_section.offset().top - winHeight;
+          stopMoving = startMoving + 500;
+          if (scrollY > startMoving) {
+            percentage = (scrollY - startMoving) / (stopMoving - startMoving);
+            if (percentage >= 0.8) {
+              top = parseInt(30 - ((percentage - 0.75) * 200));
+              if (top < -120) {
+                top = -120;
+              }
+              rotate = parseInt(((percentage - 0.75) * 10) * -10);
+              if (rotate < -50) {
+                rotate = -50;
+              }
+              left = parseInt(50 - ((percentage - 0.8) * winWidth));
+              if (top < 10) {
+                ill3.addClass('shock');
+              }
+              ill3_hat.css({
+                'left': left,
+                'rotate': rotate,
+                'top': top
+              });
+              ill3_hatshadow.css({
+                'left': left + 4,
+                'rotate': rotate,
+                'top': top
+              });
+            } else {
+              ill3.removeClass('shock');
+              ill3_hat.css({
+                left: 50,
+                top: 30,
+                rotate: 0
+              });
+              ill3_hatshadow.css({
+                left: 55,
+                top: 30,
+                rotate: 0
+              });
+            }
+            if (!(percentage < 1)) {
+              percentage = 1;
+            }
+            return ill3.css({
+              left: 520 * percentage
+            });
+          } else {
+            ill3.removeClass('shock').css({
+              left: 0
+            });
+            ill3_hat.css({
+              left: 50,
+              top: 30,
+              rotate: 0
+            });
+            return ill3_hatshadow.css({
+              left: 55,
+              top: 30,
+              rotate: 0
+            });
           }
         });
       }

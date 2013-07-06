@@ -768,6 +768,11 @@ do ($ = jQuery, window) ->
       ill2_cone = $(".cone", ill2)
       ill2_scoopes = $(".scoop", ill2)
 
+      ill3 = $("#ill3")
+      ill3_section = $("#weird")
+      ill3_hat = $(".bike_hat")
+      ill3_hatshadow = $(".bike_hat_shadow")
+
       showingIcecream = false
       animationInProgress = false
 
@@ -942,8 +947,92 @@ do ($ = jQuery, window) ->
 
 
         #
-        # Illustration 3.
+        # Illustration 3. The man on the bike, the bike comes across the page,
+        # and sits on the right hand side. The position of the bike goes from
+        # 0 to 550 based on the users scroll. We start the migration when the
+        # section gets into focus and hits the end once the page has made the
+        # whole thing visible.
         #
+        # When the bike is half way the hat starts to lift off and go away to
+        # the left, whew he's gaining pace
+        #
+        startMoving = ill3_section.offset().top - winHeight
+        stopMoving = startMoving + 500;
+
+        if scrollY > startMoving
+          # calculate the percentage
+          percentage = (scrollY - startMoving) / (stopMoving - startMoving)
+
+          if percentage >= 0.8
+            # I wish that I could fly 
+            # Into the sky 
+            # So very high 
+            # Just like a dragonfly 
+
+            # I'd fly above the trees 
+            # Over the seas in all degrees 
+            # To anywhere I please 
+
+            # Oh I want to get away 
+            # I want to fly away 
+            # Yeah yeah yeah
+
+            # top goes down to 120 pretty quick, starts at 30
+            top = parseInt(30 - ((percentage - 0.75) * 200))
+            if top < -120 then top = -120
+
+            # rotate from 0, -50 over the percentage 0.8 - 1.3
+            rotate = parseInt(((percentage - 0.75) * 10) * -10)
+            if rotate < -50 then rotate = -50
+
+            # left can go over the page as much as want
+            left = parseInt(50 - ((percentage - 0.8) * winWidth))
+
+            if top < 10
+              ill3.addClass('shock')
+
+            # rotate c
+            ill3_hat.css
+              'left': left,
+              'rotate': rotate,
+              'top': top
+
+            ill3_hatshadow.css
+              'left': left + 4,
+              'rotate': rotate,
+              'top': top
+          else
+            ill3.removeClass('shock')
+
+            ill3_hat.css
+              left: 50,
+              top: 30
+              rotate: 0
+
+            ill3_hatshadow.css
+              left: 55,
+              top: 30,
+              rotate: 0
+
+          percentage = 1 unless percentage < 1
+
+          ill3.css
+            left: (520 * percentage)
+
+        else
+          # reset back to the original positions
+          ill3.removeClass('shock').css
+            left: 0
+
+          ill3_hat.css
+            left: 50,
+            top: 30
+            rotate: 0
+
+          ill3_hatshadow.css
+            left: 55,
+            top: 30,
+            rotate: 0
 
 
     # 

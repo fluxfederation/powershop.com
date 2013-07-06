@@ -723,7 +723,8 @@ a {
 	.transform-origin(50%, -30%);
 	.rotate(0deg);
 
-	-webkit-animation: fly 2s ease-in-out infinite;
+	.animation(fly, 2s, 0s, ease-in-out);
+	.infinite();
 }
 
 .ill_holder {
@@ -748,7 +749,8 @@ a {
 	left: 440px;
 	background: url(/_assets/img/illustrations/1_fire.png) no-repeat;
 
-	-webkit-animation: shakeFire 1s linear infinite;
+	.animation(shakeFire, 1s, 0s, linear);
+	.infinite();
 }
 
 #give {
@@ -771,10 +773,6 @@ a {
 		.hr(#fff);
 	}
 
-	&:after {
-		.down_arrow(@burg);
-	}
-
 	&.past_parallax_frame:after {
 		display: none;
 	}
@@ -795,10 +793,6 @@ a {
 
 	h3 {
 		.hr(#fff);
-	}
-
-	&:after {
-		.down_arrow(@hotPink);
 	}
 
 	&.past_parallax_frame:after {
@@ -893,6 +887,87 @@ a {
 	background: url(/_assets/img/illustrations/sprinkles.png) no-repeat;
 }
 
+#ill3 {
+	position: absolute;
+	top: -20px;
+	left: 520px;
+
+	.animation(bounce, 1s, 0, linear);
+	.infinite();
+}
+
+.bike_shadow {
+	width: 217px;
+	height: 143px;
+	top: 440px;
+	left: 95px;
+	background: url(/_assets/img/illustrations/3_bike_shadow.png) no-repeat;
+	position: absolute;
+}
+
+.bike {
+	width: 359px;
+	height: 542px;
+	background: url(/_assets/img/illustrations/3_bike.png) no-repeat;
+	position: absolute;
+	z-index: 5;
+	top: 90px;
+	left: 0;
+}
+
+.shock .bike:after {
+	content: " ";
+	width: 139px;
+	height: 70px;
+	background: url(/_assets/img/illustrations/3_shock.png) no-repeat;
+	position: absolute;
+	top: 180px;
+	left: 82px;
+}
+
+.bike_wheel {
+	width: 154px;
+	height: 154px;
+	background: url(/_assets/img/illustrations/3_bike_wheel.png) no-repeat;
+	position: absolute;
+	top: 500px;
+	left: -15px;
+
+	.animation(rotating, 5s, 0, linear);
+	.infinite();
+}
+
+	.wheel_right {
+		top: 500px;
+		left: 275px;
+
+		.animation(rotating, 5s, 2.5s, linear);
+		.infinite();
+	}
+
+.ill3_holder {
+	position: relative;
+}
+
+.bike_hat_shadow {
+	width: 199px;
+	height: 106px;
+	position: absolute;
+	top: 30px;
+	left: 55px;
+	z-index: 1;
+	background: url(/_assets/img/illustrations/3_hat_shadow.png) no-repeat;
+}
+
+.bike_hat {
+	width: 199px;
+	height: 106px;
+	position: absolute;
+	top: 30px;
+	left: 50px;
+	z-index: 10;
+	background: url(/_assets/img/illustrations/3_hat.png) no-repeat;
+}
 
 #contact {
 	background: #fff;
@@ -2051,7 +2126,6 @@ a {
 		content: " ";
 		display: block;
 		position: absolute;
-		-webkit-animation: rotating 2s linear infinite;
 		top: 50%;
 		left: 50%;
 		width: 31px;
@@ -2059,6 +2133,9 @@ a {
 		margin: -15px 0 0 -15px;
 		opacity: 0.5;
 		background: url(/_assets/img/loading_element_small.png) no-repeat;
+
+		.animation(rotating, 2s, 0s, linear);
+		.infinite();
 	}
 }
 
