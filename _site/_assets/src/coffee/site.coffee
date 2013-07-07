@@ -1082,6 +1082,3 @@ do ($ = jQuery, window) ->
       )
     else
       $("#loading").fadeOut()
-
-    # 
-    $("#pow").addClass('show');

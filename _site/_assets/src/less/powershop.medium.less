@@ -110,21 +110,10 @@
 			-webkit-column-count: 1;
 			column-count: 1;
 		}
-
-		h3 {
-			margin: 0 auto 35px;
-
-			&:after {
-				display: none;
-			}
-		}
-
-		p {
-			text-align: center;
-		}
 	}
 
-	#quote p {
+	#quote p,
+	#quote h2 {
 		text-align: center;
 	}
 
@@ -137,16 +126,17 @@
 		.apply {
 			margin: 0;
 		}
+	}
 
-		.people_group h3 {
-			position: static;
-			.rotate(0deg);
-			text-align:  left;
-		}
 
-		.people_group span {
-			display: none;
-		}
+	.people_group h3 {
+		position: static;
+		.rotate(0deg);
+		text-align:  left;
+	}
+
+	.people_group span {
+		display: none;
 	}
 
 	#ill3,
@@ -159,22 +149,8 @@
 		display: none;
 	}
 
-	#customers_love h3 {
-		text-align: center;
-	}
-
 	#kiss_ass .yell {
 		width: auto;
-	}
-
-	#customers_say {
-		.next_test {
-			display: none;
-		}
-
-		.prev_test {
-			left: 20px;
-		}
 	}
 
 	#quotes li {
@@ -184,5 +160,10 @@
 
 	#quotes strong {
 		display: inline;
+	}
+
+	#customers_love h2 span:after {
+		left: 59px;
+		top: 57px;
 	}
 }

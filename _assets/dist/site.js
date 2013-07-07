@@ -802,7 +802,7 @@
       useWink = onHomePage;
       if (useWink) {
         $("#loading").addClass('done wink');
-        setTimeout(function() {
+        return setTimeout(function() {
           $("#loading").removeClass('wink');
           return setTimeout(function() {
             return $(".loading_icon").fadeOut(function() {
@@ -811,9 +811,8 @@
           }, 1000);
         }, 2000);
       } else {
-        $("#loading").fadeOut();
+        return $("#loading").fadeOut();
       }
-      return $("#pow").addClass('show');
     });
   })(jQuery, window);
 

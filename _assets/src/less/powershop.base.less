@@ -1019,6 +1019,7 @@ a {
 		position: relative;
 		padding-bottom: 30px;
 		margin-bottom: 30px;
+		color: @cream;
 
 		.hr(#fff);
 	}
@@ -1037,19 +1038,16 @@ a {
 #pow {
 	position: absolute;
 	background: url(/_assets/img/pow.png) no-repeat;
-	background-size: 100% 100%;
-	opacity: 0;
-	right: 0;
+	left: 480px;
 	top: 150px;
 	width: 585px;
 	height: 415px;
 
-	.scale(0.5);
+	.scale(1);
+	.transition(all 500ms);
 
-	&.show {
-		.scale(1);
-
-		opacity: 1;
+	&:hover {
+		.scale(1.2);
 	}
 }
 
@@ -1541,8 +1539,9 @@ a {
 		font-size: 130px;
 		line-height: 1;
 		font-weight: 100;
-		display: block;
 		padding-right: 15px;
+		width: 160px;
+		display: inline-block;
 	}
 
 	ul {
@@ -2105,6 +2104,10 @@ p.larger {
 
 .nl {
 	display: block;
+}
+
+.crop {
+	overflow: hidden;
 }
 
 /*
