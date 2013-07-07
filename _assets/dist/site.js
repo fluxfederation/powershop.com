@@ -53,7 +53,7 @@
       return this;
     };
     return $(document).ready(function() {
-      var animateHomePage, animationForDesign, animationForProduct, animationForRoles, animationInProgress, animationLength, body, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, header, headerGone, hideCurrentTestimonial, hideIcecreamAnimation, ill1, ill1_fire, ill1_section, ill2, ill2_cone, ill2_scoopes, ill2_section, ill3, ill3_hat, ill3_hatshadow, ill3_section, left, loadImages, loadedOfficePics, maps, median, menuOpen, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, prev, product, renderFrame, right, roles, say, scrollHandlers, sections, showIcecreamAnimation, showingIcecream, useWink;
+      var animateGrowthArrow, animateHomePage, animationForDesign, animationForProduct, animationForRoles, animationInProgress, animationLength, body, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, getNextStaffMember, growth, header, headerGone, hideCurrentTestimonial, hideIcecreamAnimation, ill1, ill1_fire, ill1_section, ill2, ill2_cone, ill2_scoopes, ill2_section, ill3, ill3_hat, ill3_hatshadow, ill3_section, left, loadImages, loadedOfficePics, maps, median, menuOpen, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, peopleNav, peopleNavLeft, peopleNavRight, peoplePopup, peoplePopupBackground, prev, product, renderFrame, right, roles, say, scrollHandlers, sections, showIcecreamAnimation, showingIcecream, useWink;
       sections = $(".section");
       content = $("#content");
       nav = $("#nav");
@@ -479,65 +479,125 @@
       }
       people = $("#our_people");
       if (people.length > 0) {
+        peoplePopup = $('.people_popup');
+        peoplePopupBackground = $(".people_popup_bg");
+        peopleNav = $('.popup_nav');
+        peopleNavLeft = $(".popup_nav.prev");
+        peopleNavRight = $(".popup_nav.next");
+        getNextStaffMember = function(currentStaff, prev) {
+          var nextStaff;
+          nextStaff = false;
+          if (prev === true) {
+            nextStaff = currentStaff.prev('.person_detail');
+          } else {
+            nextStaff = currentStaff.next('.person_detail');
+          }
+          if (nextStaff.length < 1) {
+            if (prev === true) {
+              nextStaff = $(".person_detail").last();
+            } else {
+              nextStaff = $(".person_detail").first();
+            }
+          }
+          return nextStaff;
+        };
         $(".close", people).click(function(e) {
-          var container;
           e.preventDefault();
-          container = $(this).parents('.people_popup');
-          $(".popup_nav", container).fadeOut();
-          return container.animate({
-            top: '-1500px'
+          peopleNav.fadeOut();
+          peoplePopupBackground.css('background-image', 'none');
+          $('.person_detail').removeClass('reveal_content');
+          return peoplePopup.animate({
+            top: (peoplePopup.innerHeight() * -1) - 340
           }, function() {
-            return container.find('.reveal_content').removeClass('.reveal_content').hide();
+            return $(this).hide();
           });
         });
         $(".face", people).click(function(e) {
-          var container, details, peopleNav;
+          var details;
           e.preventDefault();
-          $(".people_content .close:visible").trigger('click');
-          container = $(this).parents(".people_group");
-          peopleNav = container.find('.popup_nav');
-          details = $($(this).find('a').attr('href')).show();
-          return $(".people_popup", container).animate({
+          peoplePopup.css({
+            top: (peoplePopup.innerHeight() * -1) - 240,
+            opacity: 1,
+            display: 'block'
+          });
+          details = $($(this).find('a').attr('href'));
+          prev = getNextStaffMember(details, true);
+          peopleNavLeft.css('background-image', 'url(/_assets/img/staff_pics/small/' + prev.attr('id') + ".jpg)");
+          next = getNextStaffMember(details, false);
+          peopleNavRight.css('background-image', 'url(/_assets/img/staff_pics/small/' + next.attr('id') + ".jpg)");
+          peopleNav.fadeIn();
+          return peoplePopup.animate({
             top: 0
           }, function() {
-            if (details.data('background')) {
-              details.css('background-image', 'url(' + details.data('background') + ")");
-            }
-            details.addClass('reveal_content');
-            peopleNav.find('a').css({
-              top: details.height() / 2
+            peoplePopupBackground.css({
+              'background-image': 'url(/_assets/img/staff_pics/large/' + details.attr('id') + ".jpg)"
             });
-            return peopleNav.fadeIn();
+            details.css({
+              'left': 0
+            });
+            details.addClass('reveal_content');
+            return details.show();
           });
         });
-        $(".popup_nav a").click(function(e) {
-          var container, current, takeNext;
+        $(".popup_nav").click(function(e) {
+          var current, currentContent, nextContent, onPopupContentDone;
           e.preventDefault();
-          container = $(this).parents('people_group');
-          if (!$(this).hasClass('prev')) {
-            takeNext = true;
-          }
-          current = $(".reveal_content", container);
-          if (!takeNext) {
-            next = current.prev('.person_detail');
-            if (next.length < 1) {
-              next = $(".person_detail").last();
-            }
+          current = $(".reveal_content");
+          currentContent = current.find('.people_content');
+          prev = $(this).hasClass('prev');
+          next = getNextStaffMember(current, prev);
+          nextContent = next.find('.people_content');
+          next.show();
+          if (prev) {
+            nextContent.css({
+              left: next.outerWidth() * -1,
+              opacity: 0,
+              display: 'block'
+            });
           } else {
-            next = current.next('.person_detail');
-            if (next.length < 1) {
-              next = $(".person_detail").first();
-            }
+            nextContent.css({
+              left: next.outerWidth(),
+              opacity: 0,
+              display: 'block'
+            });
           }
           current.removeClass('reveal_content');
-          return setTimeout(function() {
-            next.show();
-            if (next.data('background')) {
-              next.css('background-image', 'url(' + next.data('background') + ")");
-            }
-            next.addClass('reveal_content');
-            return current.hide();
-          }, 300);
+          onPopupContentDone = function() {
+            var future;
+            prev = getNextStaffMember(next, true);
+            future = getNextStaffMember(next, false);
+            peopleNavLeft.css('background-image', 'url(/_assets/img/staff_pics/small/' + prev.attr('id') + ".jpg)");
+            peopleNavRight.css('background-image', 'url(/_assets/img/staff_pics/small/' + future.attr('id') + ".jpg)");
+            return peoplePopupBackground.animate({
+              'opacity': 0
+            }, function() {
+              peoplePopupBackground.css({
+                'background-image': 'url(/_assets/img/staff_pics/large/' + next.attr('id') + ".jpg)"
+              });
+              return peoplePopupBackground.animate({
+                'opacity': 1
+              }, function() {
+                next.addClass('reveal_content');
+                return nextContent.animate({
+                  left: 0,
+                  opacity: 1
+                });
+              });
+            });
+          };
+          if (prev) {
+            return current.animate({
+              left: current.width()
+            }, function() {
+              return onPopupContentDone();
+            });
+          } else {
+            return current.animate({
+              left: current.width() * -1
+            }, function() {
+              return onPopupContentDone();
+            });
+          }
         });
       }
       $('.parallax_section').parallax({
@@ -781,6 +841,24 @@
               rotate: 0
             });
           }
+        });
+      }
+      growth = $("#growth_arrow");
+      if (growth.length > 0) {
+        scrollHandlers.push(animateGrowthArrow = function(scrollY, winHeight, winWidth) {
+          var maxScroll, minScroll, percentage;
+          maxScroll = (growth.offset().top + growth.height()) - (winHeight / 1.5);
+          minScroll = (growth.offset().top - winHeight) - 100;
+          percentage = (scrollY - minScroll) / (maxScroll - minScroll);
+          if (!(percentage > 0)) {
+            percentage = 0;
+          }
+          if (!(percentage <= 1)) {
+            percentage = 1;
+          }
+          return growth.css({
+            'bottom': -268 + (percentage * 268)
+          });
         });
       }
       renderFrame = function(onLoad) {

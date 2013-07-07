@@ -588,90 +588,175 @@ do ($ = jQuery, window) ->
       #
       # close icon on the popup
       #
+      peoplePopup = $('.people_popup')
+      peoplePopupBackground = $(".people_popup_bg")
+      peopleNav = $('.popup_nav')
+      peopleNavLeft = $(".popup_nav.prev")
+      peopleNavRight = $(".popup_nav.next")
+
+      #
+      # Helper for getting the next staff member to show.
+      #
+      # Params:
+      # {DomElement} current currentItem in scope
+      # {Boolean} boolean take previous item
+      #
+      # Returns:
+      # {DomElement}
+      #
+      getNextStaffMember = (currentStaff, prev)->
+        nextStaff = false
+
+        if prev == true
+          nextStaff = currentStaff.prev('.person_detail')
+        else
+          nextStaff = currentStaff.next('.person_detail')
+
+        if nextStaff.length < 1
+          # it doesn't exist
+          if prev == true
+            nextStaff = $(".person_detail").last()
+          else
+            nextStaff = $(".person_detail").first()
+
+        nextStaff
+
+      #
+      # Close the people popup. 
+      #
       $(".close", people).click (e)->
         e.preventDefault();
 
-        # determine what group to hide
-        container = $(this).parents('.people_popup')
-
         # hide nav
-        $(".popup_nav", container).fadeOut()
+        peopleNav.fadeOut()
+
+        peoplePopupBackground.css('background-image', 'none')
+
+        # remove the reveal_content from everything
+        $('.person_detail').removeClass('reveal_content')
 
         # hide any open ones
-        container.animate(
-          top: '-1500px',
-          ()->
-            container
-              .find('.reveal_content').removeClass('.reveal_content').hide()
-
+        peoplePopup.animate(
+          top: (peoplePopup.innerHeight() * -1) - 340
+        , ()->
+          $(this).hide()
         )
 
+      #
+      # Click on the face to load a popup
+      #
       $(".face", people).click (e)->
         e.preventDefault()
 
-        # close any of the existing ones
-        $(".people_content .close:visible").trigger('click');
-
-        # determine what group we want to trigger
-        container = $(this).parents(".people_group")
-        peopleNav = container.find('.popup_nav')
-
-        # fade in the correct staff member from the top of the page
-        details = $($(this).find('a').attr('href')).show()
-
         # animate it down
-        $(".people_popup", container).animate(
+        peoplePopup.css
+          top: (peoplePopup.innerHeight() * -1) - 240,
+          opacity: 1,
+          display: 'block'
+        
+        details = $($(this).find('a').attr('href'))
+
+        # set the next and previous sta
+        prev = getNextStaffMember(details, true)
+        peopleNavLeft.css('background-image', 'url(/_assets/img/staff_pics/small/'+ prev.attr('id') + ".jpg)")
+
+        next = getNextStaffMember(details, false)
+        peopleNavRight.css('background-image', 'url(/_assets/img/staff_pics/small/'+ next.attr('id') + ".jpg)")
+
+        peopleNav.fadeIn()
+
+        peoplePopup.animate(
           top: 0,
           ()->
             # load the background image 
-            if details.data('background')
-              details.css('background-image', 'url('+details.data('background') + ")")
+            peoplePopupBackground.css(
+              'background-image': 'url(/_assets/img/staff_pics/large/'+ details.attr('id') + ".jpg)"
+            )
+
+            details.css(
+              'left': 0
+            )
 
             # bring in content
             details.addClass('reveal_content')
-
-            # show navigation
-            peopleNav.find('a').css(
-              top: details.height() / 2
-            )
-
-            # update the thumbnails in the people nav
-            peopleNav.fadeIn()
+            details.show()
         )
 
       #
       # Navigating between the staff members while the popup is open
       #
-      $(".popup_nav a").click (e)->
+      $(".popup_nav").click (e)->
         e.preventDefault()
-        container = $(this).parents('people_group')
-        takeNext = true unless $(this).hasClass('prev')
-        current = $(".reveal_content", container)
 
-        if not takeNext
-          next = current.prev('.person_detail')
+        current = $(".reveal_content")
+        currentContent = current.find('.people_content')
 
-          if next.length < 1
-            next = $(".person_detail").last()
+        prev = $(this).hasClass('prev')
+        next = getNextStaffMember(current, prev)
+        nextContent = next.find('.people_content')
+
+        next.show()
+
+        if prev
+          nextContent.css(
+            left: next.outerWidth() * -1,
+            opacity: 0,
+            display: 'block'
+          )
         else
-          next = current.next('.person_detail')
-
-          if next.length < 1
-            next = $(".person_detail").first()
-
+          nextContent.css(
+            left: next.outerWidth(),
+            opacity: 0,
+            display: 'block'
+          )
 
         current.removeClass('reveal_content')
 
-        setTimeout( ()->
-          next.show()
+        #
+        # Once we've finished animating out we need to bring in the next piece 
+        # of content
+        #
+        onPopupContentDone = ()->
+          # swap the nav thumbs
+          prev = getNextStaffMember(next, true)
+          future = getNextStaffMember(next, false)
 
-          # load the background image 
-          if next.data('background')
-              next.css('background-image', 'url('+next.data('background') + ")")
+          peopleNavLeft.css('background-image', 'url(/_assets/img/staff_pics/small/'+ prev.attr('id') + ".jpg)")
+          peopleNavRight.css('background-image', 'url(/_assets/img/staff_pics/small/'+ future.attr('id') + ".jpg)")
 
-          next.addClass('reveal_content')
-          current.hide()
-        , 300)
+          peoplePopupBackground.animate(
+            'opacity': 0
+          , ()->
+
+            peoplePopupBackground.css(
+              'background-image': 'url(/_assets/img/staff_pics/large/'+ next.attr('id') + ".jpg)"
+            )
+
+            peoplePopupBackground.animate(
+              'opacity': 1
+            , ()->
+              next.addClass('reveal_content')
+              nextContent.animate(
+                left: 0,
+                opacity: 1
+              )
+            )
+          )
+          
+
+        # animate current off the page. Right for previous, left for next
+        if prev
+          current.animate(
+            left: current.width()
+          , ()->
+              onPopupContentDone()
+          )
+        else
+          current.animate(
+            left: current.width() * -1
+          , ()->
+              onPopupContentDone()
+          )
 
 
     # 
@@ -1036,7 +1121,23 @@ do ($ = jQuery, window) ->
             top: 30,
             rotate: 0
 
+    #
+    # Growth arrow on the about page. As the user scrolls the arrow moves north
+    # back to the full height
+    #
+    growth = $("#growth_arrow")
 
+    if growth.length > 0
+      scrollHandlers.push animateGrowthArrow = (scrollY, winHeight, winWidth)->
+        maxScroll = (growth.offset().top + growth.height()) - (winHeight / 1.5)
+        minScroll = (growth.offset().top - winHeight) - 100
+
+        percentage = ((scrollY - minScroll) / (maxScroll - minScroll))
+        percentage = 0 unless percentage > 0
+        percentage = 1 unless percentage <= 1
+
+        growth.css
+          'bottom': -268 + (percentage * 268)
     # 
     # Now we can actually do something useful.
     # 
