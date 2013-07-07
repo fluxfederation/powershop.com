@@ -135,50 +135,46 @@ do ($ = jQuery, window) ->
     #
     $(".show_nav").click (e)->
       e.preventDefault()
-      menuOpen = true;
 
-      page.css(
-        'overflow-y': 'hidden'
-      )
+      if $(this).hasClass('close')
+        $(this).removeClass('close')
 
-      header.css(
-        'background': getHeaderBackground()
-      )
+        menuOpen = false;
 
-      header.animate({
-        height: $(window).height()
-      }, ()->
-        header.css('height', '100%')
-      )
+        header.animate(
+          height: '50px',
+          ()->
+            page.css(
+              'overflow': 'auto'
+            )
 
-      $(this).fadeOut(()->
+            header.css(
+             'overflow-y': 'hidden',
+             'background': getHeaderBackground()
+            )
+        )
+      else
+        $(this).addClass('close')
+        menuOpen = true;
+
+        page.css(
+          'overflow': 'hidden'
+        )
+
+        header.css(
+          'background': getHeaderBackground(),
+          'overflow-y': 'auto'
+        )
+
+        header.animate({
+          height: $(window).height()
+        }, ()->
+          header.css('height', '100%')
+        )
+
         $("#nav").fadeIn()
-        $(".close_nav").fadeIn()
-      )
         
-
-    # 
-    # Clicking the close navigation button should undo changes performed to the
-    # page when opening the navigation
-    #
-    $(".close_nav").click (e)->
-      e.preventDefault()
-
-      menuOpen = false;
-
-
-      page.css(
-        'overflow-y': 'scroll'
-      )
-
-      $(this).fadeOut()
-      header.animate(
-        background: getHeaderBackground()
-        height: '50px'
-      )
-      $(".show_nav").fadeIn()
-
-
+      return false
 
     
     #
@@ -305,6 +301,7 @@ do ($ = jQuery, window) ->
             center: new google.maps.LatLng($(elem).data('center-lat'), $(elem).data('center-lng')),
             zoom: 15,
             disableDefaultUI: true,
+            scrollwheel: false,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             styles: window.map_styles
 
@@ -890,6 +887,11 @@ do ($ = jQuery, window) ->
       #
       scrollHandlers.push animateHomePage = (scrollY, winHeight, winWidth)->
         #
+        # If we're at a size any smaller than the desktop view, just ignore this
+        # since the illustrations will be gone
+        # 
+
+        #
         # Illustration 1. Make things. This guy comes up from the bottom left as
         # the user scrolls on the page to sit at the final position of 20,520. The
         # driver of this vehicle is a little drunk so as he comes across, he moves
@@ -1060,7 +1062,7 @@ do ($ = jQuery, window) ->
     # render the initial frame
     renderFrame(true)
 
-    useWink = false
+    useWink = onHomePage
 
     # trigger the removal of the loading page
     if useWink

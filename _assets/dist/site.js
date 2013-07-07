@@ -118,35 +118,38 @@
       });
       $(".show_nav").click(function(e) {
         e.preventDefault();
-        menuOpen = true;
-        page.css({
-          'overflow-y': 'hidden'
-        });
-        header.css({
-          'background': getHeaderBackground()
-        });
-        header.animate({
-          height: $(window).height()
-        }, function() {
-          return header.css('height', '100%');
-        });
-        return $(this).fadeOut(function() {
+        if ($(this).hasClass('close')) {
+          $(this).removeClass('close');
+          menuOpen = false;
+          header.animate({
+            height: '50px'
+          }, function() {
+            page.css({
+              'overflow': 'auto'
+            });
+            return header.css({
+              'overflow-y': 'hidden',
+              'background': getHeaderBackground()
+            });
+          });
+        } else {
+          $(this).addClass('close');
+          menuOpen = true;
+          page.css({
+            'overflow': 'hidden'
+          });
+          header.css({
+            'background': getHeaderBackground(),
+            'overflow-y': 'auto'
+          });
+          header.animate({
+            height: $(window).height()
+          }, function() {
+            return header.css('height', '100%');
+          });
           $("#nav").fadeIn();
-          return $(".close_nav").fadeIn();
-        });
-      });
-      $(".close_nav").click(function(e) {
-        e.preventDefault();
-        menuOpen = false;
-        page.css({
-          'overflow-y': 'scroll'
-        });
-        $(this).fadeOut();
-        header.animate({
-          background: getHeaderBackground(),
-          height: '50px'
-        });
-        return $(".show_nav").fadeIn();
+        }
+        return false;
       });
       officePhotos = $("#office_photos");
       officePhotoScroller = $("ul", officePhotos);
@@ -251,6 +254,7 @@
               center: new google.maps.LatLng($(elem).data('center-lat'), $(elem).data('center-lng')),
               zoom: 15,
               disableDefaultUI: true,
+              scrollwheel: false,
               mapTypeId: google.maps.MapTypeId.ROADMAP,
               styles: window.map_styles
             };
@@ -795,7 +799,7 @@
         return renderFrame(false);
       });
       renderFrame(true);
-      useWink = false;
+      useWink = onHomePage;
       if (useWink) {
         $("#loading").addClass('done wink');
         setTimeout(function() {

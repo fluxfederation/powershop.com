@@ -1,5 +1,8 @@
 /* screens smaller than 580px / mobile */
+@import "elements.less";
+@import "grid.less";
 @import "vars.less";
+@import "css3.less";
 
 @media screen and (max-width: 580px) {
 	.wrapper {
@@ -28,6 +31,7 @@
 
 	#welcome h1 {
 		font-size: 45px;
+		margin: 120px 0 40px;
 		line-height: 50px;
 	}
 
@@ -40,7 +44,53 @@
 		font-size: 45px;
 	}
 
+	#welcome_jump p {
+		width: 100%;
+	}
+
 	#welcome_jump .first a {
 		border-right: 2px solid @hotPink;
+	}
+
+	.map {
+		width: 100%;
+		float: left;
+		height: 220px;
+	}
+
+	/* nav */
+	#header #nav li {
+		width: 226px;
+		float: none;
+		height: 69px;
+		margin: 0 auto;
+		padding: 0;
+		overflow: hidden;
+		background-size: auto;
+
+		a {
+			display: none;
+			height: 69px;
+			padding: 0;
+			border-top: none;
+
+			&:hover,
+			&:focus {
+				border-top: 0;
+			}
+		}
+
+		.welcome a,
+		.shit_hot a,
+		.contact a,
+		.kiss_ass a {
+			display: block;
+		}
+	}
+
+	#customers_say {
+		img {
+			display: none;
+		}
 	}
 }

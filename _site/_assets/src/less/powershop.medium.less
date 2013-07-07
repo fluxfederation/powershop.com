@@ -1,5 +1,8 @@
 /* medium view 880px, columns are 72px wide  */
+@import "elements.less";
+@import "grid.less";
 @import "vars.less";
+@import "css3.less";
 
 @media screen and (max-width: 879px) {
 	/* helpers */
@@ -14,6 +17,7 @@
 		width: 100%;
 		float: none;
 		display: block;
+		text-align: left;
 		max-width: 300px;
 	}
 
@@ -106,7 +110,24 @@
 			-webkit-column-count: 1;
 			column-count: 1;
 		}
+
+		h3 {
+			margin: 0 auto 35px;
+
+			&:after {
+				display: none;
+			}
+		}
+
+		p {
+			text-align: center;
+		}
 	}
+
+	#quote p {
+		text-align: center;
+	}
+
 	/* culture page */
 	#current_roles {
 		.faces {
@@ -116,5 +137,52 @@
 		.apply {
 			margin: 0;
 		}
+
+		.people_group h3 {
+			position: static;
+			.rotate(0deg);
+			text-align:  left;
+		}
+
+		.people_group span {
+			display: none;
+		}
+	}
+
+	#ill3,
+	#ill2,
+	#ill1 {
+		display: none;
+	}
+
+	#pow {
+		display: none;
+	}
+
+	#customers_love h3 {
+		text-align: center;
+	}
+
+	#kiss_ass .yell {
+		width: auto;
+	}
+
+	#customers_say {
+		.next_test {
+			display: none;
+		}
+
+		.prev_test {
+			left: 20px;
+		}
+	}
+
+	#quotes li {
+		width: auto;
+		float: none;
+	}
+
+	#quotes strong {
+		display: inline;
 	}
 }
