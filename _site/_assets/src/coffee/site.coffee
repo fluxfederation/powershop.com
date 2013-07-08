@@ -414,9 +414,17 @@ do ($ = jQuery, window) ->
       # user can cycle through some of the testimonials on the page. The scroll
       # is endless, so last item is added to the start
       $("li:first", say).addClass('showing').siblings().hide()
+      
+      animatingTestimonial = false
 
       # hide the current testimonial animation.
       hideCurrentTestimonial = (back)->
+        if animatingTestimonial
+          return false
+
+
+        animatingTestimonial = true
+
         current = $(".showing", say)
         grid = $(".grid-55", current)
         height = current.outerHeight(true)
@@ -435,100 +443,101 @@ do ($ = jQuery, window) ->
         img.animate({ 
           marginTop: '-300px',
           opacity: 0
-        }, 600, 'easeInOutBack')
+        }, 600, 'easeInOutBack', ()->
 
-        txt.css(
-         width: txtWidth,
-         position: 'absolute',
-         left: posLeft
-        )
-
-        takeOffToLeft = $(window).width();
-        takeOffToLeft = -1 * $(window).width() unless back
-
-        txt.animate({ 
-          opacity: 0
-          left: takeOffToLeft
-        }, 600, 'easeOutQuint', ()->
-          # hide the testimonial
-          current.hide().removeClass('showing');
-
-          # clean up
-          img.css('marginTop', 0)
           txt.css(
-            'width': 'auto',
-            'position': 'static'
+           width: txtWidth,
+           position: 'absolute',
+           left: posLeft
           )
 
-          grid.css(
-            'height': 'auto'
-          )
+          takeOffToLeft = $(window).width();
+          takeOffToLeft = -1 * $(window).width() unless back
 
-          # bring in the next element to focus
-          if back
-            next = current.prev('li')
+          txt.animate({ 
+            opacity: 0
+            left: takeOffToLeft
+          }, 600, 'easeOutQuint', ()->
+            # hide the testimonial
+            current.hide().removeClass('showing');
 
-            if next.length < 1
-              next = $("li", say).last()
+            # clean up
+            img.css('marginTop', 0)
+            txt.css(
+              'width': 'auto',
+              'position': 'static'
+            )
 
-          else
-            next = current.next('li')
+            grid.css(
+              'height': 'auto'
+            )
 
-            if next.length < 1
-              next = $("li", say).first()
+            # bring in the next element to focus
+            if back
+              next = current.prev('li')
 
-          next.addClass('showing')
+              if next.length < 1
+                next = $("li", say).last()
 
-          say.animate({
-            height: next.outerHeight(true)
-          })
+            else
+              next = current.next('li')
 
-          nextImg = next.find('img')
-          nextTxt = next.find('.padd-off')
-          nextGrid = next.find('.grid-55')
+              if next.length < 1
+                next = $("li", say).first()
 
-          nextGrid.css(
-            height: height
-          )
+            next.addClass('showing')
 
-          # determine where to start the next block, if moving back we start
-          # off to the left, otherwise moving next starts from the right
-          startLeft = -1 * $(window).width()
-          startLeft = $(window).width() unless back
+            say.animate({
+              height: next.outerHeight(true)
+            })
 
-          nextTxt.css(
-            opacity: 0,
-            left: startLeft,
-            position: 'absolute',
-            width: txtWidth
-          )
-          
-          nextImg.css(
-            'marginTop': '-300px',
-            'opacity': 0
-          )
+            nextImg = next.find('img')
+            nextTxt = next.find('.padd-off')
+            nextGrid = next.find('.grid-55')
 
-          next.show();
+            nextGrid.css(
+              height: height
+            )
 
-          nextTxt.animate({
-            'opacity': 1,
-            'left': posLeft
-          }, 'easeOutQuint', ()->
-              nextImg.animate({
-                'marginTop': 0,
-                'opacity': 1
-              }, 'easeInOutBack', ()->
-                # clear explict heights
-                say.css('height', '')
-                nextTxt.css('position', 'static')
-                nextGrid.css(
-                  height: ''
+            # determine where to start the next block, if moving back we start
+            # off to the left, otherwise moving next starts from the right
+            startLeft = -1 * $(window).width()
+            startLeft = $(window).width() unless back
+
+            nextTxt.css(
+              opacity: 0,
+              left: startLeft,
+              position: 'absolute',
+              width: txtWidth
+            )
+            
+            nextImg.css(
+              'marginTop': '-300px',
+              'opacity': 0
+            )
+
+            next.show();
+
+            nextTxt.animate({
+              'opacity': 1,
+              'left': posLeft
+            }, 'easeOutQuint', ()->
+                nextImg.animate({
+                  'marginTop': 0,
+                  'opacity': 1
+                }, 'easeInOutBack', ()->
+                  # clear explict heights
+                  say.css('height', '')
+                  nextTxt.css('position', 'static')
+                  nextGrid.css(
+                    height: ''
+                  )
+
+                  animatingTestimonial = false
                 )
-                # animate the container to the height of
-              )
+            )
           )
         )
-
 
       prev = $("<a></a>").addClass('prev_test')
       prev.click (e)->
@@ -1124,6 +1133,12 @@ do ($ = jQuery, window) ->
     # On scroll, rerender the frame
     #
     $(window).scroll ()->
+      renderFrame(false)
+
+    #
+    # On resize, rerender the frame
+    #
+    $(window).resize ()->
       renderFrame(false)
 
 

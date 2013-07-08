@@ -53,7 +53,7 @@
       return this;
     };
     return $(document).ready(function() {
-      var animateGrowthArrow, animateHomePage, animationForDesign, animationForProduct, animationForRoles, animationInProgress, animationLength, body, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, getNextStaffMember, growth, header, headerGone, hideCurrentTestimonial, hideIcecreamAnimation, ill1, ill1_fire, ill1_section, ill2, ill2_cone, ill2_scoopes, ill2_section, ill3, ill3_hat, ill3_hatshadow, ill3_section, left, loadImages, loadedOfficePics, maps, median, menuOpen, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, peopleNav, peopleNavLeft, peopleNavRight, peoplePopup, peoplePopupBackground, prev, product, renderFrame, right, roles, say, scrollHandlers, sections, showIcecreamAnimation, showingIcecream, updateHeaderBar, useWink;
+      var animateGrowthArrow, animateHomePage, animatingTestimonial, animationForDesign, animationForProduct, animationForRoles, animationInProgress, animationLength, body, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, getNextStaffMember, growth, header, headerGone, hideCurrentTestimonial, hideIcecreamAnimation, ill1, ill1_fire, ill1_section, ill2, ill2_cone, ill2_scoopes, ill2_section, ill3, ill3_hat, ill3_hatshadow, ill3_section, left, loadImages, loadedOfficePics, maps, median, menuOpen, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, peopleNav, peopleNavLeft, peopleNavRight, peoplePopup, peoplePopupBackground, prev, product, renderFrame, right, roles, say, scrollHandlers, sections, showIcecreamAnimation, showingIcecream, updateHeaderBar, useWink;
       sections = $(".section");
       content = $("#content");
       nav = $("#nav");
@@ -343,8 +343,13 @@
       say = $("#customers_say");
       if (say.length > 0) {
         $("li:first", say).addClass('showing').siblings().hide();
+        animatingTestimonial = false;
         hideCurrentTestimonial = function(back) {
-          var current, grid, height, img, posLeft, takeOffToLeft, txt, txtWidth;
+          var current, grid, height, img, posLeft, txt, txtWidth;
+          if (animatingTestimonial) {
+            return false;
+          }
+          animatingTestimonial = true;
           current = $(".showing", say);
           grid = $(".grid-55", current);
           height = current.outerHeight(true);
@@ -356,81 +361,84 @@
           txt = current.find('.padd-off');
           posLeft = txt.position().left;
           txtWidth = txt.width();
-          img.animate({
+          return img.animate({
             marginTop: '-300px',
             opacity: 0
-          }, 600, 'easeInOutBack');
-          txt.css({
-            width: txtWidth,
-            position: 'absolute',
-            left: posLeft
-          });
-          takeOffToLeft = $(window).width();
-          if (!back) {
-            takeOffToLeft = -1 * $(window).width();
-          }
-          return txt.animate({
-            opacity: 0,
-            left: takeOffToLeft
-          }, 600, 'easeOutQuint', function() {
-            var next, nextGrid, nextImg, nextTxt, startLeft;
-            current.hide().removeClass('showing');
-            img.css('marginTop', 0);
+          }, 600, 'easeInOutBack', function() {
+            var takeOffToLeft;
             txt.css({
-              'width': 'auto',
-              'position': 'static'
-            });
-            grid.css({
-              'height': 'auto'
-            });
-            if (back) {
-              next = current.prev('li');
-              if (next.length < 1) {
-                next = $("li", say).last();
-              }
-            } else {
-              next = current.next('li');
-              if (next.length < 1) {
-                next = $("li", say).first();
-              }
-            }
-            next.addClass('showing');
-            say.animate({
-              height: next.outerHeight(true)
-            });
-            nextImg = next.find('img');
-            nextTxt = next.find('.padd-off');
-            nextGrid = next.find('.grid-55');
-            nextGrid.css({
-              height: height
-            });
-            startLeft = -1 * $(window).width();
-            if (!back) {
-              startLeft = $(window).width();
-            }
-            nextTxt.css({
-              opacity: 0,
-              left: startLeft,
+              width: txtWidth,
               position: 'absolute',
-              width: txtWidth
+              left: posLeft
             });
-            nextImg.css({
-              'marginTop': '-300px',
-              'opacity': 0
-            });
-            next.show();
-            return nextTxt.animate({
-              'opacity': 1,
-              'left': posLeft
-            }, 'easeOutQuint', function() {
-              return nextImg.animate({
-                'marginTop': 0,
-                'opacity': 1
-              }, 'easeInOutBack', function() {
-                say.css('height', '');
-                nextTxt.css('position', 'static');
-                return nextGrid.css({
-                  height: ''
+            takeOffToLeft = $(window).width();
+            if (!back) {
+              takeOffToLeft = -1 * $(window).width();
+            }
+            return txt.animate({
+              opacity: 0,
+              left: takeOffToLeft
+            }, 600, 'easeOutQuint', function() {
+              var next, nextGrid, nextImg, nextTxt, startLeft;
+              current.hide().removeClass('showing');
+              img.css('marginTop', 0);
+              txt.css({
+                'width': 'auto',
+                'position': 'static'
+              });
+              grid.css({
+                'height': 'auto'
+              });
+              if (back) {
+                next = current.prev('li');
+                if (next.length < 1) {
+                  next = $("li", say).last();
+                }
+              } else {
+                next = current.next('li');
+                if (next.length < 1) {
+                  next = $("li", say).first();
+                }
+              }
+              next.addClass('showing');
+              say.animate({
+                height: next.outerHeight(true)
+              });
+              nextImg = next.find('img');
+              nextTxt = next.find('.padd-off');
+              nextGrid = next.find('.grid-55');
+              nextGrid.css({
+                height: height
+              });
+              startLeft = -1 * $(window).width();
+              if (!back) {
+                startLeft = $(window).width();
+              }
+              nextTxt.css({
+                opacity: 0,
+                left: startLeft,
+                position: 'absolute',
+                width: txtWidth
+              });
+              nextImg.css({
+                'marginTop': '-300px',
+                'opacity': 0
+              });
+              next.show();
+              return nextTxt.animate({
+                'opacity': 1,
+                'left': posLeft
+              }, 'easeOutQuint', function() {
+                return nextImg.animate({
+                  'marginTop': 0,
+                  'opacity': 1
+                }, 'easeInOutBack', function() {
+                  say.css('height', '');
+                  nextTxt.css('position', 'static');
+                  nextGrid.css({
+                    height: ''
+                  });
+                  return animatingTestimonial = false;
                 });
               });
             });
@@ -846,6 +854,9 @@
         });
       };
       $(window).scroll(function() {
+        return renderFrame(false);
+      });
+      $(window).resize(function() {
         return renderFrame(false);
       });
       renderFrame(true);

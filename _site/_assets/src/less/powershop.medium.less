@@ -138,7 +138,7 @@
 
 	#quote p,
 	#quote h2 {
-		text-align: center;
+		max-width: 50%;
 	}
 
 	/* culture page */
@@ -153,14 +153,21 @@
 	}
 
 
-	.people_group h3 {
-		position: static;
-		.rotate(0deg);
-		text-align:  left;
-	}
+	.people_group {
+		h3 {
+			position: static;
+			text-align: left;
 
-	.people_group span {
-		display: none;
+			.rotate(0deg);
+		}
+
+		span {
+			display: none;
+		}
+
+		.face {
+			width: 50%;
+		}
 	}
 
 	#pow {
@@ -183,5 +190,13 @@
 	#customers_love h2 span:after {
 		left: 59px;
 		top: 57px;
+	}
+
+	#customers_say .prev_test {
+		left: 10px;
+	}
+
+	#customers_say .next_test {
+		right: 10px;
 	}
 }
