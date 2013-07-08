@@ -113,6 +113,11 @@
 			text-align: center;
 			margin: 0 auto;
 		}
+
+		blockquote:before {
+			left: 50%;
+			margin-left: -15px;
+		}
 	}
 
 	#customers_love {
@@ -125,6 +130,12 @@
 			text-align: center;
 			margin: 0 auto;
 		}
+		
+		h2 span:after {
+			top: 85px;
+			left: 50%;
+			margin-left: -15px;
+		}
 
 		.grid-8 {
 			margin: 0 auto;
@@ -134,5 +145,50 @@
 	#customers_love .grid-55,
 	#customers_love .grid-7 {
 		margin: 0 auto;
+	}
+
+	/* people section for the mobile view requires a bit of effort to get right */
+	.people_popup .person_detail {
+		margin: 10px 0 0 0;
+		position: relative;
+	}
+
+	.people_popup p {
+		max-width: 270px;
+	}
+
+	.people_popup {
+		background: #4c4648;
+		max-height: none;
+		padding-bottom: 4em;
+
+		.close {
+			left: 15px;
+			right: auto;
+		}
+	}
+
+	.popup_nav {
+		top: 80px;
+		background: none !important;
+		width: 55px;
+		right: 0;
+
+		&:after {
+			display: none;
+		}
+
+		&.prev {
+			left: 10px;
+
+			&:before {
+				right: 0;
+			}
+		}
+	}
+
+	.people_popup .people_popup_bg {
+		padding-top: 59.09%;
+		background-size: 100%;
 	}
 }

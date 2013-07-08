@@ -26,7 +26,7 @@ do ($ = jQuery, window) ->
   #
   # Where P is a percentage (0 to 1) of the drawing along the line
   #
-  $.path.bezier = (params, rotate)->
+  $.bezier = (params, rotate)->
     params.start = $.extend( {angle: 0, length: 0.3333}, params.start )
     params.end = $.extend( {angle: 0, length: 0.3333}, params.end )
     @p1 = [params.start.x, params.start.y]
@@ -143,7 +143,14 @@ do ($ = jQuery, window) ->
         
       return false
 
-    
+    #
+    # Ensure that we close the navigation when the user clicks a link within the
+    # navigation, since it could be a part of the same page
+    #
+    $(".nav_wrapper a", nav).click( ()->
+      $(".close_nav").click()
+    )
+
     #
     # Swiping the office images allows the user to manipulate the office 
     # photos. The user can swipe till there are no more photos to unvisible
@@ -369,7 +376,7 @@ do ($ = jQuery, window) ->
             y: $(elem).data('sy')
           angle: $(elem).data('a')
 
-        paths[i] = new $.path.bezier(params)
+        paths[i] = new $.bezier(params)
 
       scrollHandlers.push animationForDesign = (scrollY, winHeight, winWidth)->
         # animate the design thinking banner. Each element comes in on a 
@@ -606,14 +613,20 @@ do ($ = jQuery, window) ->
         # hide nav
         peopleNav.fadeOut()
 
+        $("#jumper").fadeIn()
+        $(".people_group h3").animate(
+          opacity: 1
+        )
+
         peoplePopupBackground.css('background-image', 'none')
 
         # remove the reveal_content from everything
         $('.person_detail').removeClass('reveal_content')
 
         # hide any open ones
-        peoplePopup.animate(
-          top: (peoplePopup.innerHeight() * -1) - 340
+        peoplePopup.show().animate(
+          height: 0
+          opacity: 0
         , ()->
           $(this).hide()
         )
@@ -626,8 +639,8 @@ do ($ = jQuery, window) ->
 
         # animate it down
         peoplePopup.css
-          top: (peoplePopup.innerHeight() * -1) - 240,
           opacity: 1,
+          height: 0
           display: 'block'
         
         details = $($(this).find('a').attr('href'))
@@ -639,10 +652,15 @@ do ($ = jQuery, window) ->
         next = getNextStaffMember(details, false)
         peopleNavRight.css('background-image', 'url(/_assets/img/staff_pics/small/'+ next.attr('id') + ".jpg)")
 
+        $("#jumper").fadeOut()
+        $(".people_group h3").animate(
+          opacity: 0
+        )
+
         peopleNav.fadeIn()
 
         peoplePopup.animate(
-          top: 0,
+          height: if ($(window).width() > 580) then 650 else details.height() + 260,
           ()->
             # load the background image 
             peoplePopupBackground.css(
@@ -676,13 +694,13 @@ do ($ = jQuery, window) ->
         if prev
           nextContent.css(
             left: next.outerWidth() * -1,
-            opacity: 0,
+            opacity: 0.5,
             display: 'block'
           )
         else
           nextContent.css(
             left: next.outerWidth(),
-            opacity: 0,
+            opacity: 0.5,
             display: 'block'
           )
 
@@ -693,6 +711,7 @@ do ($ = jQuery, window) ->
         # of content
         #
         onPopupContentDone = ()->
+          currentContent.css('width', '100%')
           # swap the nav thumbs
           prev = getNextStaffMember(next, true)
           future = getNextStaffMember(next, false)
@@ -712,6 +731,7 @@ do ($ = jQuery, window) ->
               'opacity': 1
             , ()->
               next.addClass('reveal_content')
+
               nextContent.animate(
                 left: 0,
                 opacity: 1
@@ -721,14 +741,16 @@ do ($ = jQuery, window) ->
           
 
         # animate current off the page. Right for previous, left for next
+        currentContent.css('width', currentContent.width())
+
         if prev
-          current.animate(
+          currentContent.animate(
             left: current.width()
           , ()->
               onPopupContentDone()
           )
         else
-          current.animate(
+          currentContent.animate(
             left: current.width() * -1
           , ()->
               onPopupContentDone()
@@ -788,7 +810,7 @@ do ($ = jQuery, window) ->
             expectedValue = self.data('count-up');
             percentage = self.data('count-up-percentage')
             delay = Math.random() * 300
-            speed = Math.random() * 50
+            speed = Math.random() * 30
 
             setTimeout( ()->
               countValue = setInterval( ()->

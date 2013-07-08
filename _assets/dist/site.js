@@ -18,7 +18,7 @@
         return [a[0] - b[0], a[1] - b[1]];
       }
     };
-    $.path.bezier = function(params, rotate) {
+    $.bezier = function(params, rotate) {
       var v12, v14, v41, v43;
       params.start = $.extend({
         angle: 0,
@@ -122,6 +122,9 @@
           });
         }
         return false;
+      });
+      $(".nav_wrapper a", nav).click(function() {
+        return $(".close_nav").click();
       });
       officePhotos = $("#office_photos");
       officePhotoScroller = $("ul", officePhotos);
@@ -308,7 +311,7 @@
             },
             angle: $(elem).data('a')
           };
-          return paths[i] = new $.path.bezier(params);
+          return paths[i] = new $.bezier(params);
         });
         scrollHandlers.push(animationForDesign = function(scrollY, winHeight, winWidth) {
           var ignoredScroll, p, targetScroll, targetTop;
@@ -484,10 +487,15 @@
         $(".close", people).click(function(e) {
           e.preventDefault();
           peopleNav.fadeOut();
+          $("#jumper").fadeIn();
+          $(".people_group h3").animate({
+            opacity: 1
+          });
           peoplePopupBackground.css('background-image', 'none');
           $('.person_detail').removeClass('reveal_content');
-          return peoplePopup.animate({
-            top: (peoplePopup.innerHeight() * -1) - 340
+          return peoplePopup.show().animate({
+            height: 0,
+            opacity: 0
           }, function() {
             return $(this).hide();
           });
@@ -496,8 +504,8 @@
           var details;
           e.preventDefault();
           peoplePopup.css({
-            top: (peoplePopup.innerHeight() * -1) - 240,
             opacity: 1,
+            height: 0,
             display: 'block'
           });
           details = $($(this).find('a').attr('href'));
@@ -505,9 +513,13 @@
           peopleNavLeft.css('background-image', 'url(/_assets/img/staff_pics/small/' + prev.attr('id') + ".jpg)");
           next = getNextStaffMember(details, false);
           peopleNavRight.css('background-image', 'url(/_assets/img/staff_pics/small/' + next.attr('id') + ".jpg)");
+          $("#jumper").fadeOut();
+          $(".people_group h3").animate({
+            opacity: 0
+          });
           peopleNav.fadeIn();
           return peoplePopup.animate({
-            top: 0
+            height: $(window).width() > 580 ? 650 : details.height() + 260
           }, function() {
             peoplePopupBackground.css({
               'background-image': 'url(/_assets/img/staff_pics/large/' + details.attr('id') + ".jpg)"
@@ -531,19 +543,20 @@
           if (prev) {
             nextContent.css({
               left: next.outerWidth() * -1,
-              opacity: 0,
+              opacity: 0.5,
               display: 'block'
             });
           } else {
             nextContent.css({
               left: next.outerWidth(),
-              opacity: 0,
+              opacity: 0.5,
               display: 'block'
             });
           }
           current.removeClass('reveal_content');
           onPopupContentDone = function() {
             var future;
+            currentContent.css('width', '100%');
             prev = getNextStaffMember(next, true);
             future = getNextStaffMember(next, false);
             peopleNavLeft.css('background-image', 'url(/_assets/img/staff_pics/small/' + prev.attr('id') + ".jpg)");
@@ -565,14 +578,15 @@
               });
             });
           };
+          currentContent.css('width', currentContent.width());
           if (prev) {
-            return current.animate({
+            return currentContent.animate({
               left: current.width()
             }, function() {
               return onPopupContentDone();
             });
           } else {
-            return current.animate({
+            return currentContent.animate({
               left: current.width() * -1
             }, function() {
               return onPopupContentDone();
@@ -620,7 +634,7 @@
               expectedValue = self.data('count-up');
               percentage = self.data('count-up-percentage');
               delay = Math.random() * 300;
-              speed = Math.random() * 50;
+              speed = Math.random() * 30;
               return setTimeout(function() {
                 var countValue;
                 return countValue = setInterval(function() {
