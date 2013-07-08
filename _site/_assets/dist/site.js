@@ -492,7 +492,7 @@
             opacity: 1
           });
           peoplePopupBackground.css('background-image', 'none');
-          $('.person_detail').removeClass('reveal_content');
+          $('.person_detail').hide().removeClass('reveal_content');
           return peoplePopup.show().animate({
             height: 0,
             opacity: 0
@@ -501,8 +501,12 @@
           });
         });
         $(".face", people).click(function(e) {
-          var details;
+          var details, top;
           e.preventDefault();
+          top = $(this).parents('.people_group').offset().top;
+          if ($(window).scrollTop() > top) {
+            $(window).scrollTo(0, top);
+          }
           peoplePopup.css({
             opacity: 1,
             height: 0,
@@ -525,7 +529,8 @@
               'background-image': 'url(/_assets/img/staff_pics/large/' + details.attr('id') + ".jpg)"
             });
             details.css({
-              'left': 0
+              'left': 0,
+              'opacity': 1
             });
             details.addClass('reveal_content');
             return details.show();
@@ -556,7 +561,11 @@
           current.removeClass('reveal_content');
           onPopupContentDone = function() {
             var future;
-            currentContent.css('width', '100%');
+            currentContent.css({
+              'width': '90.909090%',
+              'left': 0,
+              'opacity': 0
+            }, 'display: block');
             prev = getNextStaffMember(next, true);
             future = getNextStaffMember(next, false);
             peopleNavLeft.css('background-image', 'url(/_assets/img/staff_pics/small/' + prev.attr('id') + ".jpg)");

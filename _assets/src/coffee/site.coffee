@@ -621,7 +621,7 @@ do ($ = jQuery, window) ->
         peoplePopupBackground.css('background-image', 'none')
 
         # remove the reveal_content from everything
-        $('.person_detail').removeClass('reveal_content')
+        $('.person_detail').hide().removeClass('reveal_content')
 
         # hide any open ones
         peoplePopup.show().animate(
@@ -636,6 +636,12 @@ do ($ = jQuery, window) ->
       #
       $(".face", people).click (e)->
         e.preventDefault()
+
+        # make sure the user is at the top of the viewable space
+        top = $(this).parents('.people_group').offset().top
+
+        if $(window).scrollTop() > top 
+          $(window).scrollTo(0, top);
 
         # animate it down
         peoplePopup.css
@@ -668,7 +674,8 @@ do ($ = jQuery, window) ->
             )
 
             details.css(
-              'left': 0
+              'left': 0,
+              'opacity': 1
             )
 
             # bring in content
@@ -711,7 +718,13 @@ do ($ = jQuery, window) ->
         # of content
         #
         onPopupContentDone = ()->
-          currentContent.css('width', '100%')
+          currentContent.css(
+            'width': '90.909090%',
+            'left': 0,
+            'opacity': 0,
+            'display: block'
+          )
+
           # swap the nav thumbs
           prev = getNextStaffMember(next, true)
           future = getNextStaffMember(next, false)
