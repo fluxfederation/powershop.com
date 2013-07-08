@@ -53,7 +53,7 @@
       return this;
     };
     return $(document).ready(function() {
-      var animateGrowthArrow, animateHomePage, animationForDesign, animationForProduct, animationForRoles, animationInProgress, animationLength, body, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, fadeInHeaderBar, getHeaderBackground, getNextStaffMember, growth, header, headerGone, hideCurrentTestimonial, hideIcecreamAnimation, ill1, ill1_fire, ill1_section, ill2, ill2_cone, ill2_scoopes, ill2_section, ill3, ill3_hat, ill3_hatshadow, ill3_section, left, loadImages, loadedOfficePics, maps, median, menuOpen, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, peopleNav, peopleNavLeft, peopleNavRight, peoplePopup, peoplePopupBackground, prev, product, renderFrame, right, roles, say, scrollHandlers, sections, showIcecreamAnimation, showingIcecream, useWink;
+      var animateGrowthArrow, animateHomePage, animationForDesign, animationForProduct, animationForRoles, animationInProgress, animationLength, body, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, getNextStaffMember, growth, header, headerGone, hideCurrentTestimonial, hideIcecreamAnimation, ill1, ill1_fire, ill1_section, ill2, ill2_cone, ill2_scoopes, ill2_section, ill3, ill3_hat, ill3_hatshadow, ill3_section, left, loadImages, loadedOfficePics, maps, median, menuOpen, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, peopleNav, peopleNavLeft, peopleNavRight, peoplePopup, peoplePopupBackground, prev, product, renderFrame, right, roles, say, scrollHandlers, sections, showIcecreamAnimation, showingIcecream, updateHeaderBar, useWink;
       sections = $(".section");
       content = $("#content");
       nav = $("#nav");
@@ -66,43 +66,21 @@
       menuOpen = false;
       headerGone = false;
       body = $("body");
-      getHeaderBackground = function() {
-        var op, scroll;
-        if (menuOpen) {
-          return 'rgba(0, 0, 0, 0.8)';
-        }
-        scroll = $(window).scrollTop();
+      scrollHandlers.push(updateHeaderBar = function(scrollY, winHeight, winWidth) {
         if (onHomePage) {
-          if (scroll > 4) {
+          if (scrollY > 4) {
             if (!headerGone) {
               headerGone = true;
-              $(".logo strong").animate({
+              return $(".logo strong").animate({
                 top: '-80px'
               }, 'easeInOutBack');
             }
           } else if (headerGone) {
             headerGone = false;
-            $(".logo strong").animate({
+            return $(".logo strong").animate({
               top: '10px'
             }, 'easeInOutBack');
           }
-        }
-        if (scroll >= 140) {
-          return 'rgba(0, 0, 0, 0.2)';
-        } else if (scroll < 1) {
-          return 'rgba(0, 0, 0, 0)';
-        }
-        op = (scroll / 140) / 5;
-        return 'rgba(0, 0, 0, ' + op + ')';
-      };
-      scrollHandlers.push(fadeInHeaderBar = function(scrollY, winHeight, winWidth) {
-        var current, latest;
-        current = header.css('background');
-        latest = getHeaderBackground();
-        if (current !== latest) {
-          return header.css({
-            background: latest
-          });
         }
       });
       scrollHandlers.push(fadeInContent = function(scrollY, winHeight, winWidth) {
@@ -121,15 +99,13 @@
         if ($(this).hasClass('close')) {
           $(this).removeClass('close');
           menuOpen = false;
-          header.animate({
-            height: '50px'
+          nav.animate({
+            height: '0',
+            opacity: 0
           }, function() {
-            page.css({
+            nav.hide();
+            return page.css({
               'overflow': 'auto'
-            });
-            return header.css({
-              'overflow-y': 'hidden',
-              'background': getHeaderBackground()
             });
           });
         } else {
@@ -138,16 +114,12 @@
           page.css({
             'overflow': 'hidden'
           });
-          header.css({
-            'background': getHeaderBackground(),
-            'overflow-y': 'auto'
-          });
-          header.animate({
-            height: $(window).height()
+          nav.show().animate({
+            height: $(window).height(),
+            opacity: 1
           }, function() {
-            return header.css('height', '100%');
+            return nav.css('height', '100%');
           });
-          $("#nav").fadeIn();
         }
         return false;
       });
@@ -639,8 +611,8 @@
               value = self.data('count-up-value');
               expectedValue = self.data('count-up');
               percentage = self.data('count-up-percentage');
-              delay = Math.random() * 400;
-              speed = Math.random() * 80;
+              delay = Math.random() * 300;
+              speed = Math.random() * 50;
               return setTimeout(function() {
                 var countValue;
                 return countValue = setInterval(function() {
@@ -784,7 +756,7 @@
           stopMoving = startMoving + 500;
           if (scrollY > startMoving) {
             percentage = (scrollY - startMoving) / (stopMoving - startMoving);
-            if (percentage >= 0.8) {
+            if (percentage >= 0.85) {
               top = parseInt(30 - ((percentage - 0.75) * 200));
               if (top < -120) {
                 top = -120;
@@ -794,7 +766,7 @@
                 rotate = -50;
               }
               left = parseInt(50 - ((percentage - 0.8) * winWidth));
-              if (top < 10) {
+              if (top < -100) {
                 ill3.addClass('shock');
               }
               ill3_hat.css({
@@ -877,7 +849,7 @@
         return renderFrame(false);
       });
       renderFrame(true);
-      useWink = onHomePage;
+      useWink = false;
       if (useWink) {
         $("#loading").addClass('done wink');
         return setTimeout(function() {

@@ -41,6 +41,26 @@
     to { transform: rotate(360deg); }
 }
 
+@-webkit-keyframes rotatingOffset {
+    from { -webkit-transform: rotate(45deg); }
+    to { -webkit-transform: rotate(405deg); }
+}
+
+@-moz-keyframes rotatingOffset {
+    from { -moz-transform: rotate(45deg); }
+    to { -moz-transform: rotate(405deg); }
+}
+
+@-o-keyframes rotatingOffset {
+    from { -o-transform: rotate(45deg); }
+    to { -o-transform: rotate(405deg); }
+}
+
+@keyframes rotatingOffset {
+    from { transform: rotate(45deg); }
+    to { transform: rotate(405deg); }
+}
+
 @-webkit-keyframes beat {
     0% { -webkit-transform: scale(0.75); }
     50% { -webkit-transform: scale(1.25); }

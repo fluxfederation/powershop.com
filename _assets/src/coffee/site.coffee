@@ -29,8 +29,8 @@ do ($ = jQuery, window) ->
   $.path.bezier = (params, rotate)->
     params.start = $.extend( {angle: 0, length: 0.3333}, params.start )
     params.end = $.extend( {angle: 0, length: 0.3333}, params.end )
-    this.p1 = [params.start.x, params.start.y]
-    this.p4 = [params.end.x, params.end.y]
+    @p1 = [params.start.x, params.start.y]
+    @p4 = [params.end.x, params.end.y]
 
     v14 = $.vector.minus( this.p4, this.p1 )
     v12 = $.vector.scale( v14, params.start.length )
@@ -38,10 +38,10 @@ do ($ = jQuery, window) ->
     v43 = $.vector.scale( v41, params.end.length )
 
     v12 = $.vector.rotate( v12, params.start.angle )
-    this.p2 = $.vector.add( this.p1, v12 )
+    @p2 = $.vector.add( @p1, v12 )
 
     v43 = $.vector.rotate(v43, params.end.angle )
-    this.p3 = $.vector.add( this.p4, v43 )
+    @p3 = $.vector.add( @p4, v43 )
 
     # p from 0 to 1
     this.css = (t)->
@@ -51,8 +51,8 @@ do ($ = jQuery, window) ->
       f4 = ((1-t)*(1-t)*(1-t))
 
       css = 
-        x: this.p1[0] * f1 + this.p2[0] * f2 + this.p3[0] * f3 + this.p4[0] * f4 + 0.5
-        y: this.p1[1] * f1 + this.p2[1] * f2 + this.p3[1] * f3 + this.p4[1] * f4 + 0.5
+        x: this.p1[0] * f1 + this.p2[0] * f2 + @p3[0] * f3 + @p4[0] * f4 + 0.5
+        y: this.p1[1] * f1 + this.p2[1] * f2 + @p3[1] * f3 + @p4[1] * f4 + 0.5
 
       css
 
@@ -72,48 +72,23 @@ do ($ = jQuery, window) ->
     headerGone = false
     body = $ "body"
 
-    # 
-    # Helper function for getting the background color of the header for the
-    # current window scroll. By default, no background color is needed, but by
-    # the time we hit the first text (~180px) we need to have it up.
-    #
-    getHeaderBackground = ()->
-      if menuOpen
-        return 'rgba(0, 0, 0, 0.8)'
-
-      scroll = $(window).scrollTop()
-
-      if onHomePage
-        if scroll > 4
-          if  not headerGone
-            headerGone = true 
-            $(".logo strong").animate({top: '-80px'}, 'easeInOutBack')
-        else if headerGone
-          headerGone = false
-          $(".logo strong").animate({top: '10px'}, 'easeInOutBack')
-
-      if scroll >= 140 
-        return 'rgba(0, 0, 0, 0.2)'
-      else if scroll < 1 
-        return 'rgba(0, 0, 0, 0)'
-      
-      op = (scroll/140) / 5; 
-
-      return 'rgba(0, 0, 0, '+ op + ')'
 
 
     # 
     # Once the user has started to scroll down the page, or, if they have jumped
     # to a particular point in the page, fade in the header bar.
     #
-    scrollHandlers.push fadeInHeaderBar = (scrollY, winHeight, winWidth)->
-      current = header.css('background')
-      latest = getHeaderBackground()
+    scrollHandlers.push updateHeaderBar = (scrollY, winHeight, winWidth)->
+      if onHomePage
+        if scrollY > 4
+          if  not headerGone
+            headerGone = true
 
-      if current != latest
-        header.css(
-          background: latest
-        ) 
+            $(".logo strong").animate({top: '-80px'}, 'easeInOutBack')
+
+        else if headerGone
+          headerGone = false
+          $(".logo strong").animate({top: '10px'}, 'easeInOutBack')
 
     #
     # Fade in content as you move up and down the page.
@@ -141,16 +116,14 @@ do ($ = jQuery, window) ->
 
         menuOpen = false;
 
-        header.animate(
-          height: '50px',
+        nav.animate(
+          height: '0',
+          opacity: 0
           ()->
+            nav.hide()
+
             page.css(
               'overflow': 'auto'
-            )
-
-            header.css(
-             'overflow-y': 'hidden',
-             'background': getHeaderBackground()
             )
         )
       else
@@ -161,18 +134,12 @@ do ($ = jQuery, window) ->
           'overflow': 'hidden'
         )
 
-        header.css(
-          'background': getHeaderBackground(),
-          'overflow-y': 'auto'
-        )
-
-        header.animate({
-          height: $(window).height()
+        nav.show().animate({
+          height: $(window).height(),
+          opacity: 1
         }, ()->
-          header.css('height', '100%')
+          nav.css('height', '100%')
         )
-
-        $("#nav").fadeIn()
         
       return false
 
@@ -811,8 +778,8 @@ do ($ = jQuery, window) ->
             value = self.data('count-up-value');
             expectedValue = self.data('count-up');
             percentage = self.data('count-up-percentage')
-            delay = Math.random() * 400
-            speed = Math.random() * 80
+            delay = Math.random() * 300
+            speed = Math.random() * 50
 
             setTimeout( ()->
               countValue = setInterval( ()->
@@ -1050,7 +1017,7 @@ do ($ = jQuery, window) ->
           # calculate the percentage
           percentage = (scrollY - startMoving) / (stopMoving - startMoving)
 
-          if percentage >= 0.8
+          if percentage >= 0.85
             # I wish that I could fly 
             # Into the sky 
             # So very high 
@@ -1075,7 +1042,7 @@ do ($ = jQuery, window) ->
             # left can go over the page as much as want
             left = parseInt(50 - ((percentage - 0.8) * winWidth))
 
-            if top < 10
+            if top < -100
               ill3.addClass('shock')
 
             # rotate c
@@ -1163,9 +1130,11 @@ do ($ = jQuery, window) ->
     # render the initial frame
     renderFrame(true)
 
-    useWink = onHomePage
+    #
+    # Wink animation.
+    #
+    useWink = false
 
-    # trigger the removal of the loading page
     if useWink
       $("#loading").addClass('done wink');
 
