@@ -969,8 +969,7 @@
         if (sections.length > 0) {
           active = sections.first();
           sections.each(function(i, elem) {
-            console.log($(elem).attr('id'), $(elem).position().top, scroll);
-            if ($(elem).position().top < scroll) {
+            if ($(elem).position().top <= scroll) {
               return active = $(elem);
             }
           });

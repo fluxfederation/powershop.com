@@ -67,8 +67,7 @@ do ($ = jQuery, window) ->
         active = sections.first()
         
         sections.each (i, elem)-> 
-          console.log $(elem).attr('id'), $(elem).position().top, scroll
-          if $(elem).position().top < (scroll)
+          if $(elem).position().top <= (scroll)
             active = $(elem)
 
         highlightJump(active)
