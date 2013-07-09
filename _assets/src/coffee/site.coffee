@@ -81,6 +81,12 @@ do ($ = jQuery, window) ->
     supportsAnimation = true unless (/android|webos|iphone|ipad|ipod|blackberry/i.test(navigator.userAgent.toLowerCase()))
 
     # 
+    # If the browser is a touch device, add a helper class.
+    #
+    if Modernizr.touch
+      page.addClass 'touch'
+
+    # 
     # Once the user has started to scroll down the page, or, if they have jumped
     # to a particular point in the page, fade in the header bar.
     #
@@ -214,7 +220,7 @@ do ($ = jQuery, window) ->
       scroller = new iScroll('office_photos', {
         momentum: true,
         snap: false,
-        vScroll: false,
+        vScroll: true,
         scrollbarClass: 'photo_scrollbar',
         hScrollbar: true
       })
@@ -980,7 +986,8 @@ do ($ = jQuery, window) ->
       # Trigger the hide operation on load. We call animate when the page is 
       # loaded.
       #
-      hideIcecreamAnimation(true)
+      if supportsAnimation
+        hideIcecreamAnimation(true)
 
       # 
       # On scroll handle all the animation logic

@@ -237,6 +237,10 @@ a {
 	width: 197px;
 }
 
+.touch .home .logo {
+	width: 31px;
+}
+
 .show_nav {
 	display: block;
 	text-transform: uppercase;
@@ -542,6 +546,10 @@ a {
 			}
 		}
 	}
+}
+
+.touch #jumper {
+	display: none;
 }
 
 .parallax {	
@@ -2111,7 +2119,8 @@ a {
 .p11,
 .p22,
 .p21,
-.p12 {
+.p12,
+.p33 {
 	background: url(/_assets/img/loading_face_small.png) center center no-repeat;
 	position: relative;
 
@@ -2137,16 +2146,6 @@ a {
 
 	&:after {
 		display: none;
-	}
-}
-
-.loaded {
-	&:after {
-		display: none;
-	}
-
-	&:hover {
-		opacity: 1;
 	}
 }
 
@@ -2585,18 +2584,22 @@ p.larger {
 	width: 199px;
 	height: 106px;
 	position: absolute;
-	top: 30px;
-	left: 55px;
+	top: -10px;
+	left: -45px;
 	z-index: 1;
 	background: url(/_assets/img/illustrations/3_hat_shadow.png) no-repeat;
+	opacity: 0.8;
+	.rotate(-25deg);
 }
 
 .bike_hat {
 	width: 199px;
 	height: 106px;
 	position: absolute;
-	top: 30px;
-	left: 50px;
+	top: -10px;
+	left: -50px;
 	z-index: 10;
 	background: url(/_assets/img/illustrations/3_hat.png) no-repeat;
+
+	.rotate(-25deg);
 }

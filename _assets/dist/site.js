@@ -69,6 +69,9 @@
       if (!(/android|webos|iphone|ipad|ipod|blackberry/i.test(navigator.userAgent.toLowerCase()))) {
         supportsAnimation = true;
       }
+      if (Modernizr.touch) {
+        page.addClass('touch');
+      }
       scrollHandlers.push(updateHeaderBar = function(scrollY, winHeight, winWidth) {
         if (onHomePage) {
           if (scrollY > 4) {
@@ -166,7 +169,7 @@
         scroller = new iScroll('office_photos', {
           momentum: true,
           snap: false,
-          vScroll: false,
+          vScroll: true,
           scrollbarClass: 'photo_scrollbar',
           hScrollbar: true
         });
@@ -757,7 +760,9 @@
             }, 400);
           }
         };
-        hideIcecreamAnimation(true);
+        if (supportsAnimation) {
+          hideIcecreamAnimation(true);
+        }
         scrollHandlers.push(animateHomePage = function(scrollY, winHeight, winWidth) {
           var amountOfScrollForIcecreamToTrigger, amountOfScrollToFullAnimation, percentage, percentageScroll, placeX, placeY, restingPlaceX, restingPlaceY, rotate, startMoving, stopMoving, top;
           restingPlaceX = 530;
