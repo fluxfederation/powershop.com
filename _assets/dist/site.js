@@ -812,7 +812,7 @@
                 rotate = -50;
               }
               left = parseInt(50 - ((percentage - 0.8) * winWidth));
-              if (top < -100) {
+              if (top < -50) {
                 ill3.addClass('shock');
               }
               ill3_hat.css({

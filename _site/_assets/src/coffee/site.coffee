@@ -1101,7 +1101,7 @@ do ($ = jQuery, window) ->
             # left can go over the page as much as want
             left = parseInt(50 - ((percentage - 0.8) * winWidth))
 
-            if top < -100
+            if top < -50
               ill3.addClass('shock')
 
             # rotate c
