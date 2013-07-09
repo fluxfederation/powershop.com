@@ -194,10 +194,10 @@
           var vard;
           vard = $(this).siblings('.vcard');
           if (vard.is(':visible')) {
-            $(this).addClass('open');
+            $(this).removeClass('open');
             return vard.slideUp();
           } else {
-            $(this).removeClass('open');
+            $(this).addClass('open');
             return vard.slideDown();
           }
         });
@@ -212,6 +212,7 @@
               draggable: false,
               scrollwheel: false,
               panControl: false,
+              disableDoubleClickZoom: true,
               mapTypeId: google.maps.MapTypeId.ROADMAP,
               styles: window.map_styles
             };

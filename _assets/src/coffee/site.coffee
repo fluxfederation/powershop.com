@@ -248,10 +248,10 @@ do ($ = jQuery, window) ->
         vard = $(this).siblings('.vcard')
 
         if vard.is(':visible')
-          $(this).addClass('open')
+          $(this).removeClass('open')
           vard.slideUp()
         else
-          $(this).removeClass('open');
+          $(this).addClass('open')
           vard.slideDown()
 
       google.maps.event.addDomListener(window, 'load', ()->
@@ -265,6 +265,7 @@ do ($ = jQuery, window) ->
             draggable: false,
             scrollwheel: false,
             panControl: false,
+            disableDoubleClickZoom: true,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             styles: window.map_styles
 
