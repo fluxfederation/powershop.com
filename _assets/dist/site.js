@@ -904,10 +904,10 @@
             return callback(scrollY, winHeight, winWidth);
           });
         };
-        $(document).scroll(function() {
+        $(window).scroll(function() {
           return renderFrame(false);
         });
-        $(document).resize(function() {
+        $(window).resize(function() {
           return renderFrame(false);
         });
         renderFrame(true);

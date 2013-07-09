@@ -1198,10 +1198,11 @@ do ($ = jQuery, window) ->
       # has completed the scroll resulting in odd chunky behaviour so we just
       # leave the animations are they were
       #
-      $(document).scroll ()->
+
+      $(window).scroll ()->
         renderFrame(false)
 
-      $(document).resize ()->
+      $(window).resize ()->
         renderFrame(false)
 
       renderFrame(true)
