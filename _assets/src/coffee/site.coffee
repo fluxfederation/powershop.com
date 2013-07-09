@@ -218,7 +218,7 @@ do ($ = jQuery, window) ->
 
       loadedOfficePics = false
       scroller = new iScroll('office_photos', {
-        momentum: true,
+        momentum: false,
         snap: false,
         vScroll: true,
         scrollbarClass: 'photo_scrollbar',

@@ -167,7 +167,7 @@
         };
         loadedOfficePics = false;
         scroller = new iScroll('office_photos', {
-          momentum: true,
+          momentum: false,
           snap: false,
           vScroll: true,
           scrollbarClass: 'photo_scrollbar',
@@ -951,22 +951,6 @@
         },
         onAfter: function(anchor, settings) {
           return isLocalScrolling = false;
-        }
-      });
-      $("#jumper a").click(function(e) {
-        var hash, scroll, target;
-        e.preventDefault();
-        hash = $(this).attr('href');
-        target = $(hash);
-        if (target.length > 0) {
-          highlightJump($(this));
-          scroll = target.data('scroll_for_parallax');
-          isLocalScrolling = true;
-          return $("html, body").animate({
-            scrollTop: scroll
-          }, 2000, function() {
-            return isLocalScrolling = false;
-          });
         }
       });
       return $(document).scroll(function() {

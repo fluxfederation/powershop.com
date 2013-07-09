@@ -39,24 +39,7 @@ do ($ = jQuery, window) ->
       onAfter: (anchor, settings)->
         isLocalScrolling = false
     );
-
-
-    $("#jumper a").click (e)->
-      e.preventDefault()
-
-      hash = $(this).attr('href')
-      target = $(hash)
-
-      if target.length > 0
-        highlightJump($(this))
-        scroll = target.data('scroll_for_parallax')
-        isLocalScrolling = true
-        $("html, body").animate({ 
-          scrollTop: scroll 
-        }, 2000, ()->
-          isLocalScrolling = false
-        )
-
+    
     $(document).scroll ()->
       if isLocalScrolling 
         return;
