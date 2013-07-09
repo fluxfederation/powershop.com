@@ -735,12 +735,18 @@ a {
 	}
 }
 
-#make_things {
+.make_things_pad {
+	height: 100px;
+	width: 100%;
 	background: @purplePink url(/_assets/img/textures/pink.png) 0 0 repeat;
+}
+
+#make_things {
+	background: @purplePink url(/_assets/img/textures/pink.png) 0 -100px repeat;
 	overflow: hidden;
 
 	.wrapper {
-		padding: 175px 0 120px 0;
+		padding: 100px 0 120px 0;
 		position: relative;
 	}
 
@@ -761,7 +767,7 @@ a {
 	background: @burg url(/_assets/img/textures/burg.png) repeat;
 
 	.wrapper {
-		padding: 175px 0 120px 0;
+		padding: 175px 0 0 0;
 		position: relative;
 		overflow: hidden;
 	}
@@ -782,8 +788,13 @@ a {
 
 #weird {
 	background: @hotPink url(/_assets/img/textures/hot_pink.png) repeat;
-	overflow-x: hidden;
+	overflow: hidden;
 
+	.hat_bar {
+		background: @burg url(/_assets/img/textures/burg.png) repeat;
+		width: 100%;
+		height: 150px;
+	}
 	.wrapper {
 		padding: 175px 0 120px 0;
 		position: relative;
@@ -2260,6 +2271,10 @@ p.larger {
 
 .crop {
 	overflow: hidden;
+}
+
+.width-crop {
+	overflow-x: hidden;
 }
 
 /*

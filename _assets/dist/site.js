@@ -816,8 +816,8 @@
             percentage = (scrollY - startMoving) / (stopMoving - startMoving);
             if (percentage >= 0.85) {
               top = parseInt(30 - ((percentage - 0.75) * 200));
-              if (top < -120) {
-                top = -120;
+              if (top < -90) {
+                top = -90;
               }
               rotate = parseInt(((percentage - 0.75) * 10) * -10);
               if (rotate < -50) {

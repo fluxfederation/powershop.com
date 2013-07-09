@@ -1102,7 +1102,7 @@ do ($ = jQuery, window) ->
 
             # top goes down to 120 pretty quick, starts at 30
             top = parseInt(30 - ((percentage - 0.75) * 200))
-            if top < -120 then top = -120
+            if top < -90 then top = -90
 
             # rotate from 0, -50 over the percentage 0.8 - 1.3
             rotate = parseInt(((percentage - 0.75) * 10) * -10)
