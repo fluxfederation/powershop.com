@@ -262,6 +262,9 @@ do ($ = jQuery, window) ->
             zoom: 15,
             disableDefaultUI: true,
             scrollwheel: false,
+            draggable: false,
+            scrollwheel: false,
+            panControl: false,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             styles: window.map_styles
 
