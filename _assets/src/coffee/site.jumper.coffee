@@ -62,13 +62,13 @@ do ($ = jQuery, window) ->
         return;
 
       scroll = $(document).scrollTop()
-      offset = 120
-      
+
       if sections.length > 0 
         active = sections.first()
         
         sections.each (i, elem)-> 
-          if $(elem).position().top < (scroll + offset)
+          console.log $(elem).attr('id'), $(elem).position().top, scroll
+          if $(elem).position().top < (scroll)
             active = $(elem)
 
         highlightJump(active)

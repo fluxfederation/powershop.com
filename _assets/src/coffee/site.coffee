@@ -173,7 +173,11 @@ do ($ = jQuery, window) ->
 
     #
     # Office images shouldn't load on the page till the users scroll to the 
-    # section
+    # section.
+    #
+    # Was going to load individual images on demand but now, just load them once
+    # the user has got to them (or originally if animation isn't supported) since
+    # iScroll doesn't have a scroll event to capture the information
     #
     if officePhotos.length > 0
       loadImages = ()->
@@ -185,12 +189,6 @@ do ($ = jQuery, window) ->
 
             # if the image is to the left or the right, don't both loading
             dom = $(elem).get(0)
-            
-            if $.rightofscreen(dom, {threshold: (currentScroll * -0.5) + $(window).width()}) 
-              return
-            else if $.leftofscreen(dom, {threshold: (currentScroll * -0.5) - $(window).width()})
-              return
-
             $(elem).data('img-loaded', true)
 
             path = $(elem).data('image')
@@ -200,7 +198,7 @@ do ($ = jQuery, window) ->
             setTimeout(()->
               $(elem).append(img).imagesLoaded().always (instance)->
                 $(elem).animate(
-                  opacity: 0.8
+                  opacity: 1
                 ).addClass('loaded')
 
                 img.fadeIn()
@@ -213,54 +211,24 @@ do ($ = jQuery, window) ->
             )
 
       loadedOfficePics = false
+      scroller = new iScroll('office_photos', {
+        momentum: true,
+        snap: false,
+        vScroll: false,
+        scrollbarClass: 'photo_scrollbar',
+        hScrollbar: true
+      })
 
-      officePhotoScroller.swipe(
-        swipeStatus: (event, parse, direction, distance, duration, fingerCount)->
-          winWidth = $(window).width()
-          scrollDistance = winWidth / 1.2
-          currentScroll = parseInt(officePhotoScroller.css('marginLeft').replace(/px/, ''))
-          
-          maximumPosition = (winWidth / 2) * -1
-          minimumPosition = winWidth - officePhotoScroller.width()
+      if supportsAnimation
+        scrollHandlers.push (scrollY, winHeight, winWidth)->
+          if loadedOfficePics then return
 
-          if direction == "right"
-            if (currentScroll + scrollDistance) > maximumPosition
-              officePhotoScroller.animate(
-                'marginLeft': maximumPosition + "px", 'easeOut'
-                loadImages
-              )
-            else 
-              officePhotoScroller.animate(
-                'marginLeft': (currentScroll + scrollDistance) + "px", 'easeOut'
-                loadImages
-              )
+          if (scrollY + winHeight) > officePhotos.offset().top
+            loadedOfficePics = true
 
-
-            return
-          
-          if direction == "left"
-            # animate to the right, we can increase the background position till
-            # the last photo is visible. Calculating the max vx is done by 
-            # taking into account.
-            if (currentScroll - scrollDistance) <  minimumPosition
-              officePhotoScroller.animate(
-                'marginLeft': minimumPosition + "px", 'easeOut',
-                loadImages
-              )
-            else 
-              officePhotoScroller.animate(
-                'marginLeft': (currentScroll - scrollDistance) + "px", 'easeOut'
-                loadImages
-              )
-      )
-
-      scrollHandlers.push (scrollY, winHeight, winWidth)->
-        if loadedOfficePics then return
-
-        if (scrollY + winHeight) > officePhotos.offset().top
-          loadedOfficePics = true
-
-          loadImages()
+            loadImages()
+      else
+        loadImages()
 
     #
     # On the homepage we have a google map for the office location.
@@ -803,16 +771,27 @@ do ($ = jQuery, window) ->
     # use the parallax_background
     #
     if supportsAnimation
-      $('.parallax_section').parallax()
-      
       parallaxBackgrounds = $(".parallax_background")
 
       if parallaxBackgrounds.length > 0
          scrollHandlers.push parallaxBackground = (scrollY, winHeight, winWidth)->
           parallaxBackgrounds.each (i, elem)->
-            pos = "0% " + (scrollY * 0.5) + "px"
+            if $(elem).data('reverse')
+              # reverse parallax, determine the amount of change that would be
+              # required for that size. We start at the negative value and end
+              # at zero once the user has scrolled past
+              scrollPast = $(elem).height() + $(elem).offset().top
 
-            $(elem).css('background-position', pos)
+              # size of translation is the width of the browser vs the 
+              dy = winWidth / $(elem).data('ratio-to-width') - $(elem).data('hy')
+              percentage = scrollY / scrollPast
+              percentage = 1 unless percentage < 1
+              
+              pos = "0% "+ parseInt(((-1 * dy) * (1 - percentage)))
+              $(elem).css('background-position', pos + "px")
+            else   
+              pos = "0% " + (scrollY * 0.5) + "px"
+              $(elem).css('background-position', pos)
 
     #
     # Count up statistics. Stats that count up when they start to be visible

@@ -53,7 +53,7 @@
       return this;
     };
     return $(document).ready(function() {
-      var animateGrowthArrow, animateHomePage, animatingTestimonial, animationForDesign, animationForProduct, animationInProgress, animationLength, body, content, count, countUpNumbers, designs, fadeIn, fadeInContent, getNextStaffMember, growth, header, headerGone, hideCurrentTestimonial, hideIcecreamAnimation, ill1, ill1_fire, ill1_section, ill2, ill2_cone, ill2_scoopes, ill2_section, ill3, ill3_hat, ill3_hatshadow, ill3_section, left, loadImages, loadedOfficePics, maps, menuOpen, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, peopleNav, peopleNavLeft, peopleNavRight, peoplePopup, peoplePopupBackground, prev, product, renderFrame, right, say, scrollHandlers, sections, showIcecreamAnimation, showingIcecream, supportsAnimation, updateHeaderBar, useWink;
+      var animateGrowthArrow, animateHomePage, animatingTestimonial, animationForDesign, animationForProduct, animationInProgress, animationLength, body, content, count, countUpNumbers, designs, fadeIn, fadeInContent, getNextStaffMember, growth, header, headerGone, hideCurrentTestimonial, hideIcecreamAnimation, ill1, ill1_fire, ill1_section, ill2, ill2_cone, ill2_scoopes, ill2_section, ill3, ill3_hat, ill3_hatshadow, ill3_section, left, loadImages, loadedOfficePics, maps, menuOpen, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, peopleNav, peopleNavLeft, peopleNavRight, peoplePopup, peoplePopupBackground, prev, product, renderFrame, right, say, scrollHandlers, scroller, sections, showIcecreamAnimation, showingIcecream, supportsAnimation, updateHeaderBar, useWink;
       sections = $(".section");
       content = $("#content");
       nav = $("#nav");
@@ -144,15 +144,6 @@
             }
             currentScroll = parseInt(officePhotoScroller.css('marginLeft').replace(/px/, ''));
             dom = $(elem).get(0);
-            if ($.rightofscreen(dom, {
-              threshold: (currentScroll * -0.5) + $(window).width()
-            })) {
-              return;
-            } else if ($.leftofscreen(dom, {
-              threshold: (currentScroll * -0.5) - $(window).width()
-            })) {
-              return;
-            }
             $(elem).data('img-loaded', true);
             path = $(elem).data('image');
             img = $("<img />").attr('src', path).hide().on('dragstart', function(e) {
@@ -161,7 +152,7 @@
             return setTimeout(function() {
               return $(elem).append(img).imagesLoaded().always(function(instance) {
                 $(elem).animate({
-                  opacity: 0.8
+                  opacity: 1
                 }).addClass('loaded');
                 img.fadeIn();
                 return $(elem).parents("li").animate({
@@ -172,48 +163,26 @@
           });
         };
         loadedOfficePics = false;
-        officePhotoScroller.swipe({
-          swipeStatus: function(event, parse, direction, distance, duration, fingerCount) {
-            var currentScroll, maximumPosition, minimumPosition, scrollDistance, winWidth;
-            winWidth = $(window).width();
-            scrollDistance = winWidth / 1.2;
-            currentScroll = parseInt(officePhotoScroller.css('marginLeft').replace(/px/, ''));
-            maximumPosition = (winWidth / 2) * -1;
-            minimumPosition = winWidth - officePhotoScroller.width();
-            if (direction === "right") {
-              if ((currentScroll + scrollDistance) > maximumPosition) {
-                officePhotoScroller.animate({
-                  'marginLeft': maximumPosition + "px"
-                }, 'easeOut', loadImages);
-              } else {
-                officePhotoScroller.animate({
-                  'marginLeft': (currentScroll + scrollDistance) + "px"
-                }, 'easeOut', loadImages);
-              }
+        scroller = new iScroll('office_photos', {
+          momentum: true,
+          snap: false,
+          vScroll: false,
+          scrollbarClass: 'photo_scrollbar',
+          hScrollbar: true
+        });
+        if (supportsAnimation) {
+          scrollHandlers.push(function(scrollY, winHeight, winWidth) {
+            if (loadedOfficePics) {
               return;
             }
-            if (direction === "left") {
-              if ((currentScroll - scrollDistance) < minimumPosition) {
-                return officePhotoScroller.animate({
-                  'marginLeft': minimumPosition + "px"
-                }, 'easeOut', loadImages);
-              } else {
-                return officePhotoScroller.animate({
-                  'marginLeft': (currentScroll - scrollDistance) + "px"
-                }, 'easeOut', loadImages);
-              }
+            if ((scrollY + winHeight) > officePhotos.offset().top) {
+              loadedOfficePics = true;
+              return loadImages();
             }
-          }
-        });
-        scrollHandlers.push(function(scrollY, winHeight, winWidth) {
-          if (loadedOfficePics) {
-            return;
-          }
-          if ((scrollY + winHeight) > officePhotos.offset().top) {
-            loadedOfficePics = true;
-            return loadImages();
-          }
-        });
+          });
+        } else {
+          loadImages();
+        }
       }
       maps = $(".google_map");
       if (maps.length > 0) {
@@ -629,14 +598,24 @@
         });
       }
       if (supportsAnimation) {
-        $('.parallax_section').parallax();
         parallaxBackgrounds = $(".parallax_background");
         if (parallaxBackgrounds.length > 0) {
           scrollHandlers.push(parallaxBackground = function(scrollY, winHeight, winWidth) {
             return parallaxBackgrounds.each(function(i, elem) {
-              var pos;
-              pos = "0% " + (scrollY * 0.5) + "px";
-              return $(elem).css('background-position', pos);
+              var dy, percentage, pos, scrollPast;
+              if ($(elem).data('reverse')) {
+                scrollPast = $(elem).height() + $(elem).offset().top;
+                dy = winWidth / $(elem).data('ratio-to-width') - $(elem).data('hy');
+                percentage = scrollY / scrollPast;
+                if (!(percentage < 1)) {
+                  percentage = 1;
+                }
+                pos = "0% " + parseInt((-1 * dy) * (1 - percentage));
+                return $(elem).css('background-position', pos + "px");
+              } else {
+                pos = "0% " + (scrollY * 0.5) + "px";
+                return $(elem).css('background-position', pos);
+              }
             });
           });
         }
@@ -982,16 +961,16 @@
         }
       });
       return $(document).scroll(function() {
-        var active, offset, scroll;
+        var active, scroll;
         if (isLocalScrolling) {
           return;
         }
         scroll = $(document).scrollTop();
-        offset = 120;
         if (sections.length > 0) {
           active = sections.first();
           sections.each(function(i, elem) {
-            if ($(elem).position().top < (scroll + offset)) {
+            console.log($(elem).attr('id'), $(elem).position().top, scroll);
+            if ($(elem).position().top < scroll) {
               return active = $(elem);
             }
           });
