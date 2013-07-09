@@ -109,6 +109,9 @@
             });
           });
         } else {
+          $(".logo strong").animate({
+            top: '-80px'
+          }, 'easeInOutBack');
           $(this).addClass('close');
           menuOpen = true;
           page.css({
@@ -123,8 +126,9 @@
         }
         return false;
       });
-      $(".nav_wrapper a", nav).click(function() {
-        return $(".close_nav").click();
+      $(".nav_wrapper a", nav).click(function(e) {
+        e.preventDefault();
+        return $(".show_nav").click();
       });
       officePhotos = $("#office_photos");
       officePhotoScroller = $("ul", officePhotos);
@@ -501,11 +505,15 @@
           });
         });
         $(".face", people).click(function(e) {
-          var details, top;
+          var details, parent, top;
           e.preventDefault();
-          top = $(this).parents('.people_group').offset().top;
+          parent = $('.people_group').first();
+          top = parent.offset().top;
           if ($(window).scrollTop() > top) {
-            $(window).scrollTo(0, top);
+            $(window).scrollTo({
+              top: top - 50,
+              left: 0
+            }, 500);
           }
           peoplePopup.css({
             opacity: 1,

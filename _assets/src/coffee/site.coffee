@@ -127,6 +127,9 @@ do ($ = jQuery, window) ->
             )
         )
       else
+        # hide powershop text
+        $(".logo strong").animate({top: '-80px'}, 'easeInOutBack')
+
         $(this).addClass('close')
         menuOpen = true;
 
@@ -147,8 +150,10 @@ do ($ = jQuery, window) ->
     # Ensure that we close the navigation when the user clicks a link within the
     # navigation, since it could be a part of the same page
     #
-    $(".nav_wrapper a", nav).click( ()->
-      $(".close_nav").click()
+    $(".nav_wrapper a", nav).click( (e)->
+      e.preventDefault();
+
+      $(".show_nav").click()
     )
 
     #
@@ -638,10 +643,11 @@ do ($ = jQuery, window) ->
         e.preventDefault()
 
         # make sure the user is at the top of the viewable space
-        top = $(this).parents('.people_group').offset().top
+        parent = $('.people_group').first()
+        top = parent.offset().top
 
         if $(window).scrollTop() > top 
-          $(window).scrollTo(0, top);
+          $(window).scrollTo({ top:top - 50, left:0}, 500);
 
         # animate it down
         peoplePopup.css

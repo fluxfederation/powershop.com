@@ -62,14 +62,13 @@
 	}
 
 	/* nav */
-	#header #nav li {
+	#nav li {
 		width: 226px;
 		float: none;
 		height: 69px;
 		margin: 0 auto;
 		padding: 0;
 		overflow: hidden;
-		background-size: auto;
 
 		a {
 			display: none;
@@ -89,6 +88,13 @@
 		.kiss_ass a {
 			display: block;
 		}
+	}
+
+	#nav .page-home,
+	#nav .page-contact,
+	#nav .page-about,
+	#nav .page-culture {
+		background-size: 100% auto;
 	}
 
 	#customers_say {
@@ -191,5 +197,17 @@
 	.people_popup .people_popup_bg {
 		padding-top: 59.09%;
 		background-size: 100%;
+	}
+
+	#design_thinking {
+		background: @purplePink;
+
+		.wrapper {
+			padding-top: 120px;
+		}
+
+		.icons {
+			display: none;
+		}
 	}
 }

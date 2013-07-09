@@ -191,13 +191,9 @@ a {
 	.transition(0.5s);
 }
 
-.home #header {
-	.transition(none);
-}
-
 .logo {
 	float: left;
-	padding: 10px 0;
+	padding: 15px 0 0;
 	width: 31px;
 	height: 30px;
 	overflow: hidden;
@@ -236,12 +232,25 @@ a {
 
 .show_nav {
 	display: block;
-	width: 25px;
-	height: 25px;
+	text-transform: uppercase;
 	cursor: pointer;
-	background: url(/_assets/img/sprite.png) -200px -33px no-repeat;
-	text-indent: -90000px;
-	outline: none;
+	color: #fff;
+	font-size: 16px;
+	letter-spacing: 1px;
+	padding-right: 30px;
+	position: relative;
+
+	&:after {
+		content: " ";
+		height: 25px;
+		width: 25px;
+		display: block;
+		background: url(/_assets/img/sprite.png) -200px -33px no-repeat;
+		outline: none;
+		position: absolute;
+		top: 2px;
+		right: 0;
+	}
 
 	&:hover,
 	&:focus {
@@ -249,9 +258,13 @@ a {
 	}
 
 	&.close {
-		height: 30px;
-		width: 30px;
-		background: url(/_assets/img/sprite.png) -220px -32px no-repeat;
+		text-indent: -9000px;
+
+		&:after {
+			height: 30px;
+			width: 30px;
+			background: url(/_assets/img/sprite.png) -220px -32px no-repeat;
+		}
 	}
 }
 
@@ -278,7 +291,8 @@ a {
 	top: 0;
 	left: 0;
 	width: 100%;
-	z-index: 90;
+	overflow-y: auto;
+	z-index: 105;
 
 	.nav_wrapper {
 		overflow-x: hidden;
@@ -296,7 +310,6 @@ a {
 
 	.wrapper {
 		position: relative;
-		overflow:  hidden;
 	}
 
 	ol {
@@ -336,84 +349,69 @@ a {
 			top: 0;
 			height: 100%;
 			width: 100%;
-			border-top: 10px solid transparent;
 
 			&:hover,
 			&:focus {
 				cursor: pointer;
-				border-top: 10px solid #fff;
-
-
-				&:after {
-					content: " ";
-					display: block;
-					height: 50px;
-					width: 50px;
-					background: #fff;
-					border-radius: 50px;
-					position: relative;
-					left: 50%;
-					top: 50%;
-					margin: -50px 0 0 -25px;
-				}
-
-			}
-
-			&:active {
-				background: #000;
-				opacity: 0.5;
 			}
 		}
 	}
 
 	.page-home li:nth-child(1) a:hover,
-	.page-about li:nth-child(2) a:hover,
-	.page-culture li:nth-child(3) a:hover,
-	.page-about li:nth-child(4) a:hover {
-		background: rgba(255, 255, 255, 0.6);
+	.page-about li:nth-child(3) a:hover {
+		background: rgba(254, 220, 133, 0.7);
 	}
 
 	.page-home li:nth-child(2) a:hover,
+	.page-about li:nth-child(5) a:hover,
 	.page-culture li:nth-child(2) a:hover {
-		background: rgba(250, 154, 112, 0.9);
+		background: rgba(240, 177, 124, 0.7);
 	}
 
 	.page-home li:nth-child(3) a:hover,
-	.page-about li:nth-child(6) a:hover {
-		background: rgba(190, 27, 106, 0.9);
+	.page-about li:nth-child(4) a:hover,
+	.page-contact li:nth-child(1) a:hover {
+		background: rgba(155,211,202, 0.7);
+	}
+
+	.page-home li:nth-child(4) a:hover,
+	.page-about li:nth-child(6) a:hover,
+	.page-culture li:nth-child(1) a:hover {
+		background: rgba(55,74,88, 0.7);
+	}
+
+	.page-about li:nth-child(2) a:hover {
+		background: rgba(77,104,125, 0.7);
+	}
+
+	.page-about li:nth-child(1) a:hover,
+	.page-culture li:nth-child(3) a:hover {
+		background: rgba(226,90,90, 0.7);
+	}
+
+	.page-about li:nth-child(2) a:hover {
+		background: rgba(77,104,125, 0.7);
 	}
 
 	.page-home li:nth-child(4) a:hover {
-		background: rgba(153, 210, 201, 0.9);
+		background: rgba(153, 210, 201, 0.7);
 	}
 
 	.page-home li:nth-child(5) a:hover,
 	.page-contact li:nth-child(2) a:hover {
-		background: rgba(51, 65, 76, 0.9);
-	}
-
-	.page-about li:nth-child(1) a:hover,
-	.page-contact li:nth-child(1) a:hover,
-	.page-about li:nth-child(5) a:hover,
-	.page-culture li:nth-child(1) a:hover {
-		background: rgba(250, 14, 106, 0.8);
-	}
-
-	.page-about li:nth-child(3) a:hover {
-		background: rgba(246, 223, 129, 0.9);
+		background: rgba(51, 65, 76, 0.7);
 	}
 
 	.page-home {
 		background: url(/_assets/img/nav_pics/home.jpg) no-repeat;
 		background-size: 100% 100%;
 		
-		.dummy-pad { margin-top: 415.05%; }
+		.dummy-pad { margin-top: 325.22%; }
 
 		.welcome { padding-top: 92%; }
 		.betterer { padding-top: 78%; }
 		.shit { padding-top: 78%; }
 		.weird { padding-top: 78%; }
-		.contact { padding-top: 92%; }
 	}
 
 	.page-about {
@@ -421,10 +419,9 @@ a {
 		background-size: 100% 100%;
 
 		.dummy-pad { margin-top: 548.23%; }
-
 		.kiss_ass { padding-top: 102.1%; }
 		.product { padding-top: 77%; }
-		.design { padding-top: 76%; }
+		.design { padding-top: 105%; }
 		.specials { padding-top: 29%; }
 		.customerslove { padding-top: 95%; }
 		.ourhistory { padding-top: 91%; }
@@ -453,10 +450,8 @@ a {
 		}
 
 		.contact { 
-			padding-top: 81.5%; 
-		}	
-
-		.find { padding-top: 43%; }
+			padding-top: 119.5%; 
+		}
 	}
 }
 
@@ -1582,6 +1577,7 @@ a {
 	a {
 		color: #F8E5E4;
 		border-bottom: 1px solid #F8E5E4;
+		border-bottom: 1px solid rgba(248, 229, 228, 0.6);
 
 		&:hover,
 		&:focus {
@@ -1667,6 +1663,15 @@ a {
 
 	em {
 		font-style: block;
+	}
+
+	a {
+		border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+
+		&:hover {
+			color: @cream;
+			border-bottom: none;
+		}
 	}
 
 	small {
