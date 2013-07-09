@@ -5,6 +5,17 @@
 @import "css3.less";
 
 @media screen and (max-width: 580px) {
+	.grid-3,
+	.grid-4,
+	.grid-5,
+	.grid-6,
+	.grid-7,
+	.grid-8,
+	.grid-9,
+	.grid-10 {
+		max-width: 300px;
+	}
+	
 	.wrapper {
 		width: 90%;
 	}
@@ -173,6 +184,9 @@
 		}
 	}
 
+	.parallax-block {
+		
+	}
 	.popup_nav {
 		display: none !important; /* don't want */
 
@@ -197,6 +211,22 @@
 	.people_popup .people_popup_bg {
 		padding-top: 59.09%;
 		background-size: 100%;
+	}
+
+
+	/* culture page */
+	#current_roles {
+		.faces {
+			display: none;
+		}
+
+		.apply {
+			margin: 0;
+		}
+	}
+
+	.roles .first {
+		padding-top: 0;
 	}
 
 	#design_thinking {

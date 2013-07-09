@@ -53,7 +53,7 @@
       return this;
     };
     return $(document).ready(function() {
-      var animateGrowthArrow, animateHomePage, animatingTestimonial, animationForDesign, animationForProduct, animationForRoles, animationInProgress, animationLength, body, content, count, countUpNumbers, designs, faces, fadeIn, fadeInContent, getNextStaffMember, growth, header, headerGone, hideCurrentTestimonial, hideIcecreamAnimation, ill1, ill1_fire, ill1_section, ill2, ill2_cone, ill2_scoopes, ill2_section, ill3, ill3_hat, ill3_hatshadow, ill3_section, left, loadImages, loadedOfficePics, maps, median, menuOpen, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, peopleNav, peopleNavLeft, peopleNavRight, peoplePopup, peoplePopupBackground, prev, product, renderFrame, right, roles, say, scrollHandlers, sections, showIcecreamAnimation, showingIcecream, updateHeaderBar, useWink;
+      var animateGrowthArrow, animateHomePage, animatingTestimonial, animationForDesign, animationForProduct, animationInProgress, animationLength, body, content, count, countUpNumbers, designs, fadeIn, fadeInContent, getNextStaffMember, growth, header, headerGone, hideCurrentTestimonial, hideIcecreamAnimation, ill1, ill1_fire, ill1_section, ill2, ill2_cone, ill2_scoopes, ill2_section, ill3, ill3_hat, ill3_hatshadow, ill3_section, left, loadImages, loadedOfficePics, maps, menuOpen, nav, next, officePhotoScroller, officePhotos, onHomePage, page, parallaxBackground, parallaxBackgrounds, paths, people, peopleNav, peopleNavLeft, peopleNavRight, peoplePopup, peoplePopupBackground, prev, product, renderFrame, right, say, scrollHandlers, sections, showIcecreamAnimation, showingIcecream, supportsAnimation, updateHeaderBar, useWink;
       sections = $(".section");
       content = $("#content");
       nav = $("#nav");
@@ -66,6 +66,9 @@
       menuOpen = false;
       headerGone = false;
       body = $("body");
+      if (!(/android|webos|iphone|ipad|ipod|blackberry/i.test(navigator.userAgent.toLowerCase()))) {
+        supportsAnimation = true;
+      }
       scrollHandlers.push(updateHeaderBar = function(scrollY, winHeight, winWidth) {
         if (onHomePage) {
           if (scrollY > 4) {
@@ -112,6 +115,7 @@
           $(".logo strong").animate({
             top: '-80px'
           }, 'easeInOutBack');
+          $("#our_people .close").click();
           $(this).addClass('close');
           menuOpen = true;
           page.css({
@@ -127,7 +131,6 @@
         return false;
       });
       $(".nav_wrapper a", nav).click(function(e) {
-        e.preventDefault();
         return $(".show_nav").click();
       });
       officePhotos = $("#office_photos");
@@ -170,7 +173,7 @@
         };
         loadedOfficePics = false;
         officePhotoScroller.swipe({
-          swipe: function(event, direction, distance, duration, fingerCount) {
+          swipeStatus: function(event, parse, direction, distance, duration, fingerCount) {
             var currentScroll, maximumPosition, minimumPosition, scrollDistance, winWidth;
             winWidth = $(window).width();
             scrollDistance = winWidth / 1.2;
@@ -181,11 +184,11 @@
               if ((currentScroll + scrollDistance) > maximumPosition) {
                 officePhotoScroller.animate({
                   'marginLeft': maximumPosition + "px"
-                }, loadImages);
+                }, 'easeOut', loadImages);
               } else {
                 officePhotoScroller.animate({
                   'marginLeft': (currentScroll + scrollDistance) + "px"
-                }, loadImages);
+                }, 'easeOut', loadImages);
               }
               return;
             }
@@ -193,11 +196,11 @@
               if ((currentScroll - scrollDistance) < minimumPosition) {
                 return officePhotoScroller.animate({
                   'marginLeft': minimumPosition + "px"
-                }, loadImages);
+                }, 'easeOut', loadImages);
               } else {
                 return officePhotoScroller.animate({
                   'marginLeft': (currentScroll - scrollDistance) + "px"
-                }, loadImages);
+                }, 'easeOut', loadImages);
               }
             }
           }
@@ -252,36 +255,42 @@
           });
         });
       }
-      roles = $("#current_roles");
-      if (roles.length > 0) {
+      /*
+      roles = $("#current_roles")
+      
+      if roles.length > 0
         faces = $(".faces li", roles);
-        median = faces.length / 2;
-        scrollHandlers.push(animationForRoles = function(scrollY, winHeight, winWidth) {
-          var amountScrolledWithinBox, comesIntoFocus, diff, endScrollFocus, r, startScrollForFocus;
-          comesIntoFocus = $(".faces", roles).offset().top;
-          startScrollForFocus = comesIntoFocus - winHeight;
-          endScrollFocus = startScrollForFocus + (winHeight / 2);
-          if (scrollY > startScrollForFocus) {
-            diff = endScrollFocus - startScrollForFocus;
-            amountScrolledWithinBox = scrollY - startScrollForFocus;
-            if (amountScrolledWithinBox > diff) {
-              amountScrolledWithinBox = diff;
-            }
-            r = amountScrolledWithinBox / diff;
-            return faces.each(function(i, elem) {
-              var offset;
-              offset = i - median;
-              return $(elem).css('left', (i + (offset - (offset * r))) * 86);
-            });
-          } else {
-            return faces.each(function(i, elem) {
-              var offset;
-              offset = i - median;
-              return $(elem).css('left', (offset + (offset * Math.PI)) * 86);
-            });
-          }
-        });
-      }
+        median = faces.length / 2
+      
+        scrollHandlers.push animationForRoles = (scrollY, winHeight, winWidth)->
+          comesIntoFocus = $(".faces", roles).offset().top
+          startScrollForFocus = comesIntoFocus - winHeight
+          endScrollFocus = startScrollForFocus + (winHeight / 2)
+      
+          # we want to know how how the user is through that scrolling
+          # period
+      
+          if scrollY > startScrollForFocus
+            diff = endScrollFocus - startScrollForFocus
+            amountScrolledWithinBox = scrollY - startScrollForFocus
+      
+            if amountScrolledWithinBox > diff 
+              amountScrolledWithinBox = diff
+      
+            # 0 - 1. 1 being they have scrolled the whole thing and we should be
+            # at i + 0
+            r = amountScrolledWithinBox / diff
+      
+            faces.each (i, elem)->
+              offset = i - median
+              $(elem).css 'left', (i + (offset - (offset * r))) * 86
+          else 
+            # before the animation so they should be all the way out
+            faces.each (i, elem)->
+              offset = i - median
+              $(elem).css 'left', (offset + (offset * Math.PI)) * 86
+      */
+
       product = $("#product");
       if (product.length > 0) {
         right = $(".product_3", product);
@@ -369,9 +378,9 @@
           posLeft = txt.position().left;
           txtWidth = txt.width();
           return img.animate({
-            marginTop: '-300px',
+            marginTop: '-200px',
             opacity: 0
-          }, 600, 'easeInOutBack', function() {
+          }, 300, 'easeInOutBack', function() {
             var takeOffToLeft;
             txt.css({
               width: txtWidth,
@@ -380,7 +389,7 @@
             });
             takeOffToLeft = $(window).width();
             if (!back) {
-              takeOffToLeft = -1 * $(window).width();
+              takeOffToLeft = -0.5 * $(window).width();
             }
             return txt.animate({
               opacity: 0,
@@ -428,7 +437,7 @@
                 width: txtWidth
               });
               nextImg.css({
-                'marginTop': '-300px',
+                'marginTop': '-200px',
                 'opacity': 0
               });
               next.show();
@@ -506,32 +515,36 @@
         });
         $(".face", people).click(function(e) {
           var details, parent, top;
-          e.preventDefault();
           parent = $('.people_group').first();
           top = parent.offset().top;
           if ($(window).scrollTop() > top) {
             $(window).scrollTo({
-              top: top - 50,
+              top: top,
               left: 0
             }, 500);
           }
-          peoplePopup.css({
-            opacity: 1,
-            height: 0,
-            display: 'block'
-          });
           details = $($(this).find('a').attr('href'));
           prev = getNextStaffMember(details, true);
           peopleNavLeft.css('background-image', 'url(/_assets/img/staff_pics/small/' + prev.attr('id') + ".jpg)");
           next = getNextStaffMember(details, false);
           peopleNavRight.css('background-image', 'url(/_assets/img/staff_pics/small/' + next.attr('id') + ".jpg)");
-          $("#jumper").fadeOut();
-          $(".people_group h3").animate({
-            opacity: 0
-          });
-          peopleNav.fadeIn();
+          if (peoplePopup.is(":not(:visible)")) {
+            peoplePopup.css({
+              opacity: 1,
+              height: 0,
+              display: 'block'
+            });
+            $("#jumper").fadeOut();
+            $(".people_group h3").animate({
+              opacity: 0
+            });
+            peopleNav.fadeIn();
+          } else {
+            peoplePopupBackground.css('background-image', 'none');
+            $('.person_detail').hide().removeClass('reveal_content');
+          }
           return peoplePopup.animate({
-            height: $(window).width() > 580 ? 650 : details.height() + 260
+            height: $(window).width() > 580 ? 650 : details.height() + 360
           }, function() {
             peoplePopupBackground.css({
               'background-image': 'url(/_assets/img/staff_pics/large/' + details.attr('id') + ".jpg)"
@@ -541,6 +554,10 @@
               'opacity': 1
             });
             details.addClass('reveal_content');
+            details.find('.people_content').animate({
+              opacity: 1,
+              left: 0
+            });
             return details.show();
           });
         });
@@ -611,36 +628,38 @@
           }
         });
       }
-      $('.parallax_section').parallax({
-        scroll_factor: 0.5
-      });
-      parallaxBackgrounds = $(".parallax_background");
-      if (parallaxBackgrounds.length > 0) {
-        scrollHandlers.push(parallaxBackground = function(scrollY, winHeight, winWidth) {
-          return parallaxBackgrounds.each(function(i, elem) {
-            var pos;
-            pos = "0% " + (scrollY * 0.5) + "px";
-            return $(elem).css('background-position', pos);
+      if (supportsAnimation) {
+        $('.parallax_section').parallax();
+        parallaxBackgrounds = $(".parallax_background");
+        if (parallaxBackgrounds.length > 0) {
+          scrollHandlers.push(parallaxBackground = function(scrollY, winHeight, winWidth) {
+            return parallaxBackgrounds.each(function(i, elem) {
+              var pos;
+              pos = "0% " + (scrollY * 0.5) + "px";
+              return $(elem).css('background-position', pos);
+            });
           });
-        });
+        }
       }
       count = $(".count_up");
       if (count.length > 0) {
         animationLength = 2000;
-        count.each(function(i, elem) {
-          var text;
-          if (!$(elem).is(":in-viewport")) {
-            text = "0";
-            if ($(elem).data('count-up-percentage')) {
-              text += "%";
+        if (supportsAnimation) {
+          count.each(function(i, elem) {
+            var text;
+            if (!$(elem).is(":in-viewport")) {
+              text = "0";
+              if ($(elem).data('count-up-percentage')) {
+                text += "%";
+              }
+              $(elem).data('count-up', parseInt($(elem).text().replace('%', '')));
+              $(elem).data('count-up-value', 0);
+              return $(elem).text(text);
+            } else {
+              return $(elem).data('counted-up', true);
             }
-            $(elem).data('count-up', parseInt($(elem).text().replace('%', '')));
-            $(elem).data('count-up-value', 0);
-            return $(elem).text(text);
-          } else {
-            return $(elem).data('counted-up', true);
-          }
-        });
+          });
+        }
         scrollHandlers.push(countUpNumbers = function(scrollY, winHeight, winWidth) {
           return count.each(function(i, elem) {
             var delay, expectedValue, percentage, self, speed, value;
@@ -872,25 +891,27 @@
           });
         });
       }
-      renderFrame = function(onLoad) {
-        var scrollY, winHeight, winWidth;
-        winHeight = $(window).height();
-        winWidth = $(window).width();
-        scrollY = $(window).scrollTop();
-        return $.each(scrollHandlers, function(i, callback) {
-          if (scrollY < 0) {
-            scrollY = 0;
-          }
-          return callback(scrollY, winHeight, winWidth);
+      if (supportsAnimation) {
+        renderFrame = function(onLoad) {
+          var scrollY, winHeight, winWidth;
+          winHeight = $(window).height();
+          winWidth = $(window).width();
+          scrollY = $(window).scrollTop();
+          return $.each(scrollHandlers, function(i, callback) {
+            if (scrollY < 0) {
+              scrollY = 0;
+            }
+            return callback(scrollY, winHeight, winWidth);
+          });
+        };
+        $(document).scroll(function() {
+          return renderFrame(false);
         });
-      };
-      $(window).scroll(function() {
-        return renderFrame(false);
-      });
-      $(window).resize(function() {
-        return renderFrame(false);
-      });
-      renderFrame(true);
+        $(document).resize(function() {
+          return renderFrame(false);
+        });
+        renderFrame(true);
+      }
       useWink = false;
       if (useWink) {
         $("#loading").addClass('done wink');

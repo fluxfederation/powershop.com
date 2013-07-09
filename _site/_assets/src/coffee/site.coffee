@@ -73,6 +73,12 @@ do ($ = jQuery, window) ->
     body = $ "body"
 
 
+    #
+    # Calculate whether the device supports the animation on the users page.
+    # The default positioning on the page should be the animated view. For
+    # browsers that support it, they have a frame render.
+    #
+    supportsAnimation = true unless (/android|webos|iphone|ipad|ipod|blackberry/i.test(navigator.userAgent.toLowerCase()))
 
     # 
     # Once the user has started to scroll down the page, or, if they have jumped
@@ -130,6 +136,9 @@ do ($ = jQuery, window) ->
         # hide powershop text
         $(".logo strong").animate({top: '-80px'}, 'easeInOutBack')
 
+        # close the people popup (if it's open)
+        $("#our_people .close").click();
+
         $(this).addClass('close')
         menuOpen = true;
 
@@ -151,8 +160,6 @@ do ($ = jQuery, window) ->
     # navigation, since it could be a part of the same page
     #
     $(".nav_wrapper a", nav).click( (e)->
-      e.preventDefault();
-
       $(".show_nav").click()
     )
 
@@ -208,7 +215,7 @@ do ($ = jQuery, window) ->
       loadedOfficePics = false
 
       officePhotoScroller.swipe(
-        swipe: (event, direction, distance, duration, fingerCount)->
+        swipeStatus: (event, parse, direction, distance, duration, fingerCount)->
           winWidth = $(window).width()
           scrollDistance = winWidth / 1.2
           currentScroll = parseInt(officePhotoScroller.css('marginLeft').replace(/px/, ''))
@@ -219,12 +226,12 @@ do ($ = jQuery, window) ->
           if direction == "right"
             if (currentScroll + scrollDistance) > maximumPosition
               officePhotoScroller.animate(
-                'marginLeft': maximumPosition + "px",
+                'marginLeft': maximumPosition + "px", 'easeOut'
                 loadImages
               )
             else 
               officePhotoScroller.animate(
-                'marginLeft': (currentScroll + scrollDistance) + "px", 
+                'marginLeft': (currentScroll + scrollDistance) + "px", 'easeOut'
                 loadImages
               )
 
@@ -237,12 +244,12 @@ do ($ = jQuery, window) ->
             # taking into account.
             if (currentScroll - scrollDistance) <  minimumPosition
               officePhotoScroller.animate(
-                'marginLeft': minimumPosition + "px",
+                'marginLeft': minimumPosition + "px", 'easeOut',
                 loadImages
               )
             else 
               officePhotoScroller.animate(
-                'marginLeft': (currentScroll - scrollDistance) + "px",
+                'marginLeft': (currentScroll - scrollDistance) + "px", 'easeOut'
                 loadImages
               )
       )
@@ -303,7 +310,7 @@ do ($ = jQuery, window) ->
     #
     # The icons on the roles section come in as the users scroll into the 
     # page.
-    # 
+    ###
     roles = $("#current_roles")
 
     if roles.length > 0
@@ -337,7 +344,8 @@ do ($ = jQuery, window) ->
           faces.each (i, elem)->
             offset = i - median
             $(elem).css 'left', (offset + (offset * Math.PI)) * 86
- 
+    ###
+    
     #
     # On the about page, animate in stuff
     #
@@ -453,9 +461,9 @@ do ($ = jQuery, window) ->
         txtWidth = txt.width()
 
         img.animate({ 
-          marginTop: '-300px',
+          marginTop: '-200px',
           opacity: 0
-        }, 600, 'easeInOutBack', ()->
+        }, 300, 'easeInOutBack', ()->
 
           txt.css(
            width: txtWidth,
@@ -464,7 +472,7 @@ do ($ = jQuery, window) ->
           )
 
           takeOffToLeft = $(window).width();
-          takeOffToLeft = -1 * $(window).width() unless back
+          takeOffToLeft = -0.5 * $(window).width() unless back
 
           txt.animate({ 
             opacity: 0
@@ -524,7 +532,7 @@ do ($ = jQuery, window) ->
             )
             
             nextImg.css(
-              'marginTop': '-300px',
+              'marginTop': '-200px',
               'opacity': 0
             )
 
@@ -640,23 +648,16 @@ do ($ = jQuery, window) ->
       # Click on the face to load a popup
       #
       $(".face", people).click (e)->
-        e.preventDefault()
-
+        
         # make sure the user is at the top of the viewable space
         parent = $('.people_group').first()
         top = parent.offset().top
 
         if $(window).scrollTop() > top 
-          $(window).scrollTo({ top:top - 50, left:0}, 500);
+          $(window).scrollTo({ top:top, left:0}, 500);
 
-        # animate it down
-        peoplePopup.css
-          opacity: 1,
-          height: 0
-          display: 'block'
-        
         details = $($(this).find('a').attr('href'))
-
+      
         # set the next and previous sta
         prev = getNextStaffMember(details, true)
         peopleNavLeft.css('background-image', 'url(/_assets/img/staff_pics/small/'+ prev.attr('id') + ".jpg)")
@@ -664,15 +665,31 @@ do ($ = jQuery, window) ->
         next = getNextStaffMember(details, false)
         peopleNavRight.css('background-image', 'url(/_assets/img/staff_pics/small/'+ next.attr('id') + ".jpg)")
 
-        $("#jumper").fadeOut()
-        $(".people_group h3").animate(
-          opacity: 0
-        )
+        #
+        # Bring the popup down if it isn't visible already
+        #
+        if peoplePopup.is(":not(:visible)")
+          # animate it down
+          peoplePopup.css
+            opacity: 1,
+            height: 0
+            display: 'block'
 
-        peopleNav.fadeIn()
+          $("#jumper").fadeOut()
+          $(".people_group h3").animate(
+            opacity: 0
+          )
+          
+          peopleNav.fadeIn()
+        else
+          peoplePopupBackground.css('background-image', 'none')
+
+          # remove the reveal_content from everything
+          $('.person_detail').hide().removeClass('reveal_content')
+
 
         peoplePopup.animate(
-          height: if ($(window).width() > 580) then 650 else details.height() + 260,
+          height: if ($(window).width() > 580) then 650 else details.height() + 360,
           ()->
             # load the background image 
             peoplePopupBackground.css(
@@ -686,6 +703,11 @@ do ($ = jQuery, window) ->
 
             # bring in content
             details.addClass('reveal_content')
+            details.find('.people_content').animate(
+              opacity: 1,
+              left: 0
+            )
+
             details.show()
         )
 
@@ -780,21 +802,17 @@ do ($ = jQuery, window) ->
     # Load parallax backgrounded sections. For other parallax uses (like quotes)
     # use the parallax_background
     #
-    $('.parallax_section').parallax(
-      scroll_factor: 0.5
-    )
+    if supportsAnimation
+      $('.parallax_section').parallax()
+      
+      parallaxBackgrounds = $(".parallax_background")
 
-    #
-    # Parallax backgrounds
-    #
-    parallaxBackgrounds = $(".parallax_background")
+      if parallaxBackgrounds.length > 0
+         scrollHandlers.push parallaxBackground = (scrollY, winHeight, winWidth)->
+          parallaxBackgrounds.each (i, elem)->
+            pos = "0% " + (scrollY * 0.5) + "px"
 
-    if parallaxBackgrounds.length > 0
-       scrollHandlers.push parallaxBackground = (scrollY, winHeight, winWidth)->
-        parallaxBackgrounds.each (i, elem)->
-          pos = "0% " + (scrollY * 0.5) + "px"
-
-          $(elem).css('background-position', pos)
+            $(elem).css('background-position', pos)
 
     #
     # Count up statistics. Stats that count up when they start to be visible
@@ -804,18 +822,19 @@ do ($ = jQuery, window) ->
     if count.length > 0
       animationLength = 2000;
 
-      count.each (i, elem)->
-        if not $(elem).is(":in-viewport")
-          text = "0"
+      if supportsAnimation
+        count.each (i, elem)->
+          if not $(elem).is(":in-viewport")
+            text = "0"
 
-          if $(elem).data('count-up-percentage')
-            text += "%"
+            if $(elem).data('count-up-percentage')
+              text += "%"
 
-          $(elem).data('count-up', parseInt($(elem).text().replace('%', '')))
-          $(elem).data('count-up-value', 0)
-          $(elem).text(text)
-        else
-          $(elem).data('counted-up', true)
+            $(elem).data('count-up', parseInt($(elem).text().replace('%', '')))
+            $(elem).data('count-up-value', 0)
+            $(elem).text(text)
+          else
+            $(elem).data('counted-up', true)
           
       scrollHandlers.push countUpNumbers = (scrollY, winHeight, winWidth)->
         count.each (i, elem)->
@@ -1155,36 +1174,38 @@ do ($ = jQuery, window) ->
 
         growth.css
           'bottom': -268 + (percentage * 268)
-    # 
-    # Now we can actually do something useful.
-    # 
-    renderFrame = (onLoad)->
-      winHeight = $(window).height();
-      winWidth = $(window).width();
-      scrollY = $(window).scrollTop();
 
-      $.each scrollHandlers, (i, callback)->
-        if scrollY < 0
-          scrollY = 0
-
-        callback(scrollY, winHeight, winWidth)
-    
-
-    # 
-    # On scroll, rerender the frame
-    #
-    $(window).scroll ()->
-      renderFrame(false)
 
     #
-    # On resize, rerender the frame
+    # If the device supports animation then render the frame.
     #
-    $(window).resize ()->
-      renderFrame(false)
+    if supportsAnimation
+      renderFrame = (onLoad)->
+        winHeight = $(window).height();
+        winWidth = $(window).width();
+        scrollY = $(window).scrollTop();
+      
+        $.each scrollHandlers, (i, callback)->
+          if scrollY < 0
+           scrollY = 0
 
+          callback(scrollY, winHeight, winWidth)
 
-    # render the initial frame
-    renderFrame(true)
+      #
+      # disable animations on screens that are on tablet devices
+      # 
+      # On scroll, rerender the frame. iPad's don't fire onscroll till the user
+      # has completed the scroll resulting in odd chunky behaviour so we just
+      # leave the animations are they were
+      #
+      $(document).scroll ()->
+        renderFrame(false)
+
+      $(document).resize ()->
+        renderFrame(false)
+
+      renderFrame(true)
+
 
     #
     # Wink animation.
