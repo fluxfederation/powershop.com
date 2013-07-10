@@ -14,7 +14,7 @@
         <script type="text/javascript">try {Typekit.load();}catch(e){}</script>
     </head>
 
-    <body class="{{ page.body_class }}">
+    <body id="top" class="{{ page.body_class }}">
       <div id="loading">
         <div class="loading_icon"><div class="loading_eye"><!-- --></div></div>
       </div>
@@ -81,6 +81,13 @@
       </nav>
 
       {{ content }}
+
+      <footer id="footer">
+        <div class="wrapper">
+          <p class="left"><a href="/terms-and-conditions/">Terms &amp; Conditions</a></p>
+          <p class="right"><a href="#top">Back to top</a></p>
+        </div>
+      </div>
 
       <script type="text/javascript">
         var _gaq = _gaq || [];

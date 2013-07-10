@@ -7,20 +7,20 @@ do ($ = jQuery, window) ->
       radians = degrees * Math.PI / 180
       c = Math.cos(radians)
       s = Math.sin(radians)
-
+      
       [c*p[0] - s*p[1], s*p[0] + c*p[1]]
 
     scale: (p, n)->
       [n*p[0], n*p[1]]
-
+    
     add: (a, b)->
       [a[0]+b[0], a[1]+b[1]]
-
+    
     minus: (a, b)->
       [a[0]-b[0], a[1]-b[1]]
-
-  #
-  # Draw a bézier line. Supports mapping a given point along the curve.
+  
+  # 
+  # Draw a bézier line. Supports mapping a given point along the curve. 
   #
   # > $.path.bezier.css(p)
   #
@@ -50,7 +50,7 @@ do ($ = jQuery, window) ->
       f3 = (3*t*(1-t)*(1-t))
       f4 = ((1-t)*(1-t)*(1-t))
 
-      css =
+      css = 
         x: this.p1[0] * f1 + this.p2[0] * f2 + @p3[0] * f3 + @p4[0] * f4 + 0.5
         y: this.p1[1] * f1 + this.p2[1] * f2 + @p3[1] * f3 + @p4[1] * f4 + 0.5
 
@@ -58,7 +58,7 @@ do ($ = jQuery, window) ->
 
     this
 
-  $(document).ready ->
+  $(document).ready ->  
     sections = $ ".section"
     content = $ "#content"
     nav = $ "#nav"
@@ -80,13 +80,13 @@ do ($ = jQuery, window) ->
     #
     supportsAnimation = true unless (/android|webos|iphone|ipad|ipod|blackberry/i.test(navigator.userAgent.toLowerCase()))
 
-    #
+    # 
     # If the browser is a touch device, add a helper class.
     #
     if Modernizr.touch
       page.addClass 'touch'
 
-    #
+    # 
     # Once the user has started to scroll down the page, or, if they have jumped
     # to a particular point in the page, fade in the header bar.
     #
@@ -114,7 +114,7 @@ do ($ = jQuery, window) ->
             $(elem).data('showing', true).animate(
               opacity: 1
             )
-
+    
 
     #
     # Clicking show navigation reveals the site wide navigation reveals over
@@ -158,7 +158,7 @@ do ($ = jQuery, window) ->
         }, ()->
           nav.css('height', '100%')
         )
-
+        
       return false
 
     #
@@ -170,7 +170,7 @@ do ($ = jQuery, window) ->
     )
 
     #
-    # Swiping the office images allows the user to manipulate the office
+    # Swiping the office images allows the user to manipulate the office 
     # photos. The user can swipe till there are no more photos to unvisible
     # on the page.
     #
@@ -178,7 +178,7 @@ do ($ = jQuery, window) ->
     officePhotoScroller = $ "ul", officePhotos
 
     #
-    # Office images shouldn't load on the page till the users scroll to the
+    # Office images shouldn't load on the page till the users scroll to the 
     # section.
     #
     # Was going to load individual images on demand but now, just load them once
@@ -218,7 +218,7 @@ do ($ = jQuery, window) ->
 
       loadedOfficePics = false
       scroller = new iScroll('office_photos', {
-        momentum: true,
+        momentum: false,
         snap: false,
         vScroll: true,
         scrollbarClass: 'photo_scrollbar',
@@ -271,7 +271,7 @@ do ($ = jQuery, window) ->
 
           map = new google.maps.Map($(elem).get(0), options)
 
-          image =
+          image = 
             url: $(elem).data('marker'),
             size: new google.maps.Size(30, 30),
             origin: new google.maps.Point(0,0)
@@ -286,7 +286,7 @@ do ($ = jQuery, window) ->
 
 
     #
-    # The icons on the roles section come in as the users scroll into the
+    # The icons on the roles section come in as the users scroll into the 
     # page.
     ###
     roles = $("#current_roles")
@@ -307,7 +307,7 @@ do ($ = jQuery, window) ->
           diff = endScrollFocus - startScrollForFocus
           amountScrolledWithinBox = scrollY - startScrollForFocus
 
-          if amountScrolledWithinBox > diff
+          if amountScrolledWithinBox > diff 
             amountScrolledWithinBox = diff
 
           # 0 - 1. 1 being they have scrolled the whole thing and we should be
@@ -317,13 +317,13 @@ do ($ = jQuery, window) ->
           faces.each (i, elem)->
             offset = i - median
             $(elem).css 'left', (i + (offset - (offset * r))) * 86
-        else
+        else 
           # before the animation so they should be all the way out
           faces.each (i, elem)->
             offset = i - median
             $(elem).css 'left', (offset + (offset * Math.PI)) * 86
     ###
-
+    
     #
     # On the about page, animate in stuff
     #
@@ -335,7 +335,7 @@ do ($ = jQuery, window) ->
 
       scrollHandlers.push animationForProduct = (scrollY, winHeight, winWidth)->
         # So product animation is 3 screens. Center one says fixed, the outside
-        # two come in. The animation goes from off the screen to under the
+        # two come in. The animation goes from off the screen to under the 
         # center in the process of scrolling from the top, till the bottom of
         # the section is visible
         bottomIsVisibleAt = product.offset().top + product.outerHeight();
@@ -370,22 +370,22 @@ do ($ = jQuery, window) ->
         paths[i] = new $.bezier(params)
 
       scrollHandlers.push animationForDesign = (scrollY, winHeight, winWidth)->
-        # animate the design thinking banner. Each element comes in on a
+        # animate the design thinking banner. Each element comes in on a 
         # different path and the distance along that path is determined by the
         # ratio of the users scrolling (much like the other pages)
         targetTop = designs.offset().top
 
-        if targetTop > winHeight
+        if targetTop > winHeight 
           ignoredScroll = Math.abs(targetTop - winHeight)
           targetScroll = targetTop - ignoredScroll
 
           p = (scrollY - ignoredScroll) / targetScroll;
           if p > 1 then p = 1;
 
-        else
+        else 
           p = 1
 
-
+        
 
         $(".icons li", designs).each (i, elem)->
           path = paths[i];
@@ -394,7 +394,7 @@ do ($ = jQuery, window) ->
           # opacity starts at 0.5 probability and scales up at twice the rate
           if p < 0.6
             o = 0
-          else
+          else 
             # 0 - 2
             o = (p - 0.6) * 5
 
@@ -412,7 +412,7 @@ do ($ = jQuery, window) ->
       # user can cycle through some of the testimonials on the page. The scroll
       # is endless, so last item is added to the start
       $("li:first", say).addClass('showing').siblings().hide()
-
+      
       animatingTestimonial = false
 
       # hide the current testimonial animation.
@@ -438,7 +438,7 @@ do ($ = jQuery, window) ->
         posLeft = txt.position().left
         txtWidth = txt.width()
 
-        img.animate({
+        img.animate({ 
           marginTop: '-200px',
           opacity: 0
         }, 300, 'easeInOutBack', ()->
@@ -452,7 +452,7 @@ do ($ = jQuery, window) ->
           takeOffToLeft = $(window).width();
           takeOffToLeft = -0.5 * $(window).width() unless back
 
-          txt.animate({
+          txt.animate({ 
             opacity: 0
             left: takeOffToLeft
           }, 600, 'easeOutQuint', ()->
@@ -508,7 +508,7 @@ do ($ = jQuery, window) ->
               position: 'absolute',
               width: txtWidth
             )
-
+            
             nextImg.css(
               'marginTop': '-200px',
               'opacity': 0
@@ -553,7 +553,7 @@ do ($ = jQuery, window) ->
       say.append(prev);
       say.append(next);
 
-    #
+    # 
     # Our peoples page. Clicking the users face should reveal the content popup
     #
     people = $("#our_people")
@@ -596,7 +596,7 @@ do ($ = jQuery, window) ->
         nextStaff
 
       #
-      # Close the people popup.
+      # Close the people popup. 
       #
       $(".close", people).click (e)->
         e.preventDefault();
@@ -626,16 +626,16 @@ do ($ = jQuery, window) ->
       # Click on the face to load a popup
       #
       $(".face", people).click (e)->
-
+        
         # make sure the user is at the top of the viewable space
         parent = $('.people_group').first()
         top = parent.offset().top
 
-        if $(window).scrollTop() > top
+        if $(window).scrollTop() > top 
           $(window).scrollTo({ top:top, left:0}, 500);
 
         details = $($(this).find('a').attr('href'))
-
+      
         # set the next and previous sta
         prev = getNextStaffMember(details, true)
         peopleNavLeft.css('background-image', 'url(/_assets/img/staff_pics/small/'+ prev.attr('id') + ".jpg)")
@@ -657,7 +657,7 @@ do ($ = jQuery, window) ->
           $(".people_group h3").animate(
             opacity: 0
           )
-
+          
           peopleNav.fadeIn()
         else
           peoplePopupBackground.css('background-image', 'none')
@@ -669,7 +669,7 @@ do ($ = jQuery, window) ->
         peoplePopup.animate(
           height: if ($(window).width() > 580) then 650 else details.height() + 360,
           ()->
-            # load the background image
+            # load the background image 
             peoplePopupBackground.css(
               'background-image': 'url(/_assets/img/staff_pics/large/'+ details.attr('id') + ".jpg)"
             )
@@ -720,7 +720,7 @@ do ($ = jQuery, window) ->
         current.removeClass('reveal_content')
 
         #
-        # Once we've finished animating out we need to bring in the next piece
+        # Once we've finished animating out we need to bring in the next piece 
         # of content
         #
         onPopupContentDone = ()->
@@ -757,7 +757,7 @@ do ($ = jQuery, window) ->
               )
             )
           )
-
+          
 
         # animate current off the page. Right for previous, left for next
         currentContent.css('width', currentContent.width())
@@ -776,7 +776,7 @@ do ($ = jQuery, window) ->
           )
 
 
-    #
+    # 
     # Load parallax backgrounded sections. For other parallax uses (like quotes)
     # use the parallax_background
     #
@@ -792,14 +792,14 @@ do ($ = jQuery, window) ->
               # at zero once the user has scrolled past
               scrollPast = $(elem).height() + $(elem).offset().top
 
-              # size of translation is the width of the browser vs the
+              # size of translation is the width of the browser vs the 
               dy = winWidth / $(elem).data('ratio-to-width') - $(elem).data('hy')
               percentage = scrollY / scrollPast
               percentage = 1 unless percentage < 1
-
+              
               pos = "0% "+ parseInt(((-1 * dy) * (1 - percentage)))
               $(elem).css('background-position', pos + "px")
-            else
+            else   
               pos = "0% " + (scrollY * 0.5) + "px"
               $(elem).css('background-position', pos)
 
@@ -824,7 +824,7 @@ do ($ = jQuery, window) ->
             $(elem).text(text)
           else
             $(elem).data('counted-up', true)
-
+          
       scrollHandlers.push countUpNumbers = (scrollY, winHeight, winWidth)->
         count.each (i, elem)->
           self = $(elem)
@@ -850,7 +850,7 @@ do ($ = jQuery, window) ->
                   self.text(expectedValue)
                 else
                   value += 1;
-
+                  
                   text = value;
 
                   if percentage
@@ -864,7 +864,7 @@ do ($ = jQuery, window) ->
 
     #
     # Home page animate parallaxed illustrations.
-    #
+    # 
     if onHomePage
       ill1 = $("#ill1")
       ill1_section = $("#make_things")
@@ -906,7 +906,7 @@ do ($ = jQuery, window) ->
           )
 
           setTimeout( ()->
-            # add sprinkles
+            # add sprinkles 
             $(".sprinkles", ill2).transition(
               'y': '0',
               'scale': 1
@@ -922,7 +922,7 @@ do ($ = jQuery, window) ->
           , 1100)
         , 1800)
 
-      #
+      # 
       # Code for hiding icecream on the page.
       #
       # Optionally takes a 'quick' parameter to indicate we shouldn't bother
@@ -987,28 +987,28 @@ do ($ = jQuery, window) ->
           , 400)
 
       #
-      # Trigger the hide operation on load. We call animate when the page is
+      # Trigger the hide operation on load. We call animate when the page is 
       # loaded.
       #
       if supportsAnimation
         hideIcecreamAnimation(true)
 
-      #
+      # 
       # On scroll handle all the animation logic
       #
       scrollHandlers.push animateHomePage = (scrollY, winHeight, winWidth)->
         #
         # If we're at a size any smaller than the desktop view, just ignore this
         # since the illustrations will be gone
-        #
+        # 
 
         #
         # Illustration 1. Make things. This guy comes up from the bottom left as
         # the user scrolls on the page to sit at the final position of 20,520. The
         # driver of this vehicle is a little drunk so as he comes across, he moves
-        # up and down.
+        # up and down. 
         #
-        restingPlaceX = 530
+        restingPlaceX = 530 
         restingPlaceY = 50
         amountOfScrollToFullAnimation = ill1_section.offset().top
         percentageScroll = scrollY/amountOfScrollToFullAnimation
@@ -1029,8 +1029,8 @@ do ($ = jQuery, window) ->
         )
 
         #
-        # Illustration 2. Give a shit. The ice cream cone comes up from the
-        # bottom of the users screen while the ice cream parts pop up as if
+        # Illustration 2. Give a shit. The ice cream cone comes up from the 
+        # bottom of the users screen while the ice cream parts pop up as if 
         # magic
         #
         amountOfScrollForIcecreamToTrigger = ill2_section.offset().top;
@@ -1047,7 +1047,7 @@ do ($ = jQuery, window) ->
           if not showingIcecream
             # animate in the icecream parts
             showingIcecream = true
-
+            
             showIcecreamAnimation()
         else
           #
@@ -1077,17 +1077,17 @@ do ($ = jQuery, window) ->
           percentage = (scrollY - startMoving) / (stopMoving - startMoving)
 
           if percentage >= 0.85
-            # I wish that I could fly
-            # Into the sky
-            # So very high
-            # Just like a dragonfly
+            # I wish that I could fly 
+            # Into the sky 
+            # So very high 
+            # Just like a dragonfly 
 
-            # I'd fly above the trees
-            # Over the seas in all degrees
-            # To anywhere I please
+            # I'd fly above the trees 
+            # Over the seas in all degrees 
+            # To anywhere I please 
 
-            # Oh I want to get away
-            # I want to fly away
+            # Oh I want to get away 
+            # I want to fly away 
             # Yeah yeah yeah
 
             # top goes down to 120 pretty quick, starts at 30
@@ -1174,7 +1174,7 @@ do ($ = jQuery, window) ->
         winHeight = $(window).height();
         winWidth = $(window).width();
         scrollY = $(window).scrollTop();
-
+      
         $.each scrollHandlers, (i, callback)->
           if scrollY < 0
            scrollY = 0
@@ -1183,7 +1183,7 @@ do ($ = jQuery, window) ->
 
       #
       # disable animations on screens that are on tablet devices
-      #
+      # 
       # On scroll, rerender the frame. iPad's don't fire onscroll till the user
       # has completed the scroll resulting in odd chunky behaviour so we just
       # leave the animations are they were
