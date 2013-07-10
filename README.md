@@ -13,6 +13,7 @@
     # To build the site into _site/
     jekyll build
     # To serve the site from your dev environment
+    jekyll serve
 
 ## Webserver
 
