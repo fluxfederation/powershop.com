@@ -8,23 +8,16 @@
 - Jekyll
 
 ## Setup
-	
-	gem install jekyll
-	npm install
 
-## Grunt
-
-Grunt is used to generate combined files, to regenerate files run: 
-
-	grunt watch
-
-Grunt watch is configured to generate all the assets as required and run jekyll
-to export the website to the `_site` folder.
+    bundle
+    # To build the site into _site/
+    jekyll build
+    # To serve the site from your dev environment
 
 ## Webserver
 
-Setup a VirtualHost to point to the _site/ folder. This should be the base 
-directory. 
+Setup a VirtualHost to point to the _site/ folder. This should be the base
+directory.
 
 	<VirtualHost *:80>
 		ServerName power.dev
