@@ -1,4 +1,4 @@
-set :application, 'com-qa-ps'
+set :application, 'com-qa-www'
 set :repository,  'git@git.powershop.co.nz:powershop-com.git'
 set :gateway,     'wssl.powershop.co.nz'
 set :deploy_to,   "/apps/#{application}"
