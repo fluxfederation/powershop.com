@@ -1,0 +1,211 @@
+/* medium view 880px, columns are 72px wide  */
+@import "elements.less";
+@import "grid.less";
+@import "vars.less";
+@import "css3.less";
+
+@media screen and (max-width: 879px) {
+	/* helpers */
+	.grid-3,
+	.grid-4,
+	.grid-5,
+	.grid-6,
+	.grid-7,
+	.grid-8,
+	.grid-9,
+	.grid-10 {
+		width: 100%;
+		float: none;
+		display: block;
+		text-align: left;
+		max-width: 420px;
+	}
+
+	#ill1 {
+		margin: 40px 0 0 -240px;
+	}
+
+	#give h2 {
+		text-align: left;
+		float: none;	
+		margin-bottom: 180px;
+	}
+
+	#ill2 {
+		position: absolute;
+		left: 150px;
+		top: 60px;
+	}
+
+	#ill3 {
+		margin-left: -200px;
+	}
+
+	#jumper {
+		display: none !important;
+	}
+
+	.yell {
+		font-size: 90px;
+		line-height: 85px;
+	}
+
+	.push-1,
+	.push-05 {
+		margin-left: 0;
+	}
+
+	h3 .nl {
+		display: inline;
+	}
+
+	/* homepage */
+	#welcome_jump h2 {
+		font-size: 60px;
+		float: none;
+		text-align: center;
+	}
+
+	#welcome_jump p {
+		margin-top: 8px;
+		text-align: center;
+		margin: 0 auto;
+		width: auto;
+		max-width: 100%;
+	}
+
+	#welcome_jump a {
+		padding: 20px 30px 30px 30px;
+	}
+
+	#welcome h1 {
+		font-size: 75px;
+		line-height: 85px;
+		margin-top: 100px;
+	}
+
+	#welcome p {
+		font-size: 20px;
+		line-height: 30px;
+	}
+
+
+	#shit_hot {
+		padding-top: 80px;
+
+		h1 {
+			width: 100%;
+		}
+	}
+
+	#contact {
+		.social {
+			text-align: center;
+		}
+
+		a {
+			padding-bottom: 30px;
+		}
+
+		.icon  {
+			width: 70px;
+			height: 70px;
+			float: none;
+		}
+
+		.mail .icon { background-position: 12px 12px; }
+		.phone .icon { background-position: -140px 12px; }
+		.twitter .icon { background-position: -287px 11px; }
+		.facebook .icon { background-position: -441px 12px; }
+		.skype .icon { background-position: -591px 11px; }
+	}
+
+	#give .grid-3,
+	#make_things .grid-3,
+	#weird .grid-3 {
+		padding-bottom: 20px;
+	}
+
+	.map {
+		width: 50%;
+	}
+
+	#our_history {
+		.columns {
+			-webkit-column-count: 1;
+			column-count: 1;
+		}
+	}
+
+	#quote p,
+	#quote h2 {
+		max-width: 50%;
+	}
+
+	/* culture page */
+	#current_roles {
+		.grid-6 {
+			max-width: 400px;
+			float: left;
+		}
+
+		.apply {
+			margin-left: 10%;
+		}
+	}
+
+
+	.people_group {
+		h3 {
+			position: static;
+			text-align: left;
+
+			.rotate(0deg);
+		}
+
+		span {
+			display: none;
+		}
+
+		.face {
+			width: 50%;
+		}
+	}
+
+	.people_popup {
+		p {
+			max-width: 340px;
+		}
+	}
+	
+	#pow {
+		display: none;
+	}
+
+	#kiss_ass .yell {
+		width: auto;
+	}
+
+	#quotes li {
+		width: auto;
+		float: none;
+	}
+
+	#quotes strong {
+		display: inline;
+		padding-right: 10px;
+	}
+
+	#customers_love h2 span:after {
+		left: 59px;
+		top: 57px;
+	}
+
+	#customers_say .prev_test {
+		left: 10px;
+	}
+
+	#customers_say .next_test {
+		right: 10px;
+	}
+}

@@ -7,9 +7,9 @@
 
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-        <link rel="stylesheet" href="/_assets/dist/prod.css">
+        {% stylesheet app %}
 
-        <script type="text/javascript" src="/_assets/src/vendor/modernizr.js"></script>
+        {% javascript modernizr %}
         <script type="text/javascript" src="//use.typekit.net/hvb0his.js"></script>
         <script type="text/javascript">try {Typekit.load();}catch(e){}</script>
     </head>
@@ -18,7 +18,7 @@
       <div id="loading">
         <div class="loading_icon"><div class="loading_eye"><!-- --></div></div>
       </div>
-      
+
 
       <header id="header" class="{{ page.header_color }}">
         <div class="wrapper">
@@ -67,7 +67,7 @@
                   <li class="culture"><a href="/culture/#culture">Culture</a></li>
                   <li class="current_roles"><a href="/culture/#current_roles">Current Roles</a></li>
                 </ol>
-              </li> 
+              </li>
 
               <li class="page-contact">
                 <div class="dummy-pad"></div>
@@ -75,7 +75,7 @@
                   <li class="contact"><a href="/contact/">Contact</a></li>
                 </ol>
               </li>
-            </ol> 
+            </ol>
           </div>
         </div>
       </nav>
@@ -95,8 +95,6 @@
         })();
       </script>
 
-      <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-      <script src="/_assets/dist/vendor.js"></script>
-      <script src="/_assets/dist/site.js"></script>
+      {% javascript app %}
     </body>
 </html>

@@ -1,0 +1,243 @@
+/* screens smaller than 580px / mobile */
+@import "elements.less";
+@import "grid.less";
+@import "vars.less";
+@import "css3.less";
+
+@media screen and (max-width: 580px) {
+	.grid-3,
+	.grid-4,
+	.grid-5,
+	.grid-6,
+	.grid-7,
+	.grid-8,
+	.grid-9,
+	.grid-10 {
+		max-width: 300px;
+	}
+	
+	.wrapper {
+		width: 90%;
+	}
+	.yell {
+		font-size: 60px;
+		line-height: 55px;
+	}
+
+	.grid-55 {
+		width: 100%;
+		float: none;
+		margin-bottom: 20px;
+		display: block;
+	}
+
+	#give h2 {
+		width: 100%;
+		text-align: left;
+	}
+
+	#ill3,
+	#ill2,
+	#ill1 {
+		display: none;
+	}
+
+
+	#welcome h1 {
+		font-size: 45px;
+		margin: 120px 0 40px;
+		line-height: 50px;
+	}
+
+	#welcome p {
+		font-size: 18px;
+		line-height: 25px;
+	}
+
+	#welcome_jump h2 {
+		font-size: 45px;
+	}
+
+	#welcome_jump p {
+		width: 100%;
+	}
+
+	#welcome_jump .first a {
+		border-right: 2px solid @hotPink;
+	}
+
+	.map {
+		width: 100%;
+		float: left;
+		height: 220px;
+	}
+
+	/* nav */
+	#nav li {
+		width: 226px;
+		float: none;
+		height: 69px;
+		margin: 0 auto;
+		padding: 0;
+		overflow: hidden;
+
+		a {
+			display: none;
+			height: 69px;
+			padding: 0;
+			border-top: none;
+
+			&:hover,
+			&:focus {
+				border-top: 0;
+			}
+		}
+
+		.welcome a,
+		.shit_hot a,
+		.contact a,
+		.kiss_ass a {
+			display: block;
+		}
+	}
+
+	#nav .page-home,
+	#nav .page-contact,
+	#nav .page-about,
+	#nav .page-culture {
+		background-size: 100% auto;
+	}
+
+	#customers_say {
+		.grid-55 {
+			text-align: center;
+		}
+
+		.next_test {
+			right: 10px;
+		}
+
+		img {
+			float: none;
+			margin: 0 auto;
+		}
+
+		.prev_test {
+			left: 10px;
+		}
+
+		.grid-9 {
+			text-align: center;
+			margin: 0 auto;
+		}
+
+		blockquote:before {
+			left: 50%;
+			margin-left: -15px;
+		}
+	}
+
+	#customers_love {
+		h3 {
+			text-align: center;
+			margin: 0 auto 30px;
+		}
+
+		p {
+			text-align: center;
+			margin: 0 auto;
+		}
+		
+		h2 span:after {
+			top: 85px;
+			left: 50%;
+			margin-left: -15px;
+		}
+
+		.grid-8 {
+			margin: 0 auto;
+		}
+	}
+
+	#customers_love .grid-55,
+	#customers_love .grid-7 {
+		margin: 0 auto;
+	}
+
+	/* people section for the mobile view requires a bit of effort to get right */
+	.people_popup .person_detail {
+		margin: 10px 0 0 0;
+		position: relative;
+	}
+
+	.people_popup p {
+		max-width: 270px;
+	}
+
+	.people_popup {
+		background-position: center 90px;
+		max-height: none;
+		
+		.close {
+			left: 15px;
+			right: auto;
+		}
+	}
+
+	.parallax-block {
+		
+	}
+	.popup_nav {
+		display: none !important; /* don't want */
+
+		top: 80px;
+		background: none !important;
+		width: 55px;
+		right: 0;
+
+		&:after {
+			display: none;
+		}
+
+		&.prev {
+			left: 10px;
+
+			&:before {
+				right: 0;
+			}
+		}
+	}
+
+	.people_popup .people_popup_bg {
+		padding-top: 59.09%;
+		background-size: 100%;
+	}
+
+
+	/* culture page */
+	#current_roles {
+		.faces {
+			display: none;
+		}
+
+		.apply {
+			margin: 0;
+		}
+	}
+
+	.roles .first {
+		padding-top: 0;
+	}
+
+	#design_thinking {
+		background: @purplePink;
+
+		.wrapper {
+			padding-top: 120px;
+		}
+
+		.icons {
+			display: none;
+		}
+	}
+}

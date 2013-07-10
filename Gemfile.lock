@@ -1,0 +1,99 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    POpen4 (0.1.4)
+      Platform (>= 0.4.0)
+      open4
+    Platform (0.4.0)
+    capistrano (2.15.5)
+      highline
+      net-scp (>= 1.0.0)
+      net-sftp (>= 2.0.0)
+      net-ssh (>= 2.0.14)
+      net-ssh-gateway (>= 1.1.0)
+    classifier (1.3.3)
+      fast-stemmer (>= 1.0.0)
+    coffee-script (2.2.0)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.6.3)
+    colorator (0.1)
+    commander (4.1.3)
+      highline (~> 1.6.11)
+    commonjs (0.2.6)
+    directory_watcher (1.4.1)
+    execjs (1.4.0)
+      multi_json (~> 1.0)
+    fast-stemmer (1.0.2)
+    highline (1.6.19)
+    hike (1.2.3)
+    jekyll (1.0.3)
+      classifier (~> 1.3)
+      colorator (~> 0.1)
+      commander (~> 4.1.3)
+      directory_watcher (~> 1.4.1)
+      kramdown (~> 1.0.2)
+      liquid (~> 2.3)
+      maruku (~> 0.5)
+      pygments.rb (~> 0.5.0)
+      safe_yaml (~> 0.7.0)
+    jekyll-assets (0.5.4)
+      jekyll (~> 1.0)
+      sprockets (~> 2.10)
+    kramdown (1.0.2)
+    less (2.3.2)
+      commonjs (~> 0.2.6)
+    libv8 (3.11.8.17)
+    liquid (2.5.0)
+    maruku (0.6.1)
+      syntax (>= 1.0.0)
+    multi_json (1.7.7)
+    net-scp (1.1.2)
+      net-ssh (>= 2.6.5)
+    net-sftp (2.1.2)
+      net-ssh (>= 2.6.5)
+    net-ssh (2.6.8)
+    net-ssh-gateway (1.2.0)
+      net-ssh (>= 2.6.5)
+    open4 (1.3.0)
+    posix-spawn (0.3.6)
+    pygments.rb (0.5.1)
+      posix-spawn (~> 0.3.6)
+      yajl-ruby (~> 1.1.0)
+    rack (1.5.2)
+    rake (10.1.0)
+    ref (1.0.4)
+    safe_yaml (0.7.1)
+    sprockets (2.10.0)
+      hike (~> 1.2)
+      multi_json (~> 1.0)
+      rack (~> 1.0)
+      tilt (~> 1.1, != 1.3.0)
+    sprockets-less (0.5.3)
+      less (~> 2.3.0)
+      tilt (~> 1.1)
+    syntax (1.0.0)
+    therubyracer (0.11.4)
+      libv8 (~> 3.11.8.12)
+      ref
+    tilt (1.4.1)
+    uglifier (2.1.1)
+      execjs (>= 0.3.0)
+      multi_json (~> 1.0, >= 1.0.2)
+    yajl-ruby (1.1.0)
+    yui-compressor (0.9.6)
+      POpen4 (>= 0.1.4)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  capistrano
+  coffee-script
+  jekyll
+  jekyll-assets
+  rake
+  sprockets-less
+  therubyracer
+  uglifier
+  yui-compressor

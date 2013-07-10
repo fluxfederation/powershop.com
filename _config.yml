@@ -1,4 +1,9 @@
 name: Powershop
-include: [_assets]
-exclude: [node_modules, README.md, .gitignore, package.json, Gruntfile.js]
+exclude: [README.md, .gitignore, Gemfile, Gemfile.lock, Capfile, config]
 permalinks: pretty
+plugins: ./_plugins
+
+assets:
+  js_compressor: 'uglifier'
+  css_compressor: 'yui'
+  cache: false
