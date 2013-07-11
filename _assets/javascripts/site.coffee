@@ -609,7 +609,8 @@ do ($ = jQuery, window) ->
           opacity: 1
         )
 
-        peoplePopupBackground.css('background-image', 'none')
+        #peoplePopupBackground.css('background-image', 'none')
+        peoplePopupBackground.attr('class', 'people_popup_bg')
 
         # remove the reveal_content from everything
         $('.person_detail').hide().removeClass('reveal_content')
@@ -638,10 +639,11 @@ do ($ = jQuery, window) ->
       
         # set the next and previous sta
         prev = getNextStaffMember(details, true)
-        peopleNavLeft.css('background-image', 'url(/_assets/img/staff_pics/small/'+ prev.attr('id') + ".jpg)")
 
+        peopleNavLeft.attr('class', "popup_nav prev #{prev.attr('id')}_bg_small")
         next = getNextStaffMember(details, false)
-        peopleNavRight.css('background-image', 'url(/_assets/img/staff_pics/small/'+ next.attr('id') + ".jpg)")
+
+        peopleNavRight.attr('class', "popup_nav next #{next.attr('id')}_bg_small")
 
         #
         # Bring the popup down if it isn't visible already
@@ -660,7 +662,8 @@ do ($ = jQuery, window) ->
           
           peopleNav.fadeIn()
         else
-          peoplePopupBackground.css('background-image', 'none')
+          #peoplePopupBackground.css('background-image', 'none')
+          peoplePopupBackground.attr('class', 'people_popup_bg')
 
           # remove the reveal_content from everything
           $('.person_detail').hide().removeClass('reveal_content')
@@ -670,9 +673,10 @@ do ($ = jQuery, window) ->
           height: if ($(window).width() > 580) then 650 else details.height() + 360,
           ()->
             # load the background image 
-            peoplePopupBackground.css(
-              'background-image': 'url(/_assets/img/staff_pics/large/'+ details.attr('id') + ".jpg)"
-            )
+            #peoplePopupBackground.css(
+            #  'background-image': 'url(/_assets/img/staff_pics/large/'+ details.attr('id') + ".jpg)"
+            #)
+            peoplePopupBackground.attr('class', "people_popup_bg #{details.attr('id')}_bg_large")
 
             details.css(
               'left': 0,
@@ -735,16 +739,17 @@ do ($ = jQuery, window) ->
           prev = getNextStaffMember(next, true)
           future = getNextStaffMember(next, false)
 
-          peopleNavLeft.css('background-image', 'url(/_assets/img/staff_pics/small/'+ prev.attr('id') + ".jpg)")
-          peopleNavRight.css('background-image', 'url(/_assets/img/staff_pics/small/'+ future.attr('id') + ".jpg)")
+          # peopleNavLeft.css('background-image', 'url(/_assets/img/staff_pics/small/'+ prev.attr('id') + ".jpg)")
+          # peopleNavRight.css('background-image', 'url(/_assets/img/staff_pics/small/'+ future.attr('id') + ".jpg)")
 
           peoplePopupBackground.animate(
             'opacity': 0
           , ()->
 
-            peoplePopupBackground.css(
-              'background-image': 'url(/_assets/img/staff_pics/large/'+ next.attr('id') + ".jpg)"
-            )
+            #peoplePopupBackground.css(
+            #  'background-image': 'url(/_assets/img/staff_pics/large/'+ next.attr('id') + ".jpg)"
+            #)
+            peoplePopupBackground.attr('class', "people_popup_bg #{next.attr('id')}_bg_large")
 
             peoplePopupBackground.animate(
               'opacity': 1
