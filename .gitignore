@@ -6,3 +6,4 @@ _site/*
 /.settings/
 /.project
 /.buildpath
+.ruby-version
