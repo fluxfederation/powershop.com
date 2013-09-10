@@ -392,7 +392,7 @@ a {
 
 	.page-home li:nth-child(2) a:hover,
 	.page-about li:nth-child(5) a:hover,
-	.page-culture li:nth-child(2) a:hover {
+	.page-culture li:nth-child(2) a:hover, .page-shop li:nth-child(1) a:hover {
 		background: rgb(240, 177, 124);
 		background: rgba(240, 177, 124, 0.85);
 	}
@@ -465,7 +465,7 @@ a {
 	}
 
 	.page-culture {
-		background: url(<%= asset_path('nav_pics/culture.jpg') %>) no-repeat;
+		background: url(<%= asset_path('nav_pics/culture.jpg') %>) 0 -1px no-repeat;
 		background-size: 100% 100%;
 
 		.dummy-pad {
@@ -479,14 +479,13 @@ a {
 
 
 	.page-shop {
-		background: url(<%= asset_path('nav_pics/culture.jpg') %>) no-repeat;
+		background: url(<%= asset_path('nav_pics/shop.jpg') %>) no-repeat;
 		background-size: 100% 100%;
-
 		.dummy-pad {
-			margin-top: 420.80%;
+			margin-top: 119.02%;
 		}
 
-		.shop { padding-top: 112.5%; }
+		.shop { padding-top: 119.5%; }
 	}
 
 	.page-contact {
@@ -869,6 +868,84 @@ a {
 	}
 }
 
+
+#visit_shop {
+	background: #130f1e;
+	}
+	.yell { line-height: 140px; text-align: center; }
+
+#shop {
+	background: @purplePink url(<%= asset_path('textures/pink.png') %>) repeat;
+	position: relative;
+
+	.wrapper {
+		overflow: hidden;
+		padding-bottom: 25px;
+		position: relative;
+	}
+
+	h1 {
+		margin: 80px 0 60px;
+		color: @cream;
+		font-size: 130px;
+		line-height: 120px;
+		text-align: left;
+	}
+
+	p.larger {
+		font-size: 35px;
+		line-height: 1.2em;
+		max-width: 640px;
+		margin: 0 45px 45px 0;
+		color: @cream;
+	}
+
+	p {
+		text-align: left;
+		font-size: 25px;
+		line-height: 35px;
+		margin: 0 0 45px;
+		color: @cream;
+
+	}
+	a {
+		text-transform: uppercase;
+		display: inline-block;
+		margin: 0 auto;
+		padding: 16px 3.84615% 17px;
+		text-decoration: none;
+		font-size: 18px;
+		line-height: 20px;
+		letter-spacing: 1px;
+		color: #fff;
+
+		&:hover,
+		&:focus {
+			color: @hotPink;
+			text-decoration: none;
+			outline: none;
+			background: #fff;
+		}
+	}
+
+	&.down {
+		&:after {
+			.down_arrow(@hotPink);
+
+			left: 50%;
+		}
+	}
+}
+
+
+#shop_banner {
+	overflow: hidden;
+	height: 500px;
+	background: url(<%= asset_path('shop_pics/shop-banner.jpg') %>) no-repeat;
+	background-size: 100% auto;
+	display: block;
+	width: 100%;
+}
 
 #contact {
 	background: #fff;
@@ -2123,6 +2200,13 @@ a {
 	width: 100%;
 }
 
+#office_photos.shop_photos {
+	height: 305px;
+	position: relative;
+	background: #130f1e;
+	width: 100%;
+}
+
 #scroller {
 	width: 2980px;
 	height: 100%;
@@ -2166,7 +2250,8 @@ a {
 .p22,
 .p21,
 .p12,
-.p33 {
+.p33,
+.p44 {
 	background: url(<%= asset_path('loading_face_small.png') %>) center center no-repeat;
 	position: relative;
 
@@ -2237,6 +2322,11 @@ a {
 .p33 {
 	width: 745px;
 	height: 745px;
+}
+
+.p44 {
+	width: 500px;
+	height: 305px;
 }
 
 .current_roles_spacer {
@@ -2410,11 +2500,11 @@ a {
 	background: @purplePink url(<%= asset_path('textures/pink.png') %>) repeat;
 }
 
-.culture #footer {
+.culture #footer , .shop #footer {
 	background: @purplePink url(<%= asset_path('textures/pink.png') %>) repeat;
 }
 
-.contact #footer {
+.contact #footer, {
 	background: @blueGray url(<%= asset_path('textures/blue_gray.png') %>) repeat;
 }
 
