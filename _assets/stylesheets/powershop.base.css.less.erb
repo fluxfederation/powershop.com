@@ -870,9 +870,15 @@ a {
 
 
 #visit_shop {
-	background: #130f1e;
+	background: @purplePink url(<%= asset_path('textures/pink.png') %>) repeat;
+
 	}
-	.yell { line-height: 140px; text-align: center; }
+	.yell { line-height: 140px; text-align: left; font-size: 100px; }
+
+	.shop-link {
+		position: relative;
+		top: -28px;
+	}
 
 #shop {
 	background: @purplePink url(<%= asset_path('textures/pink.png') %>) repeat;
@@ -908,6 +914,7 @@ a {
 		color: @cream;
 
 	}
+
 	a {
 		text-transform: uppercase;
 		display: inline-block;
@@ -2201,7 +2208,7 @@ a {
 }
 
 #office_photos.shop_photos {
-	height: 305px;
+	height: 450px;
 	position: relative;
 	background: #130f1e;
 	width: 100%;
