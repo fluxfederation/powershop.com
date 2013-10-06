@@ -1,4 +1,5 @@
 do ($ = jQuery, window) ->
+
   #
   # Operations to help with Vector manipulation which we use for bézier curves.
   #
@@ -335,22 +336,19 @@ do ($ = jQuery, window) ->
 
       scrollHandlers.push animationForProduct = (scrollY, winHeight, winWidth)->
         # So product animation is 3 screens. Center one says fixed, the outside
-        # two come in. The animation goes from off the screen to under the 
-        # center in the process of scrolling from the top, till the bottom of
-        # the section is visible
-        bottomIsVisibleAt = product.offset().top + product.outerHeight();
-        currentBottom = winHeight + scrollY
+        # two come in. The animation goes from a scroll position of 0 till a
+        # scroll position of the offset of the bottom
+        maxScroll = $(".product_images").offset().top - 200;
 
-        # maxDiff
-        targetScroll = (bottomIsVisibleAt + 100) - winHeight
-
-        r = scrollY / targetScroll
+        r = scrollY / maxScroll
 
         if r > 1
           r = 1
 
-        left.css 'marginLeft', -500 - ((1 - r) * (winWidth + left.outerWidth()))
-        right.css 'marginLeft', 100 + ((1 - r) * (winWidth + right.outerWidth()))
+        r = $.easing.easeOutQuint(undefined, r, 0, 1, 1);
+
+        left.css 'marginLeft', -500 - ((1 - r) * ((winWidth / 2) + left.outerWidth()))
+        right.css 'marginLeft', 100 + ((1 - r) * (winWidth / 2))
 
 
     designs = $("#design_thinking")
@@ -1170,6 +1168,150 @@ do ($ = jQuery, window) ->
         growth.css
           'bottom': -268 + (percentage * 268)
 
+    #
+    # On the products page, as the user scrolls down open up the laptop display
+    #
+    laptop = $("#shop .laptop-top")
+
+    if laptop.length > 0
+      powerpacks = $(".animate-line")
+      packs = $("li", powerpacks)
+
+      scrollHandlers.push animateProductsPage = (scrollY, winHeight, winWidth)->
+        shopSection = laptop.parents("#shop")
+        minScroll =  shopSection.offset().top - 200
+        maxScroll = minScroll + 200
+
+        percentage = ((scrollY - minScroll) / (maxScroll - minScroll))
+        percentage = 0 unless percentage > 0
+        percentage = 1 unless percentage <= 1
+        amount = (-35 + (35 * percentage))
+        amount += 'deg)'
+
+        laptop.css
+          'transform': 'rotateX('+ amount
+
+        # when the user hits the packs section and they haven't cycled through
+        # yet.
+        packMinScroll = powerpacks.offset().top - winHeight
+
+        if packMinScroll < scrollY and not powerpacks.hasClass('animated')
+          powerpacks.addClass('animated')
+
+          # for each of the powerpacks, start the value at a random value that
+          # is either negative or positive and set a timer so that they all
+          # rotate around
+          packs.each (i, elem)->
+            neg = if (i % 2) then 1 else -1
+            amount = Math.round(Math.random() * 500) + 1000 * neg
+            rotate = amount + 'deg)'
+
+            $(elem)
+              .data
+                'rotate': amount
+                'backwards': if neg > 0 then 'true' else 'false'
+              .css
+                'transform': 'rotateX('+ rotate
+
+          # Now that each has a position to start, set a timer to count it down
+          # to 0.
+          degreesPerMillisecond = 5
+
+          countPacks = setInterval( ()->
+            allFinished = true
+
+            packs.each (i, elem)->
+              current = $(elem).data('rotate')
+
+              if current == 0
+                return
+              else if current < 0
+                current = current + degreesPerMillisecond
+
+                if current > 0 then current = 0
+
+              else if current > 0
+                current = current - degreesPerMillisecond
+
+                if current < 0 then current = 0
+
+              if current != 0
+                allFinished = false
+
+              rotate = current + 'deg)'
+
+              $(elem)
+                .data
+                  'rotate': current
+                .css
+                  'transform': 'rotateX('+ rotate
+
+            if allFinished
+              clearInterval(countPacks)
+
+          , 1
+          )
+
+    # On the products page, animate the mail items out of the envelope once the
+    # user can see the envelope. Animate the first one out to -490 then begin
+    # the second mail item. The speed of the animation is determined by the
+    # amount of space to scroll. Animate starts when the top of the envelope is
+    # on the screen and finishes when the user scrolls past the top of the same
+    # mark.
+    envelope = $(".envelope")
+
+    if envelope.length > 0
+      open = $("#informed .open-envelope")
+      mailItem1 = $('.mail-month', envelope)
+      mailItem1Pos = mailItem1.data 'min-position'
+      mailItem2 = $('.mail-week', envelope)
+      mailItem2Pos = mailItem2.data 'min-position'
+
+      scrollHandlers.push animateMailItems = (scrollY, winHeight, winWidth)->
+        offsetPos = open.offset().top
+        startScroll = (open.offset().top - winHeight) - 300
+        r = ((scrollY - startScroll) / ((offsetPos - 300) - startScroll))
+        r = 0 unless r > 0
+        r = 1 unless r <= 1
+        r = $.easing.easeOutQuint(undefined, r, 0, 1, 1);
+
+        mailItem1.css(
+          bottom: (mailItem1Pos * r)
+        )
+
+        mailItem2.css(
+          bottom:  (mailItem2Pos * r)
+        )
+
+    #
+    # Finally on the products page, animates the payment methods section. The
+    # laptop stays fixed on the left hand side, the mobile methods ease in to
+    # the right hand side of the page.
+    #
+    paymentsAnimation = $('#payments')
+
+    if paymentsAnimation.length > 0
+      tablet = $('.payments-tablet', paymentsAnimation)
+      phone = $('.payments-phone', paymentsAnimation)
+      minTablet = tablet.data('min-position')
+      minPhone = phone.data('min-position')
+
+      scrollHandlers.push animateMailItems = (scrollY, winHeight, winWidth)->
+        stopScroll = $("body").height() - winHeight
+        startScroll = paymentsAnimation.offset().top
+
+        r = (scrollY - startScroll) / (stopScroll - startScroll)
+        r = 0 unless r > 0
+        r = 1 unless r <= 1
+        r = $.easing.easeOutQuint(undefined, r, 0, 1, 1);
+
+        tablet.css(
+          marginLeft: ((winWidth / 2) - (r * (winWidth / 2))) + minTablet + (minTablet * (2 - (r * 2)))
+        )
+
+        phone.css(
+          marginLeft: ((winWidth / 2) - (r * (winWidth / 2))) + minPhone + (minPhone * (2 - (r * 2)))
+        )
 
     #
     # If the device supports animation then render the frame.

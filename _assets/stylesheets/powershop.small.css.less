@@ -5,6 +5,14 @@
 @import "css3.less";
 
 @media screen and (max-width: 580px) {
+	.hidden-phone {
+		display: none !important;
+	}
+
+	.hidden-desktop {
+		display: block !important;
+	}
+
 	.grid-3,
 	.grid-4,
 	.grid-5,
@@ -19,9 +27,15 @@
 	.wrapper {
 		width: 90%;
 	}
+
 	.yell {
 		font-size: 60px;
 		line-height: 55px;
+	}
+
+	p.intro {
+		font-size: 18px;
+		line-height: 25px;
 	}
 
 	.grid-55 {
@@ -240,4 +254,67 @@
 			display: none;
 		}
 	}
+
+	.airshed {
+		clear: both;
+	}
+
+	#powerpacks li {
+		min-width: 0;
+		width: auto;
+		margin: 0 15%;
+	}
+	#powerpacks .animate-line {
+		width: 265px;
+	}
+
+	#powerpacks .animate-line li {
+		margin-bottom: 15px;
+
+		&.future-pack {
+			margin-right: 0;
+		}
+	}
+
+	#informed dl {
+		margin: 0;
+		padding: 0;
+	}
+
+	#informed dt {
+		width: auto;
+		float: none;
+		padding-top: 10px;
+	}
+
+	#informed dd {
+		padding-left: 0;
+		padding-top: 10px;
+		top: 0;
+	}
+
+	#informed .wrapper {
+		padding-bottom: 80px;
+	}
+	.login-form {
+		display: none;
+	}
+
+	.envelope {
+		display: none;
+	}
+
+	#payments .payments-laptop {
+		left: 10%;
+	}
+
+	#payments .payments-tablet {
+		left: -4%;
+	}
+
+	#payments .payments-phone {
+		left: -25%;
+	}
+
+
 }
