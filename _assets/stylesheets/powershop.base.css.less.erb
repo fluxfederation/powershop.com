@@ -15,6 +15,10 @@
 	display: none;
 }
 
+.crop {
+	overflow: hidden;
+}
+
 .down_arrow(@color) {
 	content: " ";
 	position: absolute;
@@ -198,13 +202,14 @@ a {
 	top: 0;
 	height: 80px;
 	z-index: 200;
-	background: -moz-linear-gradient(top, rgba(0,0,0,0.2) 0%, rgba(125,185,232,0) 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.2)), color-stop(100%,rgba(125,185,232,0))); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, rgba(0,0,0,0.2) 0%,rgba(125,185,232,0) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, rgba(0,0,0,0.2) 0%,rgba(125,185,232,0) 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, rgba(0,0,0,0.2) 0%,rgba(125,185,232,0) 100%); /* IE10+ */
-	background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%,rgba(125,185,232,0) 100%); /* W3C */
-
+	/*
+	background: -moz-linear-gradient(top, rgba(0,0,0,0.2) 0%, rgba(125,185,232,0) 100%); 
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.2)), color-stop(100%,rgba(125,185,232,0))); 
+	background: -webkit-linear-gradient(top, rgba(0,0,0,0.2) 0%,rgba(125,185,232,0) 100%);
+	background: -o-linear-gradient(top, rgba(0,0,0,0.2) 0%,rgba(125,185,232,0) 100%);
+	background: -ms-linear-gradient(top, rgba(0,0,0,0.2) 0%,rgba(125,185,232,0) 100%);
+	background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%,rgba(125,185,232,0) 100%); 
+*/
 	.translate(0, 0);
 	.translate3d(0, 0, 0);
 	.transition(0.5s);
@@ -308,6 +313,8 @@ a {
 .navigation {
 	float: right;
 	margin: 17px 0 0 0;
+
+	.drop-shadow(0, 0, 20px);
 }
 
 #nav {
@@ -890,20 +897,22 @@ a {
 #visit_shop {
 	background: @purplePink url(<%= asset_path('textures/pink.png') %>) repeat;
 
+	.yell { 
+		line-height: 140px; text-align: left; font-size: 100px; 
 	}
-	.yell { line-height: 140px; text-align: left; font-size: 100px; }
 
 	.shop-link {
 		position: relative;
 		top: -28px;
 	}
+}
 
 #shop {
 	background: @purplePink url(<%= asset_path('textures/pink.png') %>) repeat;
 	position: relative;
 
 	.wrapper {
-		overflow: hidden;
+		overflow: visible;
 		padding-bottom: 25px;
 		position: relative;
 	}
@@ -1297,13 +1306,11 @@ a {
 	h3 {
 		text-align: center;
 		width: 100%;
-		max-width: 420px;
+		max-width: 360px;
 		margin: 0 auto 35px;
-		padding-bottom: 35px;
+		padding-bottom: 15px;
 		color: #fff;
 		position: relative;
-
-		.hr(#fff);
 
 		&:after {
 			left: 50%;
@@ -1321,9 +1328,21 @@ a {
 	}
 
 	.product_images {
-		padding-top: 125px;
+		padding-top: 145px;
 		position: relative;
 		height: 305px;
+
+		&:before {
+			content: ' ';
+			display: block;
+			width: 45px;
+			height: 114px;
+			background: url(<%= asset_path('arrow_down_long.png') %>) no-repeat top center;
+			position: absolute;
+			top: 10px;
+			left: 50%;
+			margin-left: 11%;
+		}
 
 		img {
 			position: absolute;
@@ -1361,11 +1380,10 @@ a {
 	.wrapper {
 		padding: 120px 0 120px;
 		position: relative;
-		overflow: hidden;
 	}
 
-	p {
-		.hr(#fff);
+	.intro {
+		margin-top: 80px;
 	}
 
 	ul {
@@ -1376,13 +1394,14 @@ a {
 	li {
 		color: #fff;
 		line-height: 20px;
-		padding-bottom: 5px;
+		padding-bottom: 15px;
+		font-size: 16px;
 	}
 
 	.laptop {
 		position: absolute;
-		bottom: -80px;
-		left: 500px;
+		bottom: 0;
+		left: 520px;
 		width: 658px;
 		height: 400px;
 	}
@@ -1599,7 +1618,6 @@ a {
 	.wrapper {
 		padding: 120px 0 220px;
 		position: relative;
-		overflow: hidden;
 	}
 
 	.yell {
@@ -1708,7 +1726,8 @@ a {
 
 	li {
 		line-height: 20px;
-		padding-bottom: 5px;
+		padding-bottom: 15px;
+		font-size: 16px;
 	}
 
 	&:after {
@@ -2576,6 +2595,7 @@ a {
  */
 #shit_hot {
 	background: @purplePink;
+	color: #fff;
 
 	&:after {
 		.down_arrow(@purplePink);
@@ -2611,6 +2631,7 @@ a {
 
 #culture {
 	background: @blueGray url(<%= asset_path('textures/blue_gray.png') %>) repeat;
+	color: #f8e5e4;
 
 	&:after {
 		.down_arrow(@blueGray);
@@ -2774,6 +2795,7 @@ a {
 }
 
 #current_roles {
+	color: #fff;
 	background: @purplePink url(<%= asset_path('textures/pink.png') %>) 0 -50px;
 	padding: 70px 0 200px;
 

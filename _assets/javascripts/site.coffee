@@ -1,5 +1,10 @@
 do ($ = jQuery, window) ->
 
+  # 
+  # Grid alignment helper
+  #
+  $(this).griddit({vertical: 5});
+
   #
   # Operations to help with Vector manipulation which we use for bézier curves.
   #
@@ -1185,7 +1190,7 @@ do ($ = jQuery, window) ->
         percentage = ((scrollY - minScroll) / (maxScroll - minScroll))
         percentage = 0 unless percentage > 0
         percentage = 1 unless percentage <= 1
-        amount = (-35 + (35 * percentage))
+        amount = (-45 + (45 * percentage))
         amount += 'deg)'
 
         laptop.css
@@ -1202,7 +1207,7 @@ do ($ = jQuery, window) ->
           # is either negative or positive and set a timer so that they all
           # rotate around
           packs.each (i, elem)->
-            neg = if (i % 2) then 1 else -1
+            neg = if (i % 2) then 2 else -2
             amount = Math.round(Math.random() * 500) + 1000 * neg
             rotate = amount + 'deg)'
 
