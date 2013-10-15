@@ -903,7 +903,7 @@ a {
 
 	.shop-link {
 		position: relative;
-		top: -28px;
+		top: 28px;
 	}
 }
 
@@ -2910,7 +2910,8 @@ a {
 	}
 }
 
-#terms {
+
+#terms, #privacy {
 	background: @blueGray url(<%= asset_path('textures/blue_gray.png') %>) repeat;
 	
 	.wrapper {
@@ -2918,11 +2919,11 @@ a {
 	}
 
 	h2 {
-		padding: 120px 0 20px;
+		padding: 60px 0 20px;
 		color: #fff;
 	}
 
-	p {
+	p, li {
 		color: #fff;
 		max-width: 520px;
 	}
@@ -2933,11 +2934,14 @@ a {
 		padding-bottom: 60px;
 		margin-bottom: 0px;
 	}
+
+
 }
+
 
 #footer {
 	padding: 30px 0;
-
+	.left { margin-right: 15px; }
 	a {
 		color: #fff;
 
@@ -2948,7 +2952,7 @@ a {
 	}
 }
 
-.terms #footer {
+.terms #footer, .privacy #footer {
 	background: @blueGray url(<%= asset_path('textures/blue_gray.png') %>) repeat;
 }
 
