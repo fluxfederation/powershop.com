@@ -376,18 +376,10 @@ do ($ = jQuery, window) ->
         # animate the design thinking banner. Each element comes in on a 
         # different path and the distance along that path is determined by the
         # ratio of the users scrolling (much like the other pages)
-        targetTop = designs.offset().top
+        targetScroll = designs.offset().top
 
-        if targetTop > winHeight 
-          ignoredScroll = Math.abs(targetTop - winHeight)
-          targetScroll = targetTop - ignoredScroll
-
-          p = (scrollY - ignoredScroll) / targetScroll;
-          if p > 1 then p = 1;
-
-        else 
-          p = 1
-
+        p = (scrollY) / targetScroll;
+        if p > 1 then p = 1;
         
 
         $(".icons li", designs).each (i, elem)->
