@@ -33,7 +33,7 @@
 		line-height: 55px;
 	}
 
-	p.intro {
+	p.intro , #shop p.larger, #shop p {
 		font-size: 18px;
 		line-height: 25px;
 	}
@@ -45,10 +45,14 @@
 		display: block;
 	}
 
-	#give h2 {
-		width: 100%;
-		text-align: left;
+	#give, #weird, #make_things {
+		h2 {
+			margin-bottom: 20px;
+		}
+		.wrapper { padding: 40px 0; }
 	}
+
+	#weird .hat_bar { display: none; }
 
 	#ill3,
 	#ill2,
@@ -110,7 +114,8 @@
 		.welcome a,
 		.shit_hot a,
 		.contact a,
-		.kiss_ass a {
+		.kiss_ass a,
+		.shop a {
 			display: block;
 		}
 	}
@@ -227,6 +232,23 @@
 		background-size: 100%;
 	}
 
+	/* about page */
+	#kiss_ass, #our_history , #quote, #our_people, #customers_love, #design_thinking
+	{
+		.wrapper { padding: 80px 0 60px; }
+	}
+
+	#our_people  { 
+		padding: 0;
+		h2 { text-align: left; }
+
+	}
+
+	#kiss_ass {
+		p { width: auto; padding-right: 0; float: none; }
+		h2 { padding-bottom: 0; }
+		h2:after { display: none; }
+	}
 
 	/* culture page */
 	#current_roles {
@@ -316,5 +338,33 @@
 		left: -25%;
 	}
 
+	#shop .wrapper, #visit_shop .wrapper {
+		padding-bottom: 20px;
+	}
+	#shop .wrapper { padding-top: 120px; }
+	#visit_shop {
+
+		.yell { 
+			line-height: 40px; 
+			text-align: center; 
+			font-size: 47px; 
+			margin-top: 22px;
+			margin-bottom: 22px;
+		}
+
+		.shop-link {
+			display: none;
+		}
+	}
+
+	#terms h2, #privacy h2 {
+		padding-top: 40px;
+	}
+	#footer {
+		.left {
+			float: none;
+			margin-bottom: 5px;
+		}
+	}
 
 }
