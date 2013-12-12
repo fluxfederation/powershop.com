@@ -665,7 +665,7 @@ do ($ = jQuery, window) ->
 
 
         peoplePopup.animate(
-          height: if ($(window).width() > 580) then 920 else details.height() + 360,
+          height: if ($(window).width() > 580) then 780 else details.height() + 360,
           ()->
             # load the background image 
             #peoplePopupBackground.css(
