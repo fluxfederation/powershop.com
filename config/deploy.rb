@@ -8,10 +8,21 @@ set :build_script, 'bundle exec jekyll build'
 
 namespace :deploy do
   before 'deploy', 'require_tag'
+  before  "deploy:finalize_update", "deploy:make_tag"
 
   %i[ start stop restart finalize_update ].each do |t|
     desc "#{t} is a no-op with Jekyll"
     task(t, roles: :web) {}
+  end
+
+  desc "Make a TAG file showing which git tag has been released"
+  task :make_tag do
+    run "umask 02 && echo '#{branch}' > #{release_path}/TAG"
+  end
+
+  desc "Show the current TAG"
+  task :current_tag do
+    run "cat #{current_path}/TAG"
   end
 end
 
