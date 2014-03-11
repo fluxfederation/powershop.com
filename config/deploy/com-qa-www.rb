@@ -3,4 +3,4 @@ set :repository,  'git@git.powershop.co.nz:web/powershop-com.git'
 set :gateway,     'wssl.powershop.co.nz'
 set :deploy_to,   "/apps/#{application}"
 
-role :web, 'wssl1', 'wssl2'
+role :web, 'com-gateway-wlg1', 'com-gateway-wlg2'

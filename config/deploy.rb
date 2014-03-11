@@ -19,13 +19,15 @@ namespace :deploy do
   task :make_tag do
     run "umask 02 && echo '#{branch}' > #{release_path}/TAG"
   end
-
-  desc "Show the current TAG"
-  task :current_tag do
-    run "cat #{current_path}/TAG"
-  end
 end
 
 task :require_tag do
   set :branch, ENV['tag'] || raise("Specify the tag to deploy using the tag variable: `cap tag=nn.nn #{application} deploy`")
+end
+
+namespace :app do
+  desc "Show the current TAG"
+  task :show_tag do
+    run "cat #{current_path}/TAG"
+  end
 end
