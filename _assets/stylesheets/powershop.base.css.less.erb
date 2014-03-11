@@ -2879,28 +2879,37 @@ a {
 .roles {
 
 	li {
-		overflow: hidden;
 		position: relative;
-		padding-top: 80px;
-		margin-bottom: 80px;
+		padding-top: 40px;
+		margin-bottom: 20px;
 
-		&:before {
-			height: 1px;
-			background: #EEEEEE;
-			background: rgba(255, 255, 255, 0.8);
-			width: 50px;
-			content: " ";
-			position: absolute;
-			top: 0;
-			left: 0;
+		ul li {
+			list-style-type: circle;
+			margin-bottom: 20px;
+			padding-top: 0;
 		}
 	}
 
 	.first:before {
 		display: none;
 	}
+
+	.doge {
+		margin-top: 20px;
+		img { max-width: 270px; margin-right: 20px; float: left; }
+	}
 }
 
+.roles > ul li:before {
+	height: 1px;
+	background: #EEEEEE;
+	background: rgba(255, 255, 255, 0.8);
+	width: 50px;
+	content: " ";
+	position: absolute;
+	top: 0;
+	left: 0;
+}
 
 #terms, #privacy {
 	background: @blueGray url(<%= asset_path('textures/blue_gray.png') %>) repeat;
