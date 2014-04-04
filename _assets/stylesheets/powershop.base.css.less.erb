@@ -3,12 +3,12 @@
 @import "vars.less";
 @import "css3.less";
 
-/* 
- * -------------------------------------------------------- 
- * Core styles 
+/*
+ * --------------------------------------------------------
+ * Core styles
  *
- * Vertical Rhythm: 5px 
- * -------------------------------------------------------- 
+ * Vertical Rhythm: 5px
+ * --------------------------------------------------------
  */
 
 .hidden-desktop {
@@ -73,10 +73,10 @@ body {
 	font-family: "omnes-pro", Helvetica Neue, sans-serif;
 }
 
-/* 
- * -------------------------------------------------------- 
+/*
+ * --------------------------------------------------------
  * Layout
- * -------------------------------------------------------- 
+ * --------------------------------------------------------
  */
 .wrapper {
 	max-width: 1100px;
@@ -126,10 +126,10 @@ section {
 	float: left;
 }
 
-/* 
- * -------------------------------------------------------- 
- * Typography styles 
- * -------------------------------------------------------- 
+/*
+ * --------------------------------------------------------
+ * Typography styles
+ * --------------------------------------------------------
  */
 h1, h2, h3 {
 	margin-top: 0;
@@ -190,10 +190,10 @@ a {
 	}
 }
 
-/* 
- * -------------------------------------------------------- 
+/*
+ * --------------------------------------------------------
  * Header and main nav
- * -------------------------------------------------------- 
+ * --------------------------------------------------------
  */
 #header {
 	width: 100%;
@@ -203,12 +203,12 @@ a {
 	height: 80px;
 	z-index: 200;
 	/*
-	background: -moz-linear-gradient(top, rgba(0,0,0,0.2) 0%, rgba(125,185,232,0) 100%); 
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.2)), color-stop(100%,rgba(125,185,232,0))); 
+	background: -moz-linear-gradient(top, rgba(0,0,0,0.2) 0%, rgba(125,185,232,0) 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.2)), color-stop(100%,rgba(125,185,232,0)));
 	background: -webkit-linear-gradient(top, rgba(0,0,0,0.2) 0%,rgba(125,185,232,0) 100%);
 	background: -o-linear-gradient(top, rgba(0,0,0,0.2) 0%,rgba(125,185,232,0) 100%);
 	background: -ms-linear-gradient(top, rgba(0,0,0,0.2) 0%,rgba(125,185,232,0) 100%);
-	background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%,rgba(125,185,232,0) 100%); 
+	background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%,rgba(125,185,232,0) 100%);
 */
 	.translate(0, 0);
 	.translate3d(0, 0, 0);
@@ -464,7 +464,7 @@ a {
 	.page-home {
 		background: url(<%= asset_path('nav_pics/home.jpg') %>) no-repeat;
 		background-size: 100% 100%;
-		
+
 		.dummy-pad { margin-top: 325.22%; }
 
 		.welcome { padding-top: 92%; }
@@ -519,16 +519,16 @@ a {
 			margin-top: 119.02%;
 		}
 
-		.contact { 
-			padding-top: 119.5%; 
+		.contact {
+			padding-top: 119.5%;
 		}
 	}
 }
 
-/* 
- * -------------------------------------------------------- 
+/*
+ * --------------------------------------------------------
  * Side nav
- * -------------------------------------------------------- 
+ * --------------------------------------------------------
  */
 #jumper {
 	position: fixed;
@@ -585,7 +585,7 @@ a {
 	display: none;
 }
 
-.parallax {	
+.parallax {
 	top: 0;
 	width: 100%;
 	left: 0;
@@ -790,7 +790,7 @@ a {
 
 	span {
 		position: relative;
-		
+
 		&:after {
 			content: " ";
 			display: block;
@@ -800,7 +800,7 @@ a {
 			right: -25px;
 			width: 13px;
 			background: url(<%= asset_path('sprite.png') %>) -92px -63px no-repeat;
-		}	
+		}
 	}
 
 
@@ -847,7 +847,7 @@ a {
 	}
 
 	h2 {
-		width: 36.3636%;	
+		width: 36.3636%;
 		margin-bottom: 180px;
 		text-align: right;
 		float: right;
@@ -895,8 +895,8 @@ a {
 #visit_shop {
 	background: @purplePink url(<%= asset_path('textures/pink.png') %>) repeat;
 
-	.yell { 
-		line-height: 140px; text-align: left; font-size: 100px; 
+	.yell {
+		line-height: 140px; text-align: left; font-size: 100px;
 	}
 
 	.shop-link {
@@ -1163,7 +1163,7 @@ a {
 		display: block;
 		font-size: 18px;
 		line-height: 25px;
-		
+
 		div {
 			display: block;
 		}
@@ -1187,7 +1187,7 @@ a {
 }
 
 #map_wellington,
-#map_auckland { 
+#map_auckland {
 	h3,
 	.vcard {
 		background: #BC216B;
@@ -1195,7 +1195,7 @@ a {
 	}
 }
 
-#map_melbourne { 
+#map_melbourne {
 	h3,
 	.vcard {
 		background: @hotPink;
@@ -1204,7 +1204,7 @@ a {
 }
 
 
-#map_masterton { 
+#map_masterton {
 	h3,
 	.vcard {
 		background: @burg;
@@ -1220,10 +1220,10 @@ a {
 	width: 100%;
 }
 
-/* 
- * -------------------------------------------------------- 
+/*
+ * --------------------------------------------------------
  * About Page
- * -------------------------------------------------------- 
+ * --------------------------------------------------------
  */
 
 #kiss_ass {
@@ -1946,7 +1946,7 @@ a {
 		-moz-animation: marqueeLeft 100s linear infinite;
 		animation: marqueeLeft 100s linear infinite;
 	}
-   	
+
    	.alt {
    		height: 62px;
    		background: url(<%= asset_path('specials_02.jpg') %>) repeat-x;
@@ -1969,7 +1969,7 @@ a {
 #our_history {
 	background: @burg;
 	color: @cream;
-	
+
 	h2 {
 		margin-bottom: 55px;
 	}
@@ -2002,7 +2002,7 @@ a {
 	background: @hotPink;
 	padding: 0;
 	overflow: hidden;
-	
+
 	&:before {
 		.up_arrow(@hotPink);
 	}
@@ -2340,7 +2340,7 @@ a {
 		text-align: right;
 		margin-top: -30px;
 		margin-right: 10px;
-		
+
 		-webkit-transform: rotate(-90deg);
 		-moz-transform: rotate(-90deg);
 		-ms-transform: rotate(-90deg);
@@ -2351,7 +2351,7 @@ a {
 		-ms-transform-origin: 100% 100%;
 		transform-origin: 100% 100%%;
 	}
-	
+
 	ul {
 		.clearfix();
 	}
@@ -2579,10 +2579,10 @@ a {
 	}
 }
 
-/* 
- * -------------------------------------------------------- 
+/*
+ * --------------------------------------------------------
  * Culture Page
- * -------------------------------------------------------- 
+ * --------------------------------------------------------
  */
 #shit_hot {
 	background: @purplePink;
@@ -2627,7 +2627,7 @@ a {
 	&:after {
 		.down_arrow(@blueGray);
 	}
-	
+
 	h2 {
 		margin: 0;
 	}
@@ -2636,11 +2636,6 @@ a {
 		padding: 90px 0 100px;
 	}
 
-	p {
-		width: 350px;
-		padding-right: 50px;
-		float: left;
-	}
 }
 
 #office_photos {
@@ -2913,7 +2908,7 @@ a {
 
 #terms, #privacy {
 	background: @blueGray url(<%= asset_path('textures/blue_gray.png') %>) repeat;
-	
+
 	.wrapper {
 		padding-bottom: 60px;
 	}
@@ -2986,10 +2981,10 @@ a {
 		}
 	}
 }
-/* 
- * -------------------------------------------------------- 
+/*
+ * --------------------------------------------------------
  * Utilities
- * -------------------------------------------------------- 
+ * --------------------------------------------------------
  */
 .accessibility {
 	position: absolute;
@@ -3020,7 +3015,7 @@ p.larger {
 /*
  * ----------------------------------------------------------
  * Parallax
- * ---------------------------------------------------------- 
+ * ----------------------------------------------------------
  */
  .parallax-block {
   position: fixed;
@@ -3160,21 +3155,21 @@ p.larger {
 .scoop_6 { background-position: -352px -650px; top: 85px; left: 245px; z-index: 20; height: 124px; width: 142px; }
 .scoop_6_shadow { left: 250px; top: 85px; z-index: 3; }
 
-.cherry { 
-	height: 89px; 
-	width: 91px; 
-	background-position: 0 -88px; 
-	top: 30px; left: 290px; z-index: 40; 
+.cherry {
+	height: 89px;
+	width: 91px;
+	background-position: 0 -88px;
+	top: 30px; left: 290px; z-index: 40;
 
 	.rotate(0);
 	.transform-origin(100%, 0%);
 }
 
-.cherry_shadow { 
-	height: 88px; 
-	width: 90px; 
-	background-position: 0 0; 
-	top: 30px; left: 294px; 
+.cherry_shadow {
+	height: 88px;
+	width: 90px;
+	background-position: 0 0;
+	top: 30px; left: 294px;
 	z-index: 19;
 
 	.transform-origin(100%, 0%);
