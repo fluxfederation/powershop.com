@@ -798,7 +798,10 @@ do ($ = jQuery, window) ->
               percentage = 1 unless percentage < 1
               
               pos = "0% "+ parseInt(((-1 * dy) * (1 - percentage)))
-              $(elem).css('background-position', pos + "px")
+              if $(document).width() < 610
+                $(elem).css('background-position', pos)
+              else
+                $(elem).css('background-position', pos + "px")
             else   
               pos = "0% " + (scrollY * 0.5) + "px"
               $(elem).css('background-position', pos)
