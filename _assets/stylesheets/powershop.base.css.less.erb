@@ -47,6 +47,20 @@
 	border-bottom: 14px solid @color;
 }
 
+.down_top_arrow(@color) {
+	content: " ";
+	position: absolute;
+	height: 0;
+	width: 0;
+	top: 0;
+	z-index: 2;
+	margin-left: -14px;
+	left: 50%;
+	border-left: 14px solid transparent;
+	border-right: 14px solid transparent;
+	border-top: 14px solid @color;
+}
+
 .hr(@color) {
 	position: relative;
 	padding-bottom: 29px;
@@ -696,7 +710,7 @@ a {
 		text-align: center;
 		font-size: 25px;
 		line-height: 35px;
-		max-width: 640px;
+		max-width: 690px;
 		margin: 0 auto 45px;
 		color: @cream;
 	}
@@ -875,6 +889,10 @@ a {
 	.wrapper {
 		padding: 175px 0 120px 0;
 		position: relative;
+
+		&:before {
+			.down_top_arrow(#ececec);
+		}
 	}
 
 	h2 {
@@ -902,6 +920,47 @@ a {
 	.shop-link {
 		position: relative;
 		top: 28px;
+	}
+}
+
+#our_shop {
+	background: #ececec;
+
+	&:before {
+		.down_top_arrow(@purplePink);
+	}
+
+	.wrapper {
+		padding: 120px 0 80px;
+
+		.clearfix();
+	}
+
+	h2 {
+		text-align: center;
+	}
+
+	.intro {
+		text-align: center;
+	}
+
+	.inner {
+		max-width: 440px;
+		margin: 40px auto 0;
+
+		img {
+			margin-bottom: 30px;
+		}
+	}
+		
+	.left-side {
+		width: 50%;
+		float: left;
+	}
+
+	.right-side {
+		width: 50%;
+		float: right;
 	}
 }
 
@@ -998,7 +1057,7 @@ a {
 		float: left;
 	}
 
-	a {
+	.circle {
 		color: #662144;
 		display: inline-block;
 		text-decoration: none;
@@ -1007,7 +1066,12 @@ a {
 		font-weight: 300;
 		text-align: center;
 		line-height: 20px;
+		margin-bottom: 40px;
+		vertical-align: top
+	}
 
+	a {
+		margin-bottom: 4px;
 		&:hover,
 		&:focus {
 			opacity: 0.8;
@@ -1017,10 +1081,6 @@ a {
 	em {
 		border-bottom: 1px solid #D3C0C8;
 		font-style: normal;
-	}
-
-	.social {
-		margin-bottom: 120px;
 	}
 
 	.icon {
@@ -1067,7 +1127,8 @@ a {
 	}
 }
 
-.contact #contact {
+.contact #contact,
+.home #contact {
 	background: @blueGray url(<%= asset_path('textures/blue_gray.png') %>) repeat;
 
 	a {
@@ -1076,6 +1137,7 @@ a {
 
 	em {
 		border-color: #595E62;
+		line-height: 1.8em;
 	}
 
 	.wrapper {
@@ -1256,6 +1318,10 @@ a {
 
 	&:after {
 		.down_arrow(@burg);
+	}
+
+	&:before {
+		.down_top_arrow(#ececec);
 	}
 }
 
@@ -2145,7 +2211,7 @@ a {
 
 #our_people {
 	background: @purplePink url(<%= asset_path('textures/pink.png') %>) repeat;
-	padding: 120px 0 120px 0;
+	padding: 120px 0 0 0;
 
 	h2 {
 		text-align: center;
@@ -2369,6 +2435,26 @@ a {
 			line-height: 0
 		}
 
+		.mail {
+			position: absolute;
+			bottom: 10px;
+			left: 10px;
+			display: block;
+			line-height: 1.2;
+			text-shadow: 0 0 2px #000;
+			z-index: 10;
+			text-overflow: ellipsis;
+    		-webkit-line-clamp: 1;
+    		max-width: 90%;
+    		overflow: hidden;
+
+			&:hover,
+			&:focus {
+				opacity: 1;
+				color: #fff;
+			}
+		}
+
 		&:nth-child(5) {
 			clear: both;
 		}
@@ -2470,6 +2556,14 @@ a {
 		.transition(opacity 0.4s ease-in-out);
 	}
 
+	a {
+		color: #fff;
+		padding-top: 5px;
+		&:hover,
+		&:focus {
+			opacity: 0.8;
+		}
+	}
 
 	.reveal_content {
 		h4, h5, p {
@@ -2952,7 +3046,7 @@ a {
 }
 
 .home #footer {
-	background: @hotPink url(<%= asset_path('textures/hot_pink.png') %>) repeat;
+	background: @blueGray url(<%= asset_path('textures/blue_gray.png') %>) repeat;
 }
 
 .about #footer {
@@ -2960,7 +3054,7 @@ a {
 }
 
 .culture #footer , .shop #footer {
-	background: @purplePink url(<%= asset_path('textures/pink.png') %>) repeat;
+	background: @blueGray url(<%= asset_path('textures/blue_gray.png') %>) repeat;
 }
 
 .contact #footer, {
@@ -3064,6 +3158,9 @@ p.larger {
 	position: absolute;
 	top: 50px;
 	left: 530px;
+	
+	-webkit-transition: translate3d(0,0,0);
+	-webkit-backface-visibility: hidden;
 
 	.transform-origin(50%, -30%);
 	.rotate(0deg);

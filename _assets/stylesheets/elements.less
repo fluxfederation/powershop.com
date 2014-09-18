@@ -84,12 +84,6 @@
   -ms-filter: ~"progid:DXImageTransform.Microsoft.Alpha(opacity=@{opperc})";
   filter: ~"alpha(opacity=@{opperc})";
 }
-.transition-duration(@duration: 0.2s) {
-  -moz-transition-duration: @duration;
-  -webkit-transition-duration: @duration;
-  -o-transition-duration: @duration;
-  transition-duration: @duration;
-}
 .transform(...) {
   -webkit-transform: @arguments;
   -moz-transform: @arguments;
@@ -103,12 +97,36 @@
 .scale(@ratio:1.5){
   .transform(scale(@ratio));
 }
-.transition(@duration:0.2s, @ease:ease-out) {
-  -webkit-transition: all @duration @ease;
-  -moz-transition: all @duration @ease;
-  -o-transition: all @duration @ease;
-  transition: all @duration @ease;
+
+
+.transition(@transition) {
+  -webkit-transition: @transition;
+       -o-transition: @transition;
+          transition: @transition;
 }
+.transition-property(@transition-property) {
+  -webkit-transition-property: @transition-property;
+          transition-property: @transition-property;
+}
+.transition-delay(@transition-delay) {
+  -webkit-transition-delay: @transition-delay;
+          transition-delay: @transition-delay;
+}
+.transition-duration(@transition-duration) {
+  -webkit-transition-duration: @transition-duration;
+          transition-duration: @transition-duration;
+}
+.transition-timing-function(@timing-function) {
+  -webkit-transition-timing-function: @timing-function;
+          transition-timing-function: @timing-function;
+}
+.transition-transform(@transition) {
+  -webkit-transition: -webkit-transform @transition;
+     -moz-transition: -moz-transform @transition;
+       -o-transition: -o-transform @transition;
+          transition: transform @transition;
+}
+
 .inner-shadow(@horizontal:0, @vertical:1px, @blur:2px, @alpha: 0.4) {
   -webkit-box-shadow: inset @horizontal @vertical @blur rgba(0, 0, 0, @alpha);
   -moz-box-shadow: inset @horizontal @vertical @blur rgba(0, 0, 0, @alpha);

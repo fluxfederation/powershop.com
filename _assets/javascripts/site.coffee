@@ -294,7 +294,6 @@ do ($ = jQuery, window) ->
     #
     # The icons on the roles section come in as the users scroll into the 
     # page.
-    ###
     roles = $("#current_roles")
 
     if roles.length > 0
@@ -328,7 +327,7 @@ do ($ = jQuery, window) ->
           faces.each (i, elem)->
             offset = i - median
             $(elem).css 'left', (offset + (offset * Math.PI)) * 86
-    ###
+    
     
     #
     # On the about page, animate in stuff
@@ -868,149 +867,149 @@ do ($ = jQuery, window) ->
     #
     # Home page animate parallaxed illustrations.
     # 
-    if onHomePage
-      ill1 = $("#ill1")
-      ill1_section = $("#make_things")
-      ill1_fire = $("#ill1_fire")
+    ill1 = $("#ill1")
+    ill1_section = $("#make_things")
+    ill1_fire = $("#ill1_fire")
 
-      ill2 = $("#ill2")
-      ill2_section = $("#give")
-      ill2_cone = $(".cone", ill2)
-      ill2_scoopes = $(".scoop", ill2)
+    ill2 = $("#ill2")
+    ill2_section = $("#give")
+    ill2_cone = $(".cone", ill2)
+    ill2_scoopes = $(".scoop", ill2)
 
-      ill3 = $("#ill3")
-      ill3_section = $("#weird")
-      ill3_hat = $(".bike_hat")
-      ill3_hatshadow = $(".bike_hat_shadow")
+    ill3 = $("#ill3")
+    ill3_section = $("#weird")
+    ill3_hat = $(".bike_hat")
+    ill3_hatshadow = $(".bike_hat_shadow")
 
-      showingIcecream = false
-      animationInProgress = false
+    showingIcecream = false
+    animationInProgress = false
 
-      #
-      # Code for showing an icecream on the page.
-      #
-      showIcecreamAnimation = ()->
-        # show each of icecream scoops
-        ill2_scoopes.each((i, elem)->
-          setTimeout( ()->
-            $(elem).animate(
-              'opacity': 1
-            )
-          , i * 100
+    #
+    # Code for showing an icecream on the page.
+    #
+    showIcecreamAnimation = ()->
+      # show each of icecream scoops
+      ill2_scoopes.each((i, elem)->
+        setTimeout( ()->
+          $(elem).animate(
+            'opacity': 1
           )
+        , i * 100
+        )
+      )
+
+      setTimeout( ()->
+        # add sauce to the icecream
+        $(".sauce", ill2).transition(
+          'y': '0',
+          'scale': 1,
+          'duration': 900
         )
 
         setTimeout( ()->
-          # add sauce to the icecream
-          $(".sauce", ill2).transition(
+          # add sprinkles 
+          $(".sprinkles", ill2).transition(
             'y': '0',
-            'scale': 1,
+            'scale': 1
+          )
+
+          # add the cherry
+          $(".cherry, .cherry_shadow", ill2).transition(
+            'rotate': '0deg',
+            'y': '0',
+            'duration': 1000
+          )
+
+        , 1100)
+      , 1800)
+
+    # 
+    # Code for hiding icecream on the page.
+    #
+    # Optionally takes a 'quick' parameter to indicate we shouldn't bother
+    # animating it in any particular way
+    #
+    hideIcecreamAnimation = (quick)->
+      if quick
+        # sprinkles
+        $(".sprinkles", ill2).css(
+          'y': '-400px',
+          'scale': 0.8
+        )
+
+        # remove the cherry
+        $(".cherry, .cherry_shadow", ill2).css(
+          'rotate': '30deg',
+          'y': '-200px'
+        )
+
+        # take the sauce off
+        $(".sauce", ill2).css(
+            'y': '-400px',
+            'scale': 0.5
+          )
+
+        # remove the scoops of icecream
+        ill2_scoopes.css('opacity', 0)
+
+      else
+        # take sprinkles off
+        $(".sprinkles", ill2).transition(
+          'y': '-400px',
+          'scale': 0.8
+        )
+
+        # remove the cherry
+        $(".cherry, .cherry_shadow", ill2).transition(
+          'rotate': '30deg',
+          'y': '-200px'
+        )
+
+        setTimeout(()->
+          # take sauce off from the top
+          $(".sauce", ill2).transition(
+            'y': '-400px',
+            'scale': 0.5,
             'duration': 900
           )
 
           setTimeout( ()->
-            # add sprinkles 
-            $(".sprinkles", ill2).transition(
-              'y': '0',
-              'scale': 1
+            # trigger other animations
+            ill2_scoopes.each((i, elem)->
+              setTimeout( ()->
+                $(elem).animate(
+                  'opacity': 0
+                )
+
+              , (ill2_scoopes - i) * 50)
             )
+          , 1100
+          )
+        , 400)
 
-            # add the cherry
-            $(".cherry, .cherry_shadow", ill2).transition(
-              'rotate': '0deg',
-              'y': '0',
-              'duration': 1000
-            )
+    #
+    # Trigger the hide operation on load. We call animate when the page is 
+    # loaded.
+    #
+    if supportsAnimation
+      hideIcecreamAnimation(true)
 
-          , 1100)
-        , 1800)
-
+    # 
+    # On scroll handle all the animation logic
+    #
+    scrollHandlers.push animatePage = (scrollY, winHeight, winWidth)->
+      #
+      # If we're at a size any smaller than the desktop view, just ignore this
+      # since the illustrations will be gone
       # 
-      # Code for hiding icecream on the page.
-      #
-      # Optionally takes a 'quick' parameter to indicate we shouldn't bother
-      # animating it in any particular way
-      #
-      hideIcecreamAnimation = (quick)->
-        if quick
-          # sprinkles
-          $(".sprinkles", ill2).css(
-            'y': '-400px',
-            'scale': 0.8
-          )
-
-          # remove the cherry
-          $(".cherry, .cherry_shadow", ill2).css(
-            'rotate': '30deg',
-            'y': '-200px'
-          )
-
-          # take the sauce off
-          $(".sauce", ill2).css(
-              'y': '-400px',
-              'scale': 0.5
-            )
-
-          # remove the scoops of icecream
-          ill2_scoopes.css('opacity', 0)
-
-        else
-          # take sprinkles off
-          $(".sprinkles", ill2).transition(
-            'y': '-400px',
-            'scale': 0.8
-          )
-
-          # remove the cherry
-          $(".cherry, .cherry_shadow", ill2).transition(
-            'rotate': '30deg',
-            'y': '-200px'
-          )
-
-          setTimeout(()->
-            # take sauce off from the top
-            $(".sauce", ill2).transition(
-              'y': '-400px',
-              'scale': 0.5,
-              'duration': 900
-            )
-
-            setTimeout( ()->
-              # trigger other animations
-              ill2_scoopes.each((i, elem)->
-                setTimeout( ()->
-                  $(elem).animate(
-                    'opacity': 0
-                  )
-
-                , (ill2_scoopes - i) * 50)
-              )
-            , 1100
-            )
-          , 400)
 
       #
-      # Trigger the hide operation on load. We call animate when the page is 
-      # loaded.
+      # Illustration 1. Make things. This guy comes up from the bottom left as
+      # the user scrolls on the page to sit at the final position of 20,520. The
+      # driver of this vehicle is a little drunk so as he comes across, he moves
+      # up and down. 
       #
-      if supportsAnimation
-        hideIcecreamAnimation(true)
-
-      # 
-      # On scroll handle all the animation logic
-      #
-      scrollHandlers.push animateHomePage = (scrollY, winHeight, winWidth)->
-        #
-        # If we're at a size any smaller than the desktop view, just ignore this
-        # since the illustrations will be gone
-        # 
-
-        #
-        # Illustration 1. Make things. This guy comes up from the bottom left as
-        # the user scrolls on the page to sit at the final position of 20,520. The
-        # driver of this vehicle is a little drunk so as he comes across, he moves
-        # up and down. 
-        #
+      if ill1.length > 0
         restingPlaceX = 530 
         restingPlaceY = 50
         amountOfScrollToFullAnimation = ill1_section.offset().top
@@ -1031,11 +1030,12 @@ do ($ = jQuery, window) ->
           'left': placeX
         )
 
-        #
-        # Illustration 2. Give a shit. The ice cream cone comes up from the 
-        # bottom of the users screen while the ice cream parts pop up as if 
-        # magic
-        #
+      #
+      # Illustration 2. Give a shit. The ice cream cone comes up from the 
+      # bottom of the users screen while the ice cream parts pop up as if 
+      # magic
+      #
+      if ill2.length > 0
         amountOfScrollForIcecreamToTrigger = ill2_section.offset().top;
 
         if scrollY >= (amountOfScrollForIcecreamToTrigger - 100)
@@ -1062,16 +1062,17 @@ do ($ = jQuery, window) ->
             ill2_cone.css('top' , 400 + ((amountOfScrollForIcecreamToTrigger - 100) - scrollY))
 
 
-        #
-        # Illustration 3. The man on the bike, the bike comes across the page,
-        # and sits on the right hand side. The position of the bike goes from
-        # 0 to 550 based on the users scroll. We start the migration when the
-        # section gets into focus and hits the end once the page has made the
-        # whole thing visible.
-        #
-        # When the bike is half way the hat starts to lift off and go away to
-        # the left, whew he's gaining pace
-        #
+      #
+      # Illustration 3. The man on the bike, the bike comes across the page,
+      # and sits on the right hand side. The position of the bike goes from
+      # 0 to 550 based on the users scroll. We start the migration when the
+      # section gets into focus and hits the end once the page has made the
+      # whole thing visible.
+      #
+      # When the bike is half way the hat starts to lift off and go away to
+      # the left, whew he's gaining pace
+      #
+      if ill3_section.length > 0
         startMoving = ill3_section.offset().top - winHeight
         stopMoving = startMoving + 500;
 
