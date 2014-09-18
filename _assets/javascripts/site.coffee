@@ -384,13 +384,13 @@ do ($ = jQuery, window) ->
         $(".icons li", designs).each (i, elem)->
           path = paths[i];
           position = path.css(p);
-
-          # opacity starts at 0.5 probability and scales up at twice the rate
-          if p < 0.6
+          
+          # opacity starts at 0.74
+          if p < 0.74
             o = 0
           else 
             # 0 - 2
-            o = (p - 0.6) * 5
+            o = (p - 0.74) * 5
 
           $(elem).css
             top: position.y

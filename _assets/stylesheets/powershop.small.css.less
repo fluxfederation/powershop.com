@@ -92,17 +92,15 @@
 
 	/* nav */
 	#nav li {
-		width: 226px;
+		width: 340px;
+		height: 77px;
 		float: none;
-		height: 69px;
 		margin: 0 auto;
 		padding: 0;
 		overflow: hidden;
 
 		a {
 			display: none;
-			height: 69px;
-			padding: 0;
 			border-top: none;
 
 			&:hover,
@@ -112,10 +110,8 @@
 		}
 
 		.welcome a,
-		.shit_hot a,
-		.contact a,
-		.kiss_ass a,
-		.shop a {
+		.current_roles a,
+		.contact a {
 			display: block;
 		}
 	}
@@ -236,24 +232,43 @@
 		background-size: 100%;
 	}
 
-	/* about page */
-	#kiss_ass, #our_history , #quote, #our_people, #customers_love, #design_thinking
-	{
-		.wrapper { padding: 80px 0 60px; }
+	#kick_ass, 
+	#our_history , 
+	#quote, 
+	#our_people, 
+	#customers_love, 
+	#design_thinking {
+		.wrapper { 
+			padding: 80px 0 60px; 
+		}
 	}
 
 	#our_people  { 
 		padding: 0;
-		h2 { text-align: left; }
 
+		h2 { 
+			text-align: left; 
+		}
 	}
 
-	#quote p { max-width: 100%; }
+	#quote p { 
+		max-width: 100%; 
+	}
 
-	#kiss_ass {
-		p { width: auto; padding-right: 0; float: none; }
-		h2 { padding-bottom: 0; }
-		h2:after { display: none; }
+	#kick_ass {
+		p { 
+			width: auto; 
+			padding-right: 0; 
+			float: none; 
+		}
+
+		h2 { 
+			padding-bottom: 0; 
+
+			&:after { 
+				display: none;
+			}
+		}
 	}
 
 	/* culture page */
@@ -380,6 +395,7 @@
 	#growth_arrow {
 		display: none;
 	}
+
 	#footer {
 		.left, .right {
 			float: none;
@@ -387,8 +403,8 @@
 		}
 	}
 
-	#our_shop .left-col,
-	#our_shop .right-col {
+	#our_shop .left-side,
+	#our_shop .right-side {
 		width: 100%;
 		float: none;
 	}
