@@ -1348,15 +1348,13 @@ do ($ = jQuery, window) ->
     $(".video .thumbnail a").click (e)->
       e.preventDefault()
       
+      $(this).parents('.thumbnail').hide();
+
       $(this).parents('.video').find('.player')
         .find('iframe').attr('src', $(this).attr('data-video'))
 
-      $(".player").fadeIn()
+      $(".player").show()
 
-    $(".player").click (e)->
-      e.preventDefault()
-
-      $(".player").fadeOut()
     #
     # Wink animation.
     #

@@ -845,7 +845,7 @@ a {
 	color: #fff;
 
 	.wrapper {
-		padding: 175px 0 0 0;
+		padding: 175px 0 120px 0;
 		position: relative;
 	}
 
@@ -875,7 +875,7 @@ a {
 	color: #fff;
 
 	.hat_bar {
-		background: @burg url(<%= asset_path('textures/burg.png') %>) repeat;
+		background: @purplePink url(<%= asset_path('textures/pink.png') %>) 0 -100px repeat;
 		width: 100%;
 		height: 150px;
 	}
@@ -884,7 +884,7 @@ a {
 		position: relative;
 
 		&:before {
-			.down_top_arrow(@burg);
+			.down_top_arrow(@purplePink);
 		}
 	}
 
@@ -940,31 +940,22 @@ a {
 	}
 
 	.player {
-		position: fixed;
+		display: none;
+	}
+	
+	.video_wrapper {
+		position: relative;
+		padding-bottom: 56.25%; /* 16:9 */
+		padding-top: 25px;
+		height: 0;
+	}
+
+	iframe {
+		width: 100%;
+		position: absolute;
 		top: 0;
 		left: 0;
-		display: none;
-		background: #000;
-		background: rgba(0, 0, 0, 0.8);
-		width: 100%;
 		height: 100%;
-		z-index: 9999;
-		text-align: center;
-
-		.video_wrapper {
-			position: relative;
-			padding-bottom: 56.25%; /* 16:9 */
-			padding-top: 25px;
-			height: 0;
-		}
-
-		iframe {
-			width: 100%;
-			position: absolute;
-			top: 0;
-			left: 0;
-			height: 100%;
-		}
 	}
 }
 
