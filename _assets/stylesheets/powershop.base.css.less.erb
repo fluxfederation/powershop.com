@@ -942,7 +942,7 @@ a {
 	.player {
 		display: none;
 	}
-	
+
 	.video_wrapper {
 		position: relative;
 		padding-bottom: 56.25%; /* 16:9 */
@@ -1153,6 +1153,14 @@ a {
 	.twitter .icon { background-position: -274px 25px; }
 	.facebook .icon { background-position: -425px 25px; }
 	.skype .icon { background-position: -578px 25px; }
+
+	.businessmail .icon {
+		background: @hotPink url(<%= asset_path('businessmailicon.png') %>) no-repeat center 21px;
+	}
+
+	.jobsmail .icon {
+		background: @hotPink url(<%= asset_path('jobmailicon.png') %>) no-repeat 29px 24px;
+	}
 }
 
 .home #contact .circle {
