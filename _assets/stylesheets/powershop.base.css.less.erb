@@ -380,7 +380,8 @@ a {
 	ol {
 		list-style: none;
 		overflow: hidden;
-		margin: 0;
+		margin: 0 auto;
+		max-width: 678px;
 		clear: both;
 		padding: 0;
 
@@ -396,7 +397,7 @@ a {
 
 	li {
 		float: left;
-		width: 33.3%;
+		width: 226px;
 		position: relative;
 
 		li {
@@ -424,6 +425,7 @@ a {
 
 	.page-home li:nth-child(1) a:hover,
 	.page-about li:nth-child(3) a:hover,
+	.page-culture li:nth-child(6) a:hover,
 	.page-home li:nth-child(5) a:hover {
 		background: rgb(254, 220, 133);
 		background: rgba(254, 220, 133, 0.85);
@@ -485,16 +487,14 @@ a {
 		background: url(<%= asset_path('nav_pics/home.jpg') %>) no-repeat;
 		background-size: 100% 100%;
 
-		.dummy-pad { margin-top: 746.268%; }
+		.dummy-pad { margin-top: 615.044%; }
 
-		.welcome { padding-top: 97.5%; }
-		.betterer { padding-top: 80.8%; }
-		.our_shop { padding-top: 77.92%; }
-		.kick_ass { padding-top: 59.5%; }
-		.design_thinking { padding-top: 102.5%; }
-		.customers_love { padding-top: 92.5%; }
-		.our_history { padding-top: 85.5%; }
-		.our_people { padding-top: 90%; }
+		.welcome { padding-top: 101%; }
+		.kick_ass { padding-top: 61.5%; }
+		.our_shop { padding-top: 113.92%; }
+		.customers_love { padding-top: 95.5%; }
+		.our_history { padding-top: 88.2%; }
+		.our_people { padding-top: 93%; }
 		.contact_welcome { padding-top: 60%; }
 	}
 
@@ -503,14 +503,14 @@ a {
 		background-size: 100% 100%;
 
 		.dummy-pad {
-			margin-top: 563.582%;
+			margin-top: 629.646%;
 		}
 
-
-		.current_roles { padding-top: 164%; }
-		.give { padding-top: 89%; }
+		.current_roles { padding-top: 167.5%; }
+		.give { padding-top: 86%; }
+		.betterer { padding-top: 86.8%; }
 		.weird { padding-top: 80%; }
-		.shit_hot { padding-top: 112.80%; }
+		.shit_hot { padding-top: 91%; }
 		.culture { padding-top: 118%; }
 	}
 
@@ -519,11 +519,11 @@ a {
 		background-size: 100% 100%;
 
 		.dummy-pad {
-			margin-top: 130.447%;
+			margin-top: 123%;
 		}
 
 		.contact {
-			padding-top: 130.447%;
+			padding-top: 123%;
 		}
 	}
 }
