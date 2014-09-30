@@ -1,5 +1,5 @@
 name: Powershop
-exclude: [README.md, .gitignore, Gemfile, Gemfile.lock, Capfile, config]
+exclude: [README.md, .gitignore, Gemfile, Gemfile.lock, Capfile, config, Rakefile]
 permalinks: pretty
 plugins: ./_plugins
 
