@@ -904,17 +904,20 @@ a {
 
 .video {
 	clear: both;
-	padding-top: 20px;
+	padding-top: 40px;
 
 	.thumbnail {
-		background: #000 url(<%= asset_path('play.png') %>) no-repeat center center;
+		background: url(<%= asset_path('play.png') %>),
+		url(<%= asset_path('keyframe.jpg') %>);
+		background-repeat: no-repeat, no-repeat;
+  	background-position: center center, center center;
 		height: auto;
 		width: 100%;
 		position: relative;
 		display: block;
 		margin: 20px auto;
 		text-align: center;
-		padding: 10px 0 0;
+		padding: 0;
 		border-radius: 5px;
 		color: #fff;
 		.transition(all 0.2s);
@@ -946,7 +949,7 @@ a {
 	.video_wrapper {
 		position: relative;
 		padding-bottom: 56.25%; /* 16:9 */
-		padding-top: 25px;
+		/* padding-top: 25px; */
 		height: 0;
 	}
 
