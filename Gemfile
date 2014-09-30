@@ -13,4 +13,4 @@ gem 'therubyracer'
 gem 'yui-compressor'
 
 # Deployment
-gem 'capistrano'
+gem 'capistrano', '~> 2.15.4'
