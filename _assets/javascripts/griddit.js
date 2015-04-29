@@ -50,15 +50,17 @@ jQuery.fn.griddit = function(options){
 	
 	$(canvas).hide();
 	
-	$('html').keyup(function(event) {
-		if(event.keyCode == 27){
-			if( $(canvas).is(':visible') ){
-				$(canvas).hide();
-			}else{
-				$(canvas).show();
-			}
-		}
-	});
+	// The code below shouldnt be on production
+	// If you need to see the grid uncomment it
+	// $('html').keyup(function(event) {
+	// 	if(event.keyCode == 27){
+	// 		if( $(canvas).is(':visible') ){
+	// 			$(canvas).hide();
+	// 		}else{
+	// 			$(canvas).show();
+	// 		}
+	// 	}
+	// });
 	
 }
 })(jQuery);
