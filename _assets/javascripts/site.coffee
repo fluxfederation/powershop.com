@@ -1,10 +1,5 @@
 do ($ = jQuery, window) ->
 
-  # 
-  # Grid alignment helper
-  #
-  $(this).griddit({vertical: 5});
-
   #
   # Operations to help with Vector manipulation which we use for bézier curves.
   #
