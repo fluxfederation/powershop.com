@@ -8,6 +8,7 @@ set :build_script, 'bundle exec jekyll build'
 
 namespace :deploy do
   before 'deploy', 'require_tag'
+  before "deploy:check", "deploy:fix_permissions"
   before "deploy:finalize_update", "deploy:make_tag"
   after  "deploy:make_tag",        "deploy:tag_text"
   before "deploy:finalize_update", "deploy:update_release_branch"
@@ -41,5 +42,11 @@ namespace :app do
   desc "Show the current TAG"
   task :show_tag do
     run "cat #{current_path}/TAG"
+  end
+end
+
+namespace :deploy do
+  task :fix_permissions do
+    sudo "/usr/local/bin/fix_deploy_permissions.sh #{application}"
   end
 end
