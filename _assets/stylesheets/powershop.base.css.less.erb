@@ -1226,7 +1226,7 @@ a {
 }
 
 .map {
-	width: 25%;
+	width: 50%;
 	height: 500px;
 	float: left;
 	display: inline;
@@ -1324,8 +1324,7 @@ a {
 	}
 }
 
-#map_wellington,
-#map_auckland {
+#map_hq,{
 	h3,
 	.vcard {
 		background: #BC216B;
@@ -1333,7 +1332,15 @@ a {
 	}
 }
 
-#map_melbourne {
+#map_nz {
+	h3,
+	.vcard {
+		background: @hotPink;
+		background: rgba(249, 13, 106, 0.9);
+	}
+}
+
+#map_au {
 	h3,
 	.vcard {
 		background: @hotPink;
@@ -1342,7 +1349,7 @@ a {
 }
 
 
-#map_masterton {
+#map_uk {
 	h3,
 	.vcard {
 		background: @burg;
@@ -2594,6 +2601,8 @@ a {
 
         .ari_bg_small   { background-image: url(<%= asset_path('staff_pics/small/ari.jpg') %>); }
         .ari_bg_large   { background-image: url(<%= asset_path('staff_pics/large/ari.jpg') %>); }
+        .jim_bg_small   { background-image: url(<%= asset_path('staff_pics/small/jim.jpg') %>); }
+        .jim_bg_large   { background-image: url(<%= asset_path('staff_pics/large/jim.jpg') %>); }
         .umesh_bg_small  { background-image: url(<%= asset_path('staff_pics/small/umesh.jpg') %>); }
         .umesh_bg_large  { background-image: url(<%= asset_path('staff_pics/large/umesh.jpg') %>); }
         .dan_bg_small { background-image: url(<%= asset_path('staff_pics/small/dan.jpg') %>); }
