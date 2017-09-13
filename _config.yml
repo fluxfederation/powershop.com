@@ -1,9 +1,0 @@
-name: Powershop
-exclude: [README.md, .gitignore, Gemfile, Gemfile.lock, Capfile, config, Rakefile]
-permalinks: pretty
-plugins: ./_plugins
-
-assets:
-  js_compressor: 'uglifier'
-  css_compressor: 'yui'
-  cache: false
