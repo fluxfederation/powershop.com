@@ -1,2 +1,4 @@
-ErrorDocument 404 /404/
-
+AuthType Basic
+AuthName "Flux"
+AuthUserFile /var/www/vhosts/dartworks.nz/flux.dartworks.nz/.pw
+Require valid-user
